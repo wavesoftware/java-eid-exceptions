@@ -25,6 +25,7 @@
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
         <maven.compiler.source>1.6</maven.compiler.source>
         <maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
+        <coveralls.skip>${skipTests}</coveralls.skip>
     </properties>
     
     <licenses>

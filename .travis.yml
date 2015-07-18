@@ -1,0 +1,10 @@
+language: java
+sudo: false
+script: mvn clean install -Pci
+notifications:
+  email: false
+jdk:
+  - openjdk7
+  - oraclejdk8
+  - oraclejdk7
+  - openjdk6

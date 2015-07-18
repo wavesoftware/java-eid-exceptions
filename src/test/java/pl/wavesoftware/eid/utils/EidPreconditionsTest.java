@@ -44,7 +44,7 @@ public class EidPreconditionsTest {
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
-    private String eid = "20150718:075046";
+    private final String eid = "20150718:075046";
 
     @Before
     public void setUp() throws Exception {

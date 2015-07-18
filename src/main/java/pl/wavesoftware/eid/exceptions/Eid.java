@@ -140,7 +140,7 @@ public class Eid implements Serializable {
         if (format == null) {
             throw new NullPointerException("Format can't be null, but just recieved one");
         }
-        List<String> specifiers = new ArrayList<String>();
+        List<String> specifiers = new ArrayList<>();
         for (int i = 0; i < numSpecifiers; i++) {
             specifiers.add(i + Integer.toString(abs(RANDOM.nextInt()), 36));
         }

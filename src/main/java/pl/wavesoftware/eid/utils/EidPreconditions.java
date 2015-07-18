@@ -71,33 +71,32 @@ import pl.wavesoftware.eid.exceptions.EidRuntimeException;
  * <pre>
  *
  * {@code
- *   // Main application class for ex.: servlet
+ *   // Main application class for ex.: http servlet
  *    try {
  *        performRequest(request, response);
- *    } catch (RuntimeException ex) {
- *        if (ex instanceof EidRuntimeException) {
- *            issuesTrackerService.put((EidRuntimeException) ex)
- *        }
+ *    } catch (EidRuntimeException ex) {
+ *        issuesTracker.put(ex);
  *        throw ex;
  *    }
  * }</pre>
  *
  *
- * <h3>Using easier functional exception blocks</h3>
+ * <h3>Functional try to execute blocks</h3>
  *
  * <p>
- * Using of functional blocks to handle operations that are inteaded to operate properly is easy and gives developers nise way of
+ * Using functional blocks to handle operations, that are intended to operate properly, simplify the code and makes it more
+ * readable. It's also good way to deal with untested, uncovered {@code catch} blocks. It's easy and gives developers nice way of
  * dealing with countless operations that supose to work as intended.
  *
  * <p>
  * Example:
  * <pre><code>
  *
- *     Document doc = EidPreconditions.tryToExecute({@code new RiskyCode<Document>}() {
+ *     InputStream is = EidPreconditions.tryToExecute({@code new RiskyCode<InputStream>}() {
  *        {@literal @}Override
- *         public Document execute() throws SAXException, IOException {
- *            DocumentBuilder docBuilder = ...
- *            return docBuilder.parse(new InputSource(reader));
+ *         public InputStream execute() throws IOException {
+ *             return this.getClass().getClassLoader()
+ *                 .getResourceAsStream("project.properties");
  *         }
  *     }, "20150718:121521");
  * </code></pre>

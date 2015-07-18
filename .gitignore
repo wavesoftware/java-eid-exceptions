@@ -1,0 +1,17 @@
+# Maven
+/target
+
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
+/.classpath
+/.project
+/.settings/org.eclipse.core.resources.prefs
+/.settings/org.eclipse.jdt.core.prefs
+/.settings/org.eclipse.m2e.core.prefs
+/.settings/org.eclipse.jdt.ui.prefs
+/nbactions.xml
+/nbactions-ci.xml

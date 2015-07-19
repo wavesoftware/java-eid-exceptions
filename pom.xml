@@ -10,7 +10,7 @@
     
     <groupId>pl.wavesoftware</groupId>
     <artifactId>eid-exceptions</artifactId>
-    <version>0.1.1-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     
     <name>EID Runtime Exceptions and Utilities</name>
@@ -23,8 +23,8 @@
         <netbeans.hint.license>apache20</netbeans.hint.license>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
-        <maven.compiler.source>1.7</maven.compiler.source>
-        <maven.compiler.target>1.7</maven.compiler.target>
+        <maven.compiler.source>1.6</maven.compiler.source>
+        <maven.compiler.target>1.6</maven.compiler.target>
         <coveralls.skip>${skipTests}</coveralls.skip>
     </properties>
     
@@ -58,7 +58,7 @@
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
-            <version>2.1.0</version>
+            <version>1.7.1</version> <!-- For compatibility with JDK 1.6 -->
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -86,7 +86,7 @@
                     <plugin>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
-                        <version>0.7.4.201502262128</version>
+                        <version>0.7.4.201502262128</version> <!-- 0.7.5 fails on SONAR -->
 
                         <executions>
                             <execution>

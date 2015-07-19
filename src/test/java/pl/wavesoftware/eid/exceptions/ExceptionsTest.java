@@ -104,7 +104,9 @@ public class ExceptionsTest {
                 constructor,
                 args
             });
-        } catch (NoSuchMethodException | SecurityException ex) {
+        } catch (NoSuchMethodException ex) {
+            throw new RuntimeException(ex);
+        } catch (SecurityException ex) {
             throw new RuntimeException(ex);
         }
     }
@@ -158,7 +160,13 @@ public class ExceptionsTest {
     private <T extends EidRuntimeException> T construct() {
         try {
             return (T) constructor.newInstance(arguments);
-        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+        } catch (InstantiationException ex) {
+            throw new RuntimeException(ex);
+        } catch (IllegalAccessException ex) {
+            throw new RuntimeException(ex);
+        } catch (IllegalArgumentException ex) {
+            throw new RuntimeException(ex);
+        } catch (InvocationTargetException ex) {
             throw new RuntimeException(ex);
         }
     }

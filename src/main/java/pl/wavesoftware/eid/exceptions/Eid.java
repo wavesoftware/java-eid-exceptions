@@ -195,7 +195,7 @@ public class Eid implements Serializable {
         if (format == null) {
             throw new IllegalArgumentException("Format can't be null, but just received one");
         }
-        List<String> specifiers = new ArrayList<>();
+        List<String> specifiers = new ArrayList<String>();
         for (int i = 0; i < numSpecifiers; i++) {
             specifiers.add(i + "-test-id");
         }

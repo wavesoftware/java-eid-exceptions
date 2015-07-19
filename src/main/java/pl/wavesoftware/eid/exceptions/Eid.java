@@ -191,7 +191,7 @@ public class Eid implements Serializable {
         return uniq;
     }
 
-    static void validateFormat(String format, int numSpecifiers) throws IllegalArgumentException {
+    static void validateFormat(String format, int numSpecifiers) {
         if (format == null) {
             throw new IllegalArgumentException("Format can't be null, but just recieved one");
         }
@@ -212,7 +212,7 @@ public class Eid implements Serializable {
      * It is used to generate unique ID for each EID object. It's mustn't be secure becouse it just indicate EID object while
      * logging.
      */
-    public static interface UniqIdGenerator {
+    public interface UniqIdGenerator {
 
         /**
          * Generates a uniq string ID
@@ -228,13 +228,13 @@ public class Eid implements Serializable {
 
         private final Random random;
 
-        public StdUniqIdGenerator() {
+        private StdUniqIdGenerator() {
             this.random = getUnsecureFastRandom();
         }
 
         @Override
         public String generateUniqId() {
-            long first = abs(random.nextLong());
+            long first = abs(random.nextLong() + 1);
             int second = abs(random.nextInt(Integer.MAX_VALUE));
             int calc = (int) (first + second);
             return Integer.toString(calc, BASE36);

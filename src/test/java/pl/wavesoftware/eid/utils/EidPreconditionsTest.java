@@ -152,6 +152,30 @@ public class EidPreconditionsTest {
     }
 
     @Test
+    public void testCheckElementIndex_SizeInvalid() {
+        // given
+        int index = 1;
+        int size = -5;
+        // then
+        thrown.expect(EidIllegalArgumentException.class);
+        thrown.expectMessage(containsString(eid));
+        // when
+        EidPreconditions.checkElementIndex(index, size, eid);
+    }
+
+    @Test
+    public void testCheckElementIndex_Eid_SizeInvalid() {
+        // given
+        int index = 2;
+        int size = -1;
+        // then
+        thrown.expect(EidIllegalArgumentException.class);
+        thrown.expectMessage(containsString(eid));
+        // when
+        EidPreconditions.checkElementIndex(index, size, new Eid(eid));
+    }
+
+    @Test
     public void testCheckElementIndex_Positive() {
         // given
         int index = 14;

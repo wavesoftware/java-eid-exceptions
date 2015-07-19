@@ -104,9 +104,7 @@ public class ExceptionsTest {
                 constructor,
                 args
             });
-        } catch (NoSuchMethodException ex) {
-            throw new RuntimeException(ex);
-        } catch (SecurityException ex) {
+        } catch (NoSuchMethodException | SecurityException ex) {
             throw new RuntimeException(ex);
         }
     }

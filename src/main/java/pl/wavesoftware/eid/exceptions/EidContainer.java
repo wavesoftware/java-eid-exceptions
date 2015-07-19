@@ -23,7 +23,7 @@ package pl.wavesoftware.eid.exceptions;
 public interface EidContainer {
 
     /**
-     * Retrives a Eid object
+     * Retrieves a Eid object
      *
      * @return Eid object
      */

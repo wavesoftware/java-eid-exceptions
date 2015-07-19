@@ -7,11 +7,21 @@
 *.jar
 *.war
 *.ear
+
+# Eclipse IDE
 /.classpath
 /.project
 /.settings/org.eclipse.core.resources.prefs
 /.settings/org.eclipse.jdt.core.prefs
 /.settings/org.eclipse.m2e.core.prefs
 /.settings/org.eclipse.jdt.ui.prefs
+
+# Netbeans IDE
 /nbactions.xml
 /nbactions-ci.xml
+
+# IntiliJ IDE
+
+/*.iml
+/.idea
+

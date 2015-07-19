@@ -6,7 +6,7 @@ This small library holds a set of Exceptions that implements idea of fast, reusa
 
 ## Caution
 
-This classes shouldn't be used in any public API or library. It is designed to be used for in-house development of end user applications which will report Bugs in standarized error pages or post them to issue tracker.
+This classes shouldn't be used in any public API or library. It is designed to be used for in-house development of end user applications which will report Bugs in standardized error pages or post them to issue tracker.
 
 ## Requirements
 
@@ -69,7 +69,7 @@ try {
  
 #### Functional try to execute blocks
  
-Using functional blocks to handle operations, that are intended to operate properly, simplify the code and makes it more readable. It's also good way to deal with untested, uncovered `catch` blocks. It's easy and gives developers nice way of dealing with countless operations that supose to work as intended.
+Using functional blocks to handle operations, that are intended to operate properly, simplify the code and makes it more readable. It's also good way to deal with untested, uncovered `catch` blocks. It's easy and gives developers nice way of dealing with countless operations that suppose to work as intended.
 
 Example:
 
@@ -82,7 +82,21 @@ InputStream is = EidPreconditions.tryToExecute(new RiskyCode<InputStream>() {
     }
 }, "20150718:121521");
 ```
- 
+
+###Contributing
+
+Contributions are welcome!
+
+To contribute, follow the standard [git flow](http://danielkummer.github.io/git-flow-cheatsheet/) of:
+
+1. Fork it
+1. Create your feature branch (`git checkout -b feature/my-new-feature`)
+1. Commit your changes (`git commit -am 'Add some feature'`)
+1. Push to the branch (`git push origin feature/my-new-feature`)
+1. Create new Pull Request
+
+Even if you can't contribute code, if you have an idea for an improvement please open an [issue](https://github.com/wavesoftware/java-eid-exceptions/issues).
+
 ### Releases
 
 - 0.1.0 (idea imported from Guava Library and COI code)

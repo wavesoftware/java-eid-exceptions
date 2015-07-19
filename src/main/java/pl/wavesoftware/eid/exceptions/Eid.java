@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
 
 /**
  * <strong>This class shouldn't be used in any public API or library.</strong> It is designed to be used for in-house development
- * of end user applications which will report Bugs in standarized error pages or post them to issue tracker.
+ * of end user applications which will report Bugs in standardized error pages or post them to issue tracker.
  * <p>
  * Exception identifier for all Eid Runtime Exceptions.
  *
@@ -65,7 +65,7 @@ public class Eid implements Serializable {
     /**
      * Constructor
      *
-     * @param id the exception id, must be unique developer insereted string, from date
+     * @param id the exception id, must be unique developer inserted string, from date
      * @param ref an optional reference
      */
     public Eid(String id, @Nullable String ref) {
@@ -77,7 +77,7 @@ public class Eid implements Serializable {
     /**
      * Constructor
      *
-     * @param id the exception id, must be unique developer insereted string, from date
+     * @param id the exception id, must be unique developer inserted string, from date
      */
     public Eid(String id) {
         this(id, null);
@@ -127,7 +127,7 @@ public class Eid implements Serializable {
     }
 
     /**
-     * Sets the actual format that will be used in {@link toString()} method. It will return previously used format.
+     * Sets the actual format that will be used in {@link #toString()} method. It will return previously used format.
      *
      * @param format a format compliant with {@link String#format(String, Object...)} with 2 object arguments
      * @return a previously used format
@@ -142,7 +142,7 @@ public class Eid implements Serializable {
     }
 
     /**
-     * Sets the actual format that will be used in {@link toString()} method
+     * Sets the actual format that will be used in {@link #toString()} method
      *
      * @param refFormat a format compliant with {@link String#format(String, Object...)} with 3 object arguments
      * @return a previously used format
@@ -151,9 +151,9 @@ public class Eid implements Serializable {
      */
     public static String setRefFormat(String refFormat) {
         validateFormat(refFormat, REF_FORMAT_NUM_SPEC);
-        String prevoiusly = Eid.refFormat;
+        String previously = Eid.refFormat;
         Eid.refFormat = refFormat;
-        return prevoiusly;
+        return previously;
     }
 
     @Override
@@ -183,9 +183,9 @@ public class Eid implements Serializable {
     }
 
     /**
-     * Gets uniq generated string for this instance of Eid
+     * Gets unique generated string for this instance of Eid
      *
-     * @return a uniq string
+     * @return a unique string
      */
     public String getUniq() {
         return uniq;
@@ -193,15 +193,15 @@ public class Eid implements Serializable {
 
     static void validateFormat(String format, int numSpecifiers) {
         if (format == null) {
-            throw new IllegalArgumentException("Format can't be null, but just recieved one");
+            throw new IllegalArgumentException("Format can't be null, but just received one");
         }
         List<String> specifiers = new ArrayList<>();
         for (int i = 0; i < numSpecifiers; i++) {
             specifiers.add(i + "-test-id");
         }
-        String formated = String.format(format, specifiers.toArray());
+        String formatted = String.format(format, specifiers.toArray());
         for (String specifier : specifiers) {
-            if (!formated.contains(specifier)) {
+            if (!formatted.contains(specifier)) {
                 throw new IllegalArgumentException("Given format contains to little format specifiers, "
                     + "expected " + numSpecifiers + " but given \"" + format + "\"");
             }
@@ -209,13 +209,13 @@ public class Eid implements Serializable {
     }
 
     /**
-     * It is used to generate unique ID for each EID object. It's mustn't be secure becouse it just indicate EID object while
+     * It is used to generate unique ID for each EID object. It's mustn't be secure because it just indicate EID object while
      * logging.
      */
     public interface UniqIdGenerator {
 
         /**
-         * Generates a uniq string ID
+         * Generates a unique string ID
          *
          * @return a generated unique ID
          */

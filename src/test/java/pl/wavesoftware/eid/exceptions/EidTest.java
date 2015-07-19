@@ -38,7 +38,7 @@ public class EidTest {
             String format = null;
             // then
             thrown.expect(IllegalArgumentException.class);
-            thrown.expectMessage("Format can't be null, but just recieved one");
+            thrown.expectMessage("Format can't be null, but just received one");
             // when
             Eid.setMessageFormat(format);
         } finally {
@@ -74,11 +74,11 @@ public class EidTest {
                 }
             };
             // when
-            UniqIdGenerator prevoius = Eid.setUniqIdGenerator(generator);
-            UniqIdGenerator set = Eid.setUniqIdGenerator(prevoius);
+            UniqIdGenerator previous = Eid.setUniqIdGenerator(generator);
+            UniqIdGenerator set = Eid.setUniqIdGenerator(previous);
             // then
             assertThat(set).isSameAs(generator);
-            assertThat(prevoius).isSameAs(Eid.DEFAULT_UNIQ_ID_GENERATOR);
+            assertThat(previous).isSameAs(Eid.DEFAULT_UNIQ_ID_GENERATOR);
         } finally {
             Eid.setUniqIdGenerator(Eid.DEFAULT_UNIQ_ID_GENERATOR);
         }
@@ -106,7 +106,7 @@ public class EidTest {
             String format = null;
             // then
             thrown.expect(IllegalArgumentException.class);
-            thrown.expectMessage("Format can't be null, but just recieved one");
+            thrown.expectMessage("Format can't be null, but just received one");
             // when
             Eid.setFormat(format);
         } finally {
@@ -168,7 +168,7 @@ public class EidTest {
             String refFormat = null;
             // then
             thrown.expect(IllegalArgumentException.class);
-            thrown.expectMessage("Format can't be null, but just recieved one");
+            thrown.expectMessage("Format can't be null, but just received one");
             // when
             Eid.setRefFormat(refFormat);
         } finally {

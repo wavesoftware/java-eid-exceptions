@@ -26,7 +26,7 @@ import pl.wavesoftware.eid.exceptions.EidRuntimeException;
 
 /**
  * <strong>This class shouldn't be used in any public API or library.</strong> It is designed to be used for in-house development
- * of end user applications which will report Bugs in standarized error pages or post them to issue tracker.
+ * of end user applications which will report Bugs in standardized error pages or post them to issue tracker.
  * <p>
  * Static convenience methods that help a method or constructor check whether it was invoked correctly (whether its
  * <i>preconditions</i>
@@ -175,7 +175,7 @@ public final class EidPreconditions {
     /**
      * Ensures that an object reference passed as a parameter to the calling method is not null.
      *
-     * @param <T>
+     * @param <T> type of object reference being checked
      * @param reference an object reference
      * @param eid the exception message to use if the check fails; will be converted to a string using
      * {@link String#valueOf(Object)}
@@ -194,7 +194,7 @@ public final class EidPreconditions {
     /**
      * Ensures that an object reference passed as a parameter to the calling method is not null.
      *
-     * @param <T>
+     * @param <T> type of object reference being checked
      * @param reference an object reference
      * @param eid the exception message to use if the check fails; will be converted to a string using
      * {@link String#valueOf(Object)}
@@ -259,7 +259,7 @@ public final class EidPreconditions {
     }
 
     /**
-     * Tries to execute code in given block, and if exception is thrown, it will gets retrown as a {@link EidRuntimeException}
+     * Tries to execute code in given block, and if exception is thrown, it will gets rethrown as a {@link EidRuntimeException}
      * with eid given as a argument
      * <p>
      * Example:
@@ -276,7 +276,7 @@ public final class EidPreconditions {
      *
      * @param <R> return type
      * @param code code to be executed within a try-catch block
-     * @param eid uniq developer identifier from date for ex.: "20150716:123200"
+     * @param eid unique developer identifier from date for ex.: "20150716:123200"
      * @return A block of code return type, if exception is not thrown
      * @throws EidRuntimeException if code block thrown any exception, which in that case is wrapped in EidRuntimeException
      */
@@ -295,7 +295,7 @@ public final class EidPreconditions {
     }
 
     /**
-     * Tries to execute code in given block, and if exception is thrown, it will gets retrown as a {@link EidRuntimeException}
+     * Tries to execute code in given block, and if exception is thrown, it will gets rethrown as a {@link EidRuntimeException}
      * with eid given as a argument
      * <p>
      * Example:
@@ -312,7 +312,7 @@ public final class EidPreconditions {
      *
      * @param <R> return type
      * @param code code to be executed within a try-catch block
-     * @param eid uniq developer identifier from date for ex.: "20150716:123200"
+     * @param eid unique developer identifier from date for ex.: "20150716:123200"
      * @return A block of code return type, if exception is not thrown
      * @throws EidRuntimeException if code block thrown any exception, which in that case is wrapped in EidRuntimeException
      */
@@ -341,7 +341,7 @@ public final class EidPreconditions {
          * Executes a client code
          *
          * @return a object of client code
-         * @throws Exception this exception sould be set to concrete one
+         * @throws Exception this exception should be set to concrete one
          */
         @SuppressWarnings({
             "pmd:SignatureDeclareThrowsException",

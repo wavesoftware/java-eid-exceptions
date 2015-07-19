@@ -18,7 +18,7 @@ This classes shouldn't be used in any public API or library. It is designed to b
 <dependency>
     <groupId>pl.wavesoftware</groupId>
     <artifactId>eid-exceptions</artifactId>
-    <version>0.1.0</version>
+    <version>1.0.0</version>
 </dependency>
 ```
 
@@ -99,4 +99,8 @@ Even if you can't contribute code, if you have an idea for an improvement please
 
 ### Releases
 
-- 0.1.0 (idea imported from Guava Library and COI code)
+- 1.0.0
+ - Support for JDK >= 1.6
+- 0.1.0
+ - initial release
+ - idea imported from Guava Library and COI code

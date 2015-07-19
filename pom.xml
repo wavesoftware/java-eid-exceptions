@@ -58,7 +58,8 @@
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
-            <version>1.7.1</version> <!-- For compatibility with JDK 1.6 -->
+            <!-- Version pin for compatibility with JDK 1.6 -->
+            <version>1.7.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -86,8 +87,8 @@
                     <plugin>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
-                        <version>0.7.4.201502262128</version> <!-- 0.7.5 fails on SONAR -->
-
+                        <!-- Version pin because 0.7.5 fails on SONAR -->
+                        <version>0.7.4.201502262128</version>
                         <executions>
                             <execution>
                                 <id>jacoco-initialize</id>

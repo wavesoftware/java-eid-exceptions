@@ -96,7 +96,7 @@ public class EidRuntimeException extends RuntimeException implements EidContaine
      * permitted, and indicates that the cause is nonexistent or unknown.)
      */
     public EidRuntimeException(Eid id, Throwable cause) {
-        super(String.format(Eid.messageFormat, id.toString(), message(cause)), cause);
+        super(String.format(Eid.getMessageFormat(), id.toString(), message(cause)), cause);
         eid = id;
     }
 

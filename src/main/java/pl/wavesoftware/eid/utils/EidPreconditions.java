@@ -147,7 +147,7 @@ public final class EidPreconditions {
      * @param expression a boolean expression
      * @param eid the exception message to use if the check fails; will be converted to a string using
      * {@link String#valueOf(Object)}
-     * @throws IllegalStateException if {@code expression} is false
+     * @throws EidIllegalStateException if {@code expression} is false
      */
     public static void checkState(@Nonnull boolean expression, @Nonnull String eid) {
         String checkedEid = checkNotNull(eid);
@@ -163,7 +163,7 @@ public final class EidPreconditions {
      * @param expression a boolean expression
      * @param eid the exception message to use if the check fails; will be converted to a string using
      * {@link String#valueOf(Object)}
-     * @throws IllegalStateException if {@code expression} is false
+     * @throws EidIllegalStateException if {@code expression} is false
      */
     public static void checkState(@Nonnull boolean expression, @Nonnull Eid eid) {
         Eid checkedEid = checkNotNull(eid);
@@ -180,7 +180,7 @@ public final class EidPreconditions {
      * @param eid the exception message to use if the check fails; will be converted to a string using
      * {@link String#valueOf(Object)}
      * @return the non-null reference that was validated
-     * @throws NullPointerException if {@code reference} is null
+     * @throws EidNullPointerException if {@code reference} is null
      */
     @Nonnull
     public static <T> T checkNotNull(@Nullable T reference, @Nonnull String eid) {
@@ -199,7 +199,7 @@ public final class EidPreconditions {
      * @param eid the exception message to use if the check fails; will be converted to a string using
      * {@link String#valueOf(Object)}
      * @return the non-null reference that was validated
-     * @throws NullPointerException if {@code reference} is null
+     * @throws EidNullPointerException if {@code reference} is null
      */
     @Nonnull
     public static <T> T checkNotNull(@Nullable T reference, @Nonnull Eid eid) {
@@ -218,12 +218,15 @@ public final class EidPreconditions {
      * @param size the size of that array, list or string
      * @param eid the text to use to describe this index in an error message
      * @return the value of {@code index}
-     * @throws IndexOutOfBoundsException if {@code index} is negative or is not less than {@code size}
-     * @throws IllegalArgumentException if {@code size} is negative
+     * @throws EidIndexOutOfBoundsException if {@code index} is negative or is not less than {@code size}
+     * @throws EidIllegalArgumentException if {@code size} is negative
      */
     @Nonnull
     public static int checkElementIndex(int index, int size, @Nonnull String eid) {
         String checkedEid = checkNotNull(eid);
+        if (size < 0) {
+            throw new EidIllegalArgumentException(new Eid(checkedEid));
+        }
         // Carefully optimized for execution by hotspot (explanatory comment above)
         if (index < 0 || index > size) {
             throw new EidIndexOutOfBoundsException(new Eid(checkedEid));
@@ -239,12 +242,15 @@ public final class EidPreconditions {
      * @param size the size of that array, list or string
      * @param eid the text to use to describe this index in an error message
      * @return the value of {@code index}
-     * @throws IndexOutOfBoundsException if {@code index} is negative or is not less than {@code size}
-     * @throws IllegalArgumentException if {@code size} is negative
+     * @throws EidIndexOutOfBoundsException if {@code index} is negative or is not less than {@code size}
+     * @throws EidIllegalArgumentException if {@code size} is negative
      */
     @Nonnull
     public static int checkElementIndex(int index, int size, @Nonnull Eid eid) {
         Eid checkedEid = checkNotNull(eid);
+        if (size < 0) {
+            throw new EidIllegalArgumentException(checkedEid);
+        }
         // Carefully optimized for execution by hotspot (explanatory comment above)
         if (index < 0 || index > size) {
             throw new EidIndexOutOfBoundsException(checkedEid);
@@ -272,6 +278,7 @@ public final class EidPreconditions {
      * @param code code to be executed within a try-catch block
      * @param eid uniq developer identifier from date for ex.: "20150716:123200"
      * @return A block of code return type, if exception is not thrown
+     * @throws EidRuntimeException if code block thrown any exception, which in that case is wrapped in EidRuntimeException
      */
     @Nullable
     @SuppressWarnings({
@@ -307,6 +314,7 @@ public final class EidPreconditions {
      * @param code code to be executed within a try-catch block
      * @param eid uniq developer identifier from date for ex.: "20150716:123200"
      * @return A block of code return type, if exception is not thrown
+     * @throws EidRuntimeException if code block thrown any exception, which in that case is wrapped in EidRuntimeException
      */
     @Nullable
     @SuppressWarnings({
@@ -344,7 +352,7 @@ public final class EidPreconditions {
 
     private static <T> T checkNotNull(@Nullable T reference) {
         if (reference == null) {
-            throw new IllegalArgumentException(new NullPointerException("Pass not-null Eid to EidPreconditions first!"));
+            throw new IllegalArgumentException("Pass not-null Eid to EidPreconditions first!");
         }
         return reference;
     }

@@ -46,7 +46,9 @@ public class Eid implements Serializable {
 
     private static final int REF_FORMAT_NUM_SPEC = 3;
 
-    static String messageFormat = DEFAULT_MESSAGE_FORMAT;
+    private static final int MESSAGE_FORMAT_NUM_SPEC = 2;
+
+    private static String messageFormat = DEFAULT_MESSAGE_FORMAT;
 
     private static UniqIdGenerator uniqIdGenerator = DEFAULT_UNIQ_ID_GENERATOR;
 
@@ -88,14 +90,23 @@ public class Eid implements Serializable {
      *
      * @param format a format that will be used, must be non-null and contain two format specifiers <tt>"%s"</tt>
      * @return previously used format
-     * @throws NullPointerException if given format was null
-     * @throws IllegalArgumentException if given format hasn't got two format specifiers <tt>"%s"</tt>
+     * @throws IllegalArgumentException if given format hasn't got two format specifiers <tt>"%s"</tt>, or if given format was
+     * null
      */
     public static String setMessageFormat(String format) {
-        validateFormat(format, 2);
+        validateFormat(format, MESSAGE_FORMAT_NUM_SPEC);
         String oldFormat = Eid.messageFormat;
         Eid.messageFormat = format;
         return oldFormat;
+    }
+
+    /**
+     * Gets actually set message format
+     *
+     * @return actually set message format
+     */
+    public static String getMessageFormat() {
+        return messageFormat;
     }
 
     /**
@@ -108,7 +119,7 @@ public class Eid implements Serializable {
      */
     public static UniqIdGenerator setUniqIdGenerator(UniqIdGenerator uniqIdGenerator) {
         if (uniqIdGenerator == null) {
-            throw new IllegalArgumentException(new NullPointerException("Unique ID generator can't be null, but given one"));
+            throw new IllegalArgumentException("Unique ID generator can't be null, but given one");
         }
         UniqIdGenerator previous = Eid.uniqIdGenerator;
         Eid.uniqIdGenerator = uniqIdGenerator;
@@ -135,7 +146,6 @@ public class Eid implements Serializable {
      *
      * @param refFormat a format compliant with {@link String#format(String, Object...)} with 3 object arguments
      * @return a previously used format
-     * @throws NullPointerException if given format was null
      * @throws IllegalArgumentException if given format hasn't got tree format specifiers <tt>"%s"</tt>, or if given format was
      * null
      */
@@ -181,9 +191,9 @@ public class Eid implements Serializable {
         return uniq;
     }
 
-    static void validateFormat(String format, int numSpecifiers) throws NullPointerException, IllegalArgumentException {
+    static void validateFormat(String format, int numSpecifiers) throws IllegalArgumentException {
         if (format == null) {
-            throw new IllegalArgumentException(new NullPointerException("Format can't be null, but just recieved one"));
+            throw new IllegalArgumentException("Format can't be null, but just recieved one");
         }
         List<String> specifiers = new ArrayList<>();
         for (int i = 0; i < numSpecifiers; i++) {
@@ -230,10 +240,9 @@ public class Eid implements Serializable {
             return Integer.toString(calc, BASE36);
         }
 
+        @SuppressWarnings("squid:S2245")
         private Random getUnsecureFastRandom() {
-            @SuppressWarnings("squid:S2245")
-            Random ret = new Random(System.currentTimeMillis());
-            return ret;
+            return new Random(System.currentTimeMillis());
         }
 
     }

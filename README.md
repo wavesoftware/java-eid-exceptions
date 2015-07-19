@@ -1,6 +1,6 @@
 # EID Runtime Exceptions and Utilities
 
-[![Build Status](https://travis-ci.org/wavesoftware/java-eid-exceptions.svg?branch=master)](https://travis-ci.org/wavesoftware/java-eid-exceptions) [![Coverage Status](https://coveralls.io/repos/wavesoftware/java-eid-exceptions/badge.svg?branch=master&service=github)](https://coveralls.io/github/wavesoftware/java-eid-exceptions?branch=master) [![Maven Central](https://img.shields.io/maven-central/v/pl.wavesoftware/eid-exceptions.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22pl.wavesoftware%22%20AND%20a%3A%22eid-exceptions%22)
+[![Build Status](https://travis-ci.org/wavesoftware/java-eid-exceptions.svg?branch=master)](https://travis-ci.org/wavesoftware/java-eid-exceptions) [![Coverage Status](https://coveralls.io/repos/wavesoftware/java-eid-exceptions/badge.svg?branch=master&service=github)](https://coveralls.io/github/wavesoftware/java-eid-exceptions?branch=master) [![SonarQube Tech Debt](https://img.shields.io/sonar/http/sonar-ro.wavesoftware.pl/pl.wavesoftware:eid-exceptions/tech_debt.svg)](http://sonar-ro.wavesoftware.pl/dashboard/index/2600) [![Maven Central](https://img.shields.io/maven-central/v/pl.wavesoftware/eid-exceptions.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22pl.wavesoftware%22%20AND%20a%3A%22eid-exceptions%22)
 
 This small library holds a set of Exceptions that implements idea of fast, reusable, error codes that can be simple thrown fast in case of unpredictable and unrecoverable application failure.
 

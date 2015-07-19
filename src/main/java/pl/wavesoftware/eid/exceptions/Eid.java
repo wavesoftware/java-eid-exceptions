@@ -36,9 +36,19 @@ public class Eid implements Serializable {
 
     public static final String DEFAULT_REF_FORMAT = "[%s|%s]<%s>";
 
+    public static final String DEFAULT_MESSAGE_FORMAT = "%s => %s";
+
+    public static final UniqIdGenerator DEFAULT_UNIQ_ID_GENERATOR = new StdUniqIdGenerator();
+
     private static final long serialVersionUID = -9876432123423401L;
 
-    private static final Random RANDOM = new Random(System.currentTimeMillis());
+    private static final int FORMAT_NUM_SPEC = 2;
+
+    private static final int REF_FORMAT_NUM_SPEC = 3;
+
+    static String messageFormat = DEFAULT_MESSAGE_FORMAT;
+
+    private static UniqIdGenerator uniqIdGenerator = DEFAULT_UNIQ_ID_GENERATOR;
 
     private static String format = DEFAULT_FORMAT;
 
@@ -51,43 +61,13 @@ public class Eid implements Serializable {
     private final String uniq;
 
     /**
-     * Sets the actual format that will be used in {@link toString()} method. It will return previously used format.
-     *
-     * @param format a format compliant with {@link String#format(String, Object...)} with 2 object arguments
-     * @return a previously used format
-     * @throws NullPointerException if given format was null
-     * @throws IllegalArgumentException if given format hasn't got two format specifiers <tt>"%s"</tt>
-     */
-    public static String setFormat(String format) throws NullPointerException, IllegalArgumentException {
-        validateFormat(format, 2);
-        String prevoiusly = Eid.format;
-        Eid.format = format;
-        return prevoiusly;
-    }
-
-    /**
-     * Sets the actual format that will be used in {@link toString()} method
-     *
-     * @param refFormat a format compliant with {@link String#format(String, Object...)} with 3 object arguments
-     * @return a previously used format
-     * @throws NullPointerException if given format was null
-     * @throws IllegalArgumentException if given format hasn't got tree format specifiers <tt>"%s"</tt>
-     */
-    public static String setRefFormat(String refFormat) {
-        validateFormat(refFormat, 3);
-        String prevoiusly = Eid.refFormat;
-        Eid.refFormat = refFormat;
-        return prevoiusly;
-    }
-
-    /**
      * Constructor
      *
      * @param id the exception id, must be unique developer insereted string, from date
      * @param ref an optional reference
      */
     public Eid(String id, @Nullable String ref) {
-        uniq = Integer.toString(abs(Long.valueOf(abs(RANDOM.nextLong()) + abs(RANDOM.nextInt())).intValue()), 36);
+        uniq = uniqIdGenerator.generateUniqId();
         this.id = id;
         this.ref = ref == null ? "" : ref;
     }
@@ -99,6 +79,71 @@ public class Eid implements Serializable {
      */
     public Eid(String id) {
         this(id, null);
+    }
+
+    /**
+     * Sets a format that will be used for all Eid exceptions when printing a detail message.
+     * <p>
+     * Format must be non-null and contain two format specifiers <tt>"%s"</tt>
+     *
+     * @param format a format that will be used, must be non-null and contain two format specifiers <tt>"%s"</tt>
+     * @return previously used format
+     * @throws NullPointerException if given format was null
+     * @throws IllegalArgumentException if given format hasn't got two format specifiers <tt>"%s"</tt>
+     */
+    public static String setMessageFormat(String format) {
+        validateFormat(format, 2);
+        String oldFormat = Eid.messageFormat;
+        Eid.messageFormat = format;
+        return oldFormat;
+    }
+
+    /**
+     * Sets the actual unique ID generator that will be used to generate IDs for all Eid objects. It will return previously used
+     * generator.
+     *
+     * @param uniqIdGenerator new instance of unique ID generator
+     * @return a previously used unique ID generator
+     * @throws IllegalArgumentException if given generator was null
+     */
+    public static UniqIdGenerator setUniqIdGenerator(UniqIdGenerator uniqIdGenerator) {
+        if (uniqIdGenerator == null) {
+            throw new IllegalArgumentException(new NullPointerException("Unique ID generator can't be null, but given one"));
+        }
+        UniqIdGenerator previous = Eid.uniqIdGenerator;
+        Eid.uniqIdGenerator = uniqIdGenerator;
+        return previous;
+    }
+
+    /**
+     * Sets the actual format that will be used in {@link toString()} method. It will return previously used format.
+     *
+     * @param format a format compliant with {@link String#format(String, Object...)} with 2 object arguments
+     * @return a previously used format
+     * @throws IllegalArgumentException if given format hasn't got two format specifiers <tt>"%s"</tt>, or if given format was
+     * null
+     */
+    public static String setFormat(String format) {
+        validateFormat(format, FORMAT_NUM_SPEC);
+        String prevoiusly = Eid.format;
+        Eid.format = format;
+        return prevoiusly;
+    }
+
+    /**
+     * Sets the actual format that will be used in {@link toString()} method
+     *
+     * @param refFormat a format compliant with {@link String#format(String, Object...)} with 3 object arguments
+     * @return a previously used format
+     * @throws NullPointerException if given format was null
+     * @throws IllegalArgumentException if given format hasn't got tree format specifiers <tt>"%s"</tt>, or if given format was
+     * null
+     */
+    public static String setRefFormat(String refFormat) {
+        validateFormat(refFormat, REF_FORMAT_NUM_SPEC);
+        String prevoiusly = Eid.refFormat;
+        Eid.refFormat = refFormat;
+        return prevoiusly;
     }
 
     @Override
@@ -138,11 +183,11 @@ public class Eid implements Serializable {
 
     static void validateFormat(String format, int numSpecifiers) throws NullPointerException, IllegalArgumentException {
         if (format == null) {
-            throw new NullPointerException("Format can't be null, but just recieved one");
+            throw new IllegalArgumentException(new NullPointerException("Format can't be null, but just recieved one"));
         }
         List<String> specifiers = new ArrayList<>();
         for (int i = 0; i < numSpecifiers; i++) {
-            specifiers.add(i + Integer.toString(abs(RANDOM.nextInt()), 36));
+            specifiers.add(i + "-test-id");
         }
         String formated = String.format(format, specifiers.toArray());
         for (String specifier : specifiers) {
@@ -151,6 +196,46 @@ public class Eid implements Serializable {
                     + "expected " + numSpecifiers + " but given \"" + format + "\"");
             }
         }
+    }
+
+    /**
+     * It is used to generate unique ID for each EID object. It's mustn't be secure becouse it just indicate EID object while
+     * logging.
+     */
+    public static interface UniqIdGenerator {
+
+        /**
+         * Generates a uniq string ID
+         *
+         * @return a generated unique ID
+         */
+        String generateUniqId();
+    }
+
+    private static class StdUniqIdGenerator implements UniqIdGenerator {
+
+        private static final int BASE36 = 36;
+
+        private final Random random;
+
+        public StdUniqIdGenerator() {
+            this.random = getUnsecureFastRandom();
+        }
+
+        @Override
+        public String generateUniqId() {
+            long first = abs(random.nextLong());
+            int second = abs(random.nextInt(Integer.MAX_VALUE));
+            int calc = (int) (first + second);
+            return Integer.toString(calc, BASE36);
+        }
+
+        private Random getUnsecureFastRandom() {
+            @SuppressWarnings("squid:S2245")
+            Random ret = new Random(System.currentTimeMillis());
+            return ret;
+        }
+
     }
 
 }

@@ -282,7 +282,7 @@ public final class EidPreconditions {
         String checkedEid = checkNotNull(eid);
         try {
             return code.execute();
-        } catch (Exception throwable) { // NOSONAR
+        } catch (Exception throwable) {
             throw new EidRuntimeException(new Eid(checkedEid), throwable);
         }
     }
@@ -317,7 +317,7 @@ public final class EidPreconditions {
         Eid checkedEid = checkNotNull(eid);
         try {
             return code.execute();
-        } catch (Exception throwable) { // NOSONAR
+        } catch (Exception throwable) {
             throw new EidRuntimeException(checkedEid, throwable);
         }
     }
@@ -335,12 +335,16 @@ public final class EidPreconditions {
          * @return a object of client code
          * @throws Exception this exception sould be set to concrete one
          */
+        @SuppressWarnings({
+            "pmd:SignatureDeclareThrowsException",
+            "squid:S00112"
+        })
         R execute() throws Exception;
     }
 
     private static <T> T checkNotNull(@Nullable T reference) {
         if (reference == null) {
-            throw new NullPointerException("Pass not-null Eid to EidPreconditions first!");
+            throw new IllegalArgumentException(new NullPointerException("Pass not-null Eid to EidPreconditions first!"));
         }
         return reference;
     }

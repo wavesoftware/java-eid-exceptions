@@ -230,7 +230,7 @@ public class EidPreconditionsTest {
         boolean expression = false;
         Eid eidObject = getNullEid();
         // then
-        thrown.expect(NullPointerException.class);
+        thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Pass not-null Eid to EidPreconditions first!");
         // when
         EidPreconditions.checkArgument(expression, eidObject);

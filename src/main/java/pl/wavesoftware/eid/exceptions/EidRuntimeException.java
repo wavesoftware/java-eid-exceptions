@@ -15,8 +15,6 @@
  */
 package pl.wavesoftware.eid.exceptions;
 
-import static pl.wavesoftware.eid.exceptions.Eid.validateFormat;
-
 /**
  * <strong>This class shouldn't be used in any public API or library.</strong> It is designed to be used for in-house development
  * of end user applications which will report Bugs in standarized error pages or post them to issue tracker.
@@ -36,10 +34,6 @@ import static pl.wavesoftware.eid.exceptions.Eid.validateFormat;
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
 public class EidRuntimeException extends RuntimeException implements EidContainer {
-
-    public static final String DEFAULT_MESSAGE_FORMAT = "%s => %s";
-
-    private static String messageFormat = DEFAULT_MESSAGE_FORMAT;
 
     private static final long serialVersionUID = -9876432123423587L;
 
@@ -102,30 +96,13 @@ public class EidRuntimeException extends RuntimeException implements EidContaine
      * permitted, and indicates that the cause is nonexistent or unknown.)
      */
     public EidRuntimeException(Eid id, Throwable cause) {
-        super(String.format(messageFormat, id.toString(), message(cause)), cause);
+        super(String.format(Eid.messageFormat, id.toString(), message(cause)), cause);
         eid = id;
     }
 
     @Override
     public Eid getEid() {
         return eid;
-    }
-
-    /**
-     * Sets a format that will be used for all Eid exceptions when printing a detail message.
-     * <p>
-     * Format must be non-null and contain two format specifiers <tt>"%s"</tt>
-     *
-     * @param format a format that will be used, must be non-null and contain two format specifiers <tt>"%s"</tt>
-     * @return previously used format
-     * @throws NullPointerException if given format was null
-     * @throws IllegalArgumentException if given format hasn't got two format specifiers <tt>"%s"</tt>
-     */
-    public static String setMessageFormat(String format) throws NullPointerException, IllegalArgumentException {
-        validateFormat(format, 2);
-        String oldFormat = EidRuntimeException.messageFormat;
-        EidRuntimeException.messageFormat = format;
-        return oldFormat;
     }
 
     /**

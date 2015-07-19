@@ -16,9 +16,11 @@
 package pl.wavesoftware.eid.exceptions;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.fail;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import pl.wavesoftware.eid.exceptions.Eid.UniqIdGenerator;
 
 /**
  *
@@ -30,12 +32,80 @@ public class EidTest {
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
+    public void testSetMessageFormat_Null() {
+        try {
+            // given
+            String format = null;
+            // then
+            thrown.expect(IllegalArgumentException.class);
+            thrown.expectMessage("Format can't be null, but just recieved one");
+            // when
+            Eid.setMessageFormat(format);
+        } finally {
+            Eid.setMessageFormat(Eid.DEFAULT_MESSAGE_FORMAT);
+        }
+    }
+
+    @Test
+    public void testSetMessageFormat_Invalid() {
+        try {
+            // given
+            String format = "%s -> s";
+            // then
+            thrown.expect(IllegalArgumentException.class);
+            thrown.expectMessage("Given format contains to little format specifiers, expected 2 but given \"%s -> s\"");
+            // when
+            Eid.setMessageFormat(format);
+        } finally {
+            Eid.setMessageFormat(Eid.DEFAULT_MESSAGE_FORMAT);
+        }
+    }
+
+    @Test
+    public void testSetUniqIdGenerator() {
+        try {
+            // given
+            UniqIdGenerator generator = new UniqIdGenerator() {
+
+                @Override
+                public String generateUniqId() {
+                    fail("Generator should not be executed while validating");
+                    return "constant";
+                }
+            };
+            // when
+            UniqIdGenerator prevoius = Eid.setUniqIdGenerator(generator);
+            UniqIdGenerator set = Eid.setUniqIdGenerator(prevoius);
+            // then
+            assertThat(set).isSameAs(generator);
+            assertThat(prevoius).isSameAs(Eid.DEFAULT_UNIQ_ID_GENERATOR);
+        } finally {
+            Eid.setUniqIdGenerator(Eid.DEFAULT_UNIQ_ID_GENERATOR);
+        }
+    }
+
+    @Test
+    public void testSetUniqIdGenerator_Null() {
+        try {
+            // given
+            UniqIdGenerator generator = null;
+            // then
+            thrown.expect(IllegalArgumentException.class);
+            thrown.expectMessage("Unique ID generator can't be null, but given one");
+            // when
+            Eid.setUniqIdGenerator(generator);
+        } finally {
+            Eid.setUniqIdGenerator(Eid.DEFAULT_UNIQ_ID_GENERATOR);
+        }
+    }
+
+    @Test
     public void testSetFormat_Null() {
         try {
             // given
             String format = null;
             // then
-            thrown.expect(NullPointerException.class);
+            thrown.expect(IllegalArgumentException.class);
             thrown.expectMessage("Format can't be null, but just recieved one");
             // when
             Eid.setFormat(format);
@@ -97,7 +167,7 @@ public class EidTest {
             // given
             String refFormat = null;
             // then
-            thrown.expect(NullPointerException.class);
+            thrown.expect(IllegalArgumentException.class);
             thrown.expectMessage("Format can't be null, but just recieved one");
             // when
             Eid.setRefFormat(refFormat);
@@ -130,7 +200,7 @@ public class EidTest {
         String result = instance.toString();
         // then
         assertThat(result).contains(expResult);
-        assertThat(result).matches("^\\[20150718:012917\\]<[a-zA-Z0-9]+>$");
+        assertThat(result).matches("^\\[20150718:012917\\]<[a-zA-Z0-9_-]+>$");
     }
 
     @Test

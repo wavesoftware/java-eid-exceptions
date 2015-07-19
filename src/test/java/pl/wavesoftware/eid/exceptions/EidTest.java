@@ -26,10 +26,11 @@ import pl.wavesoftware.eid.exceptions.Eid.UniqIdGenerator;
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
+@SuppressWarnings({"ConstantConditions", "unused"})
 public class EidTest {
 
     @Rule
-    public ExpectedException thrown = ExpectedException.none();
+    public final ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void testSetMessageFormat_Null() {

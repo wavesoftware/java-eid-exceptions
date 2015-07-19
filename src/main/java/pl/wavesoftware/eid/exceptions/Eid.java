@@ -93,6 +93,7 @@ public class Eid implements Serializable {
      * @throws IllegalArgumentException if given format hasn't got two format specifiers <tt>"%s"</tt>, or if given format was
      * null
      */
+    @SuppressWarnings("UnusedReturnValue")
     public static String setMessageFormat(String format) {
         validateFormat(format, MESSAGE_FORMAT_NUM_SPEC);
         String oldFormat = Eid.messageFormat;
@@ -195,7 +196,7 @@ public class Eid implements Serializable {
         if (format == null) {
             throw new IllegalArgumentException("Format can't be null, but just received one");
         }
-        List<String> specifiers = new ArrayList<>();
+        List<String> specifiers = new ArrayList<String>();
         for (int i = 0; i < numSpecifiers; i++) {
             specifiers.add(i + "-test-id");
         }

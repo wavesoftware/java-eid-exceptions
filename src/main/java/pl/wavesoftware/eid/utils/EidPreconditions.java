@@ -104,6 +104,7 @@ import pl.wavesoftware.eid.exceptions.EidRuntimeException;
  * @since 0.1.0 (idea imported from Guava Library and COI code)
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
+@SuppressWarnings("WeakerAccess")
 public final class EidPreconditions {
 
     protected EidPreconditions() {

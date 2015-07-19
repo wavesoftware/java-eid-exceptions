@@ -23,7 +23,6 @@ import org.hamcrest.CustomMatcher;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import static org.hamcrest.Matchers.*;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import static org.junit.internal.matchers.ThrowableMessageMatcher.hasMessage;
@@ -39,16 +38,13 @@ import pl.wavesoftware.eid.exceptions.EidRuntimeException;
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
+@SuppressWarnings({"ConstantConditions", "unused"})
 public class EidPreconditionsTest {
 
     @Rule
-    public ExpectedException thrown = ExpectedException.none();
+    public final ExpectedException thrown = ExpectedException.none();
 
     private final String eid = "20150718:075046";
-
-    @Before
-    public void setUp() throws Exception {
-    }
 
     @Test
     public void testCheckArgument() {
@@ -227,8 +223,8 @@ public class EidPreconditionsTest {
     public void testCreate() throws NoSuchMethodException {
         // given
         Class<EidPreconditions> cls = EidPreconditions.class;
-        Constructor<?> constr = cls.getDeclaredConstructor();
-        boolean access = constr.isAccessible();
+        Constructor<?> constructor = cls.getDeclaredConstructor();
+        boolean access = constructor.isAccessible();
 
         // then
         assertThat(access).isFalse();
@@ -237,6 +233,7 @@ public class EidPreconditionsTest {
 
             @Override
             public boolean matches(Object item) {
+                @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
                 Eid eidObject = EidRuntimeException.class.cast(item).getEid();
                 return eidObject.getId().equals("20150718:083450")
                     && !eidObject.getRef().isEmpty()
@@ -406,6 +403,7 @@ public class EidPreconditionsTest {
         assertThat(result).isEqualTo(tester);
     }
 
+    @SuppressWarnings("SameReturnValue")
     private Eid getNullEid() {
         return null;
     }

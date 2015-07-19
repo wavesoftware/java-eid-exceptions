@@ -31,6 +31,7 @@ import org.junit.runners.Parameterized.Parameters;
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
+@SuppressWarnings("unused")
 @RunWith(Parameterized.class)
 public class ExceptionsTest {
 

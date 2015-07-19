@@ -93,6 +93,7 @@ public class Eid implements Serializable {
      * @throws IllegalArgumentException if given format hasn't got two format specifiers <tt>"%s"</tt>, or if given format was
      * null
      */
+    @SuppressWarnings("UnusedReturnValue")
     public static String setMessageFormat(String format) {
         validateFormat(format, MESSAGE_FORMAT_NUM_SPEC);
         String oldFormat = Eid.messageFormat;

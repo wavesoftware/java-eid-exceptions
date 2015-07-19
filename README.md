@@ -10,7 +10,7 @@ This classes shouldn't be used in any public API or library. It is designed to b
 
 ## Requirements
 
-* JDK >= 1.7
+* JDK >= 1.6
 
 ## Maven
 

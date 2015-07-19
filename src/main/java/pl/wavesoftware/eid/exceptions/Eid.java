@@ -222,7 +222,7 @@ public class Eid implements Serializable {
         String generateUniqId();
     }
 
-    private final static class StdUniqIdGenerator implements UniqIdGenerator {
+    private static final class StdUniqIdGenerator implements UniqIdGenerator {
 
         private static final int BASE36 = 36;
 

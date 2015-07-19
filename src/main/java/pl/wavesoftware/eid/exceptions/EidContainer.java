@@ -20,6 +20,7 @@ package pl.wavesoftware.eid.exceptions;
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
+@SuppressWarnings("WeakerAccess")
 public interface EidContainer {
 
     /**

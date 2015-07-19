@@ -227,7 +227,7 @@ public class EidPreconditionsTest {
     public void testCreate() throws NoSuchMethodException {
         // given
         Class<EidPreconditions> cls = EidPreconditions.class;
-        Constructor<?> constr = cls.getDeclaredConstructor(new Class<?>[0]);
+        Constructor<?> constr = cls.getDeclaredConstructor();
         boolean access = constr.isAccessible();
 
         // then

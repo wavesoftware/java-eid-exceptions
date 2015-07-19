@@ -17,7 +17,7 @@ package pl.wavesoftware.eid.exceptions;
 
 /**
  * <strong>This class shouldn't be used in any public API or library.</strong> It is designed to be used for in-house development
- * of end user applications which will report Bugs in standarized error pages or post them to issue tracker.
+ * of end user applications which will report Bugs in standardized error pages or post them to issue tracker.
  * <p>
  * This id Eid version of {@link NullPointerException}
  *
@@ -25,6 +25,7 @@ package pl.wavesoftware.eid.exceptions;
  * @see EidRuntimeException
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
+@SuppressWarnings("unused")
 public class EidNullPointerException extends EidRuntimeException {
 
     private static final long serialVersionUID = -9876432123423469L;

@@ -86,7 +86,7 @@ import pl.wavesoftware.eid.exceptions.EidRuntimeException;
  * <p>
  * Using functional blocks to handle operations, that are intended to operate properly, simplify the code and makes it more
  * readable. It's also good way to deal with untested, uncovered {@code catch} blocks. It's easy and gives developers nice way of
- * dealing with countless operations that supose to work as intended.
+ * dealing with countless operations that suppose to work as intended.
  *
  * <p>
  * Example:
@@ -113,14 +113,15 @@ public final class EidPreconditions {
     /**
      * Ensures the truth of an expression involving one or more parameters to the calling method.
      *
-     * @param expression ({@link Nonnull}) a boolean expression
+     * @param expression ({@link Nullable}) a boolean expression
      * @param eid ({@link Nonnull}) the exception ID to use if the check fails; will be converted to
      * {@link pl.wavesoftware.eid.exceptions.Eid}
      * @throws EidIllegalArgumentException if {@code expression} is false
+     * @throws EidNullPointerException if {@code expression} is null
      */
-    public static void checkArgument(@Nonnull boolean expression, @Nonnull String eid) {
+    public static void checkArgument(@Nullable Boolean expression, @Nonnull String eid) {
         String checkedEid = checkNotNull(eid);
-        if (!expression) {
+        if (!checkNotNull(expression, checkedEid)) {
             throw new EidIllegalArgumentException(new Eid(checkedEid));
         }
     }
@@ -128,14 +129,15 @@ public final class EidPreconditions {
     /**
      * Ensures the truth of an expression involving one or more parameters to the calling method.
      *
-     * @param expression ({@link Nonnull}) a boolean expression
+     * @param expression ({@link Nullable}) a boolean expression
      * @param eid ({@link Nonnull}) the exception ID to use if the check fails; will be converted to
      * {@link pl.wavesoftware.eid.exceptions.Eid}
      * @throws EidIllegalArgumentException if {@code expression} is false
+     * @throws EidNullPointerException if {@code expression} is null
      */
-    public static void checkArgument(@Nonnull boolean expression, @Nonnull Eid eid) {
+    public static void checkArgument(@Nullable Boolean expression, @Nonnull Eid eid) {
         Eid checkedEid = checkNotNull(eid);
-        if (!expression) {
+        if (!checkNotNull(expression, checkedEid)) {
             throw new EidIllegalArgumentException(checkedEid);
         }
     }
@@ -144,14 +146,15 @@ public final class EidPreconditions {
      * Ensures the truth of an expression involving the state of the calling instance, but not involving any parameters to the
      * calling method.
      *
-     * @param expression a boolean expression
-     * @param eid the exception message to use if the check fails; will be converted to a string using
+     * @param expression  ({@link Nullable}) a boolean expression
+     * @param eid ({@link Nonnull}) the exception message to use if the check fails; will be converted to a string using
      * {@link String#valueOf(Object)}
      * @throws EidIllegalStateException if {@code expression} is false
+     * @throws EidNullPointerException if {@code expression} is null
      */
-    public static void checkState(@Nonnull boolean expression, @Nonnull String eid) {
+    public static void checkState(@Nullable Boolean expression, @Nonnull String eid) {
         String checkedEid = checkNotNull(eid);
-        if (!expression) {
+        if (!checkNotNull(expression, checkedEid)) {
             throw new EidIllegalStateException(new Eid(checkedEid));
         }
     }
@@ -160,14 +163,14 @@ public final class EidPreconditions {
      * Ensures the truth of an expression involving the state of the calling instance, but not involving any parameters to the
      * calling method.
      *
-     * @param expression a boolean expression
-     * @param eid the exception message to use if the check fails; will be converted to a string using
+     * @param expression ({@link Nullable}) a boolean expression
+     * @param eid ({@link Nonnull}) the exception message to use if the check fails; will be converted to a string using
      * {@link String#valueOf(Object)}
      * @throws EidIllegalStateException if {@code expression} is false
      */
-    public static void checkState(@Nonnull boolean expression, @Nonnull Eid eid) {
+    public static void checkState(@Nullable Boolean expression, @Nonnull Eid eid) {
         Eid checkedEid = checkNotNull(eid);
-        if (!expression) {
+        if (!checkNotNull(expression, checkedEid)) {
             throw new EidIllegalStateException(checkedEid);
         }
     }
@@ -221,7 +224,6 @@ public final class EidPreconditions {
      * @throws EidIndexOutOfBoundsException if {@code index} is negative or is not less than {@code size}
      * @throws EidIllegalArgumentException if {@code size} is negative
      */
-    @Nonnull
     public static int checkElementIndex(int index, int size, @Nonnull String eid) {
         String checkedEid = checkNotNull(eid);
         if (size < 0) {
@@ -245,7 +247,6 @@ public final class EidPreconditions {
      * @throws EidIndexOutOfBoundsException if {@code index} is negative or is not less than {@code size}
      * @throws EidIllegalArgumentException if {@code size} is negative
      */
-    @Nonnull
     public static int checkElementIndex(int index, int size, @Nonnull Eid eid) {
         Eid checkedEid = checkNotNull(eid);
         if (size < 0) {
@@ -350,8 +351,12 @@ public final class EidPreconditions {
         R execute() throws Exception;
     }
 
+    private static boolean isNull(@Nullable Object reference) {
+        return reference == null;
+    }
+
     private static <T> T checkNotNull(@Nullable T reference) {
-        if (reference == null) {
+        if (isNull(reference)) {
             throw new IllegalArgumentException("Pass not-null Eid to EidPreconditions first!");
         }
         return reference;

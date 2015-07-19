@@ -136,9 +136,9 @@ public class Eid implements Serializable {
      */
     public static String setFormat(String format) {
         validateFormat(format, FORMAT_NUM_SPEC);
-        String prevoiusly = Eid.format;
+        String previously = Eid.format;
         Eid.format = format;
-        return prevoiusly;
+        return previously;
     }
 
     /**
@@ -191,7 +191,7 @@ public class Eid implements Serializable {
         return uniq;
     }
 
-    static void validateFormat(String format, int numSpecifiers) {
+    private static void validateFormat(String format, int numSpecifiers) {
         if (format == null) {
             throw new IllegalArgumentException("Format can't be null, but just received one");
         }
@@ -229,7 +229,7 @@ public class Eid implements Serializable {
         private final Random random;
 
         private StdUniqIdGenerator() {
-            this.random = getUnsecureFastRandom();
+            this.random = getUnsecuredFastRandom();
         }
 
         @Override
@@ -241,7 +241,7 @@ public class Eid implements Serializable {
         }
 
         @SuppressWarnings("squid:S2245")
-        private Random getUnsecureFastRandom() {
+        private Random getUnsecuredFastRandom() {
             return new Random(System.currentTimeMillis());
         }
 

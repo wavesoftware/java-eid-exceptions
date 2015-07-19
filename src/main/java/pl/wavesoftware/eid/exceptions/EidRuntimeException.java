@@ -17,7 +17,7 @@ package pl.wavesoftware.eid.exceptions;
 
 /**
  * <strong>This class shouldn't be used in any public API or library.</strong> It is designed to be used for in-house development
- * of end user applications which will report Bugs in standarized error pages or post them to issue tracker.
+ * of end user applications which will report Bugs in standardized error pages or post them to issue tracker.
  * <p>
  * This exception class is baseline of all Eid runtime exception classes. It is designed to ease of use and provide strict ID for
  * given Exception usage. This approach speed up development of large application and helps support teams to by giving the both
@@ -54,12 +54,13 @@ public class EidRuntimeException extends RuntimeException implements EidContaine
      * Constructs a new runtime exception with the specified cause, a exception Id and detail message of <tt>eid.toString() + " =>
      * " + (cause==null ? null : cause.toString())</tt>
      * (which typically contains the class and detail message of
-     * <tt>cause</tt>). This constructor is useful for runtime exceptions that are little more than wrappers for other throwables.
+     * <tt>cause</tt>). This constructor is useful for runtime exceptions that are little more than wrappers for other throwable.
      *
      * @param eid exception ID
      * @param cause the cause (which is saved for later retrieval by the {@link #getCause()} method). (A <tt>null</tt>
      * value is permitted, and indicates that the cause is nonexistent or unknown.)
      */
+    @SuppressWarnings("WeakerAccess")
     public EidRuntimeException(String eid, Throwable cause) {
         this(new Eid(eid), cause);
     }
@@ -72,6 +73,7 @@ public class EidRuntimeException extends RuntimeException implements EidContaine
      * @param cause the cause (which is saved for later retrieval by the {@link #getCause()} method). (A <tt>null</tt> value is
      * permitted, and indicates that the cause is nonexistent or unknown.)
      */
+    @SuppressWarnings("WeakerAccess")
     public EidRuntimeException(String eid, String ref, Throwable cause) {
         this(new Eid(eid, ref), cause);
     }
@@ -81,6 +83,7 @@ public class EidRuntimeException extends RuntimeException implements EidContaine
      *
      * @param id exception ID
      */
+    @SuppressWarnings("WeakerAccess")
     public EidRuntimeException(Eid id) {
         super(id.toString());
         eid = id;

@@ -4,13 +4,18 @@
 
 This small library holds a set of Exceptions that implements idea of fast, reusable, error codes that can be simple thrown fast in case of unpredictable and unrecoverable application failure.
 
+## Idea
+
+The idea is to have a set of simple runtime exceptions. They should always take the field Exception ID (Eid) in the making. This field will then be reported when displaying or logging that exception. It can also be viewed on the professional fatal error window of the application as a bug reference. This approach simplifies the management of exceptions in the application and allows developers to focus on functionalities rather than coming up with the correct statement for the exception.
+
+This approach is best to use with tools and plugins like:
+
+ * [EidGenerator for Netbeans IDE](http://plugins.netbeans.org/plugin/53137/exception-id-eid-generator)
+ * [Generating Exception Id number in Intellij IDEA with Live Templates](https://github.com/wavesoftware/java-eid-exceptions/wiki/Generating%20Exception%20Id%20number%20in%20Intellij%20IDEA%20with%20Live%20Templates)
+
 ## Caution
 
-This classes shouldn't be used in any public API or library. It is designed to be used for in-house development of end user applications which will report Bugs in standardized error pages or post them to issue tracker.
-
-## Requirements
-
-* JDK >= 1.6
+This classes shouldn't be used in any public API or library. It is designed to be used for in-house development of end user applications which will report bugs in standardized error pages or post them to issue tracker.
 
 ## Maven
 
@@ -29,8 +34,6 @@ This classes shouldn't be used in any public API or library. It is designed to b
 Static convenience methods that help a method or constructor check whether it was invoked correctly (whether its preconditions have been met). These methods generally accept a `boolean` expression which is expected to be `true` (or in the case of `checkNotNull`, an object reference which is expected to be non-null). When `false` (or `null`) is passed instead, the `EidPreconditions` method throws an unchecked exception, which helps the calling method communicate to its caller that that caller has made a mistake.
 
 Each method accepts a EID string or Eid object, which is designed to ease of use and provide strict ID for given exception usage. This approach speed up development of large application and helps support teams by giving both static and random ID for each possible unpredicted bug.
-
-This approach is best to use with tools and plugins like [EidGenerator for Netbeans IDE](http://plugins.netbeans.org/plugin/53137/exception-id-eid-generator)
 
 Example:
 
@@ -96,6 +99,10 @@ To contribute, follow the standard [git flow](http://danielkummer.github.io/git-
 1. Create new Pull Request
 
 Even if you can't contribute code, if you have an idea for an improvement please open an [issue](https://github.com/wavesoftware/java-eid-exceptions/issues).
+
+## Requirements
+
+* JDK >= 1.6
 
 ### Releases
 

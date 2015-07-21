@@ -6,12 +6,32 @@ This small library holds a set of Exceptions that implements idea of fast, reusa
 
 ## Idea
 
-The idea is to have a set of simple runtime exceptions. They should always take the field Exception ID (Eid) in the making. This field will then be reported when displaying or logging that exception. It can also be viewed on the professional fatal error window of the application as a bug reference. This approach simplifies the management of exceptions in the application and allows developers to focus on functionalities rather than coming up with the correct statement for the exception.
+The idea is to use a set of simple runtime exceptions. They should always take the field Exception ID (Eid) in the making. This field will then be reported when displaying or logging that exception. It can also be viewed on the professional fatal error window of the application as a bug reference. EidRuntimeExceptions contains also additional unique ID to identify each single exception. This approach simplifies the management of exceptions in the application and allows developers to focus on functionalities rather than coming up with the correct statement for the exception.
 
 This approach is best to use with tools and plugins like:
 
  * [EidGenerator for Netbeans IDE](http://plugins.netbeans.org/plugin/53137/exception-id-eid-generator)
  * [Generating Exception Id number in Intellij IDEA with Live Templates](https://github.com/wavesoftware/java-eid-exceptions/wiki/Generating%20Exception%20Id%20number%20in%20Intellij%20IDEA%20with%20Live%20Templates)
+
+Example:
+
+```java
+throw new EidIllegalStateException("20150721:100554", cause);
+```
+
+Example log:
+
+```
+pl.wavesoftware.eid.exceptions.EidIllegalStateException: [20150721:100554]<g0qrwx> => Zipfile in invalid format
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:57)
+	
+Caused by: java.util.zip.DataFormatException: Zipfile in invalid format
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:57)
+	... 62 more
+```
+
 
 ## Caution
 
@@ -35,39 +55,54 @@ Static convenience methods that help a method or constructor check whether it wa
 
 Each method accepts a EID string or Eid object, which is designed to ease of use and provide strict ID for given exception usage. This approach speed up development of large application and helps support teams by giving both static and random ID for each possible unpredicted bug.
 
+Each example uses static import:
+
+```java
+import static pl.wavesoftware.eid.utils.EidPreconditions.*;
+```
+
+#### `checkArgument` method
+
+`checkArgument` method should be used to check argument of the method, and validate it in technical terms (not business terms).
+
 Example:
 
 ```java
-/**
- * Returns the positive square root of the given value.
- * 
- * @param value value to be square rooted
- * @return the square root of input value
- * @throws EidIllegalArgumentException if the value is negative
- */
-public static double sqrt(double value) {
-  EidPreconditions.checkArgument(value >= 0.0, "20150718:012333");
-  // calculate the square root
-}
-
-void exampleBadCaller() {
-  // will throw EidIllegalArgumentException with "20150718:012333" as ID
-  double d = sqrt(-1.0);
+// [..]
+public static double sqrt(double value);
+  checkArgument(value >= 0.0, "20150718:012333");
+  // if ok, calculate the square root
 }
 ```
  
-In this example, `checkArgument` throws an `EidIllegalArgumentException` to indicate that `exampleBadCaller` made an error in its call to sqrt. Exception, when it will be printed will contain user given EID and also randomly generated ID. Those fields can be displayed to end user on error page on posted directly to issue tracker.
+In this example, `checkArgument` throws an `EidIllegalArgumentException` to indicate that developer made an error in its call to `sqrt`. 
+
+#### `checkState` method
+
+`checkState` method should be used to check state of the class in given moment, and validate it in technical terms (not business terms).
 
 Example:
 
 ```java
-// Main application class for ex.: http servlet
-try {
-    performRequest(request, response);
-} catch (EidRuntimeException ex) {
-    issuesTracker.putIssue(ex);
-    throw ex;
-}
+checkState(a >= 3.14 && b < 0., "20150721:115016");
+```
+
+#### `checkNotNull` method
+
+`checkNotNull` method should be used to check if given non null argument is actually `null`
+
+Example:
+
+```java
+String nonNullUserName = checkNotNull(userName, "20150721:115515");
+```
+
+#### `checkElementIndex` method
+
+`checkElementIndex` method can be used to test parameters of an array, before being used
+
+```java
+checkElementIndex(index, list.size(), "20150721:115749");
 ```
  
 #### Functional try to execute blocks

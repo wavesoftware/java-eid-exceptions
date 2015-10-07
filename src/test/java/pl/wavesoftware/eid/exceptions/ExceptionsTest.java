@@ -15,17 +15,19 @@
  */
 package pl.wavesoftware.eid.exceptions;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
-import java.util.Map;
-import static org.assertj.core.api.Assertions.assertThat;
 import org.assertj.core.util.Lists;
 import org.assertj.core.util.Maps;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
+import java.util.Map;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  *
@@ -47,7 +49,7 @@ public class ExceptionsTest {
     }
 
     private static List<Object[]> getArguments() {
-        Throwable cause = new InterruptedException();
+        Throwable cause = new InterruptedException("A testing message");
         String eid = "20150718:112954";
         String ref = "PL-981";
         Eid id = new Eid(eid);
@@ -149,9 +151,23 @@ public class ExceptionsTest {
     }
 
     @Test
+    public void testMessage() {
+        // given
+        EidRuntimeException exception = construct();
+        boolean hasCause = exception.getCause() != null;
+
+        // then
+        assertThat(exception).hasMessageContaining("20150718:112954");
+        if (hasCause) {
+            assertThat(exception).hasMessageContaining("A testing message");
+        }
+    }
+
+    @Test
     public void testConstruction() {
         // given
         EidRuntimeException exception = construct();
+
         // then
         assertThat(exception).isNotNull();
         assertThat(exception).isExactlyInstanceOf(eidClass);

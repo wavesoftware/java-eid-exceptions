@@ -15,6 +15,8 @@
  */
 package pl.wavesoftware.eid.exceptions;
 
+import javax.annotation.Nullable;
+
 /**
  * <strong>This class shouldn't be used in any public API or library.</strong> It is designed to be used for in-house development
  * of end user applications which will report Bugs in standardized error pages or post them to issue tracker.
@@ -118,7 +120,17 @@ public class EidRuntimeException extends RuntimeException implements EidContaine
     }
 
     private static String message(Throwable cause) {
-        return cause.getLocalizedMessage();
+        String msg = coalesce(cause.getLocalizedMessage(), cause.getMessage());
+        return coalesce(msg, cause.toString());
+    }
+
+    @Nullable
+    private static <T> T coalesce(@Nullable T first, @Nullable T second) {
+        if (first == null) {
+            return second;
+        } else {
+            return first;
+        }
     }
 
 }

@@ -76,6 +76,16 @@ public class EidIndexOutOfBoundsException extends EidRuntimeException {
     }
 
     /**
+     * @see EidRuntimeException#EidRuntimeException(Eid, String, Object...)
+     * @param id see description on {@link EidRuntimeException#EidRuntimeException(Eid, String, Object...)}
+     * @param messageFormat see description on {@link EidRuntimeException#EidRuntimeException(Eid, String, Object...)}
+     * @param parameters see description on {@link EidRuntimeException#EidRuntimeException(Eid, String, Object...)}
+     */
+    public EidIndexOutOfBoundsException(Eid id, String messageFormat, Object... parameters) {
+        super(id, messageFormat, parameters);
+    }
+
+    /**
      * @inheritdoc
      * @return {@link IndexOutOfBoundsException} class
      */

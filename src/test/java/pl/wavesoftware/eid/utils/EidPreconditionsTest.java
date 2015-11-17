@@ -15,17 +15,11 @@
  */
 package pl.wavesoftware.eid.utils;
 
-import java.io.InterruptedIOException;
-import java.lang.reflect.Constructor;
-import javax.annotation.Nonnull;
-import static org.assertj.core.api.Assertions.assertThat;
 import org.hamcrest.CustomMatcher;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
-import static org.hamcrest.Matchers.*;
 import org.junit.Rule;
 import org.junit.Test;
-import static org.junit.internal.matchers.ThrowableMessageMatcher.hasMessage;
 import org.junit.rules.ExpectedException;
 import pl.wavesoftware.eid.exceptions.Eid;
 import pl.wavesoftware.eid.exceptions.EidIllegalArgumentException;
@@ -34,11 +28,21 @@ import pl.wavesoftware.eid.exceptions.EidIndexOutOfBoundsException;
 import pl.wavesoftware.eid.exceptions.EidNullPointerException;
 import pl.wavesoftware.eid.exceptions.EidRuntimeException;
 
+import javax.annotation.Nonnull;
+import java.io.InterruptedIOException;
+import java.lang.reflect.Constructor;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.isA;
+import static org.junit.internal.matchers.ThrowableMessageMatcher.hasMessage;
+
 /**
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
-@SuppressWarnings({"ConstantConditions", "unused"})
+@SuppressWarnings({"ConstantConditions"})
 public class EidPreconditionsTest {
 
     @Rule
@@ -55,6 +59,18 @@ public class EidPreconditionsTest {
         thrown.expectMessage(containsString(eid));
         // when
         EidPreconditions.checkArgument(expression, eid);
+    }
+
+    @Test
+    public void testCheckArgument_WithMessage() {
+        // given
+        boolean expression = false;
+        // then
+        thrown.expect(EidIllegalArgumentException.class);
+        thrown.expectMessage(containsString(eid));
+        thrown.expectMessage(containsString("PI value is 3.14"));
+        // when
+        EidPreconditions.checkArgument(expression, eid, "PI value is %.2f", Math.PI);
     }
 
     @Test
@@ -76,6 +92,18 @@ public class EidPreconditionsTest {
         thrown.expectMessage(containsString(eid));
         // when
         EidPreconditions.checkState(expression, eid);
+    }
+
+    @Test
+    public void testCheckState_WithMessage() {
+        // given
+        boolean expression = false;
+        // then
+        thrown.expect(EidIllegalStateException.class);
+        thrown.expectMessage(containsString(eid));
+        thrown.expectMessage(containsString("PI is 3.1416"));
+        // when
+        EidPreconditions.checkState(expression, eid, "PI is %.4f", Math.PI);
     }
 
     @Test
@@ -108,6 +136,18 @@ public class EidPreconditionsTest {
         thrown.expectMessage(containsString(eid));
         // when
         EidPreconditions.checkNotNull(reference, eid);
+    }
+
+    @Test
+    public void testCheckNotNull_WithMessage() {
+        // given
+        Object reference = null;
+        // then
+        thrown.expect(EidNullPointerException.class);
+        thrown.expectMessage(containsString(eid));
+        thrown.expectMessage(containsString("π <=> 3.142"));
+        // when
+        EidPreconditions.checkNotNull(reference, eid, "π <=> %.3f", Math.PI);
     }
 
     @Test
@@ -145,6 +185,19 @@ public class EidPreconditionsTest {
         thrown.expectMessage(containsString(eid));
         // when
         EidPreconditions.checkElementIndex(index, size, eid);
+    }
+
+    @Test
+    public void testCheckElementIndex_WithMessage() {
+        // given
+        int index = -1;
+        int size = 0;
+        // then
+        thrown.expect(EidIndexOutOfBoundsException.class);
+        thrown.expectMessage(containsString(eid));
+        thrown.expectMessage(containsString("Pi (π): 3.14"));
+        // when
+        EidPreconditions.checkElementIndex(index, size, eid, "Pi (π): %.2f", Math.PI);
     }
 
     @Test

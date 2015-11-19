@@ -25,7 +25,8 @@
         <sonar.working.directory>${project.build.directory}/sonar</sonar.working.directory>
         <sonar.host.url>https://sonar.wavesoftware.pl</sonar.host.url>
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
-        <java.source.version>6</java.source.version>
+	<sonar.java.source>6</sonar.java.source>
+	<java.source.version>${sonar.java.source}</java.source.version>
         <maven.compiler.source>1.${java.source.version}</maven.compiler.source>
         <maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
         <coveralls.skip>${skipTests}</coveralls.skip>

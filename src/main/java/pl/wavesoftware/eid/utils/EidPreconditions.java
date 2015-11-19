@@ -121,7 +121,7 @@ public final class EidPreconditions {
      * @throws EidIllegalArgumentException if {@code expression} is false
      * @throws EidNullPointerException     if {@code expression} is null
      */
-    public static void checkArgument(final @Nullable Boolean expression, final @Nonnull String eid) {
+    public static void checkArgument(@Nullable final Boolean expression, @Nonnull final String eid) {
         String checkedEid = checkNotNull(eid);
         checkArgument(expression, new Eid(checkedEid));
     }
@@ -137,8 +137,8 @@ public final class EidPreconditions {
      * @throws EidIllegalArgumentException if {@code expression} is false
      * @throws EidNullPointerException     if {@code expression} or {@code eid} are null
      */
-    public static void checkArgument(final @Nullable Boolean expression, final @Nonnull String eid,
-                                     final @Nonnull String messageFormat, final Object... parameters) {
+    public static void checkArgument(@Nullable final Boolean expression, @Nonnull final String eid,
+                                     @Nonnull final String messageFormat, final Object... parameters) {
         String checkedEid = checkNotNull(eid);
         checkArgument(expression, new Eid(checkedEid), messageFormat, parameters);
     }
@@ -152,7 +152,7 @@ public final class EidPreconditions {
      * @throws EidIllegalArgumentException if {@code expression} is false
      * @throws EidNullPointerException     if {@code expression} is null
      */
-    public static void checkArgument(final @Nullable Boolean expression, final @Nonnull Eid eid) {
+    public static void checkArgument(@Nullable final Boolean expression, @Nonnull final Eid eid) {
         Eid checkedEid = checkNotNull(eid);
         if (!checkNotNull(expression, checkedEid)) {
             throw new EidIllegalArgumentException(checkedEid);
@@ -170,8 +170,8 @@ public final class EidPreconditions {
      * @throws EidIllegalArgumentException if {@code expression} is false
      * @throws EidNullPointerException     if {@code expression} is null
      */
-    public static void checkArgument(final @Nullable Boolean expression, final @Nonnull Eid eid,
-                                     final @Nonnull String messageFormat, final Object... parameters) {
+    public static void checkArgument(@Nullable final Boolean expression, @Nonnull final Eid eid,
+                                     @Nonnull final String messageFormat, final Object... parameters) {
         Eid checkedEid = checkNotNull(eid);
         if (!checkNotNull(expression, checkedEid)) {
             throw new EidIllegalArgumentException(checkedEid, messageFormat, parameters);
@@ -188,7 +188,7 @@ public final class EidPreconditions {
      * @throws EidIllegalStateException if {@code expression} is false
      * @throws EidNullPointerException  if {@code expression} is null
      */
-    public static void checkState(final @Nullable Boolean expression, final @Nonnull String eid) {
+    public static void checkState(@Nullable final Boolean expression, @Nonnull final String eid) {
         String checkedEid = checkNotNull(eid);
         checkState(expression, new Eid(checkedEid));
     }
@@ -205,8 +205,8 @@ public final class EidPreconditions {
      * @throws EidIllegalStateException if {@code expression} is false
      * @throws EidNullPointerException  if {@code expression} is null
      */
-    public static void checkState(final @Nullable Boolean expression, final @Nonnull String eid,
-                                  final @Nonnull String messageFormat, final Object... parameters) {
+    public static void checkState(@Nullable final Boolean expression, @Nonnull final String eid,
+                                  @Nonnull final String messageFormat, final Object... parameters) {
         String checkedEid = checkNotNull(eid);
         checkState(expression, new Eid(checkedEid), messageFormat, parameters);
     }
@@ -220,7 +220,7 @@ public final class EidPreconditions {
      *                   {@link String#valueOf(Object)}
      * @throws EidIllegalStateException if {@code expression} is false
      */
-    public static void checkState(final @Nullable Boolean expression, final @Nonnull Eid eid) {
+    public static void checkState(@Nullable final Boolean expression, @Nonnull final Eid eid) {
         Eid checkedEid = checkNotNull(eid);
         if (!checkNotNull(expression, checkedEid)) {
             throw new EidIllegalStateException(checkedEid);
@@ -238,8 +238,8 @@ public final class EidPreconditions {
      * @param parameters    parameters fo message format in for of {@link String#format(String, Object...)}
      * @throws EidIllegalStateException if {@code expression} is false
      */
-    public static void checkState(final @Nullable Boolean expression, final @Nonnull Eid eid,
-                                  final @Nonnull String messageFormat, final Object... parameters) {
+    public static void checkState(@Nullable final Boolean expression, @Nonnull final Eid eid,
+                                  @Nonnull final String messageFormat, final Object... parameters) {
         Eid checkedEid = checkNotNull(eid);
         if (!checkNotNull(expression, checkedEid)) {
             throw new EidIllegalStateException(checkedEid, messageFormat, parameters);
@@ -257,7 +257,7 @@ public final class EidPreconditions {
      * @throws EidNullPointerException if {@code reference} is null
      */
     @Nonnull
-    public static <T> T checkNotNull(final @Nullable T reference, final @Nonnull String eid) {
+    public static <T> T checkNotNull(@Nullable final T reference, @Nonnull final String eid) {
         String checkedEid = checkNotNull(eid);
         return checkNotNull(reference, new Eid(checkedEid));
     }
@@ -275,8 +275,8 @@ public final class EidPreconditions {
      * @throws EidNullPointerException if {@code reference} is null
      */
     @Nonnull
-    public static <T> T checkNotNull(final @Nullable T reference, final @Nonnull String eid,
-                                     final @Nonnull String messageFormat, final Object... parameters) {
+    public static <T> T checkNotNull(@Nullable final T reference, @Nonnull final String eid,
+                                     @Nonnull final String messageFormat, final Object... parameters) {
         String checkedEid = checkNotNull(eid);
         return checkNotNull(reference, new Eid(checkedEid), messageFormat, parameters);
     }
@@ -292,7 +292,7 @@ public final class EidPreconditions {
      * @throws EidNullPointerException if {@code reference} is null
      */
     @Nonnull
-    public static <T> T checkNotNull(final @Nullable T reference, final @Nonnull Eid eid) {
+    public static <T> T checkNotNull(@Nullable final T reference, @Nonnull final Eid eid) {
         Eid checkedEid = checkNotNull(eid);
         if (reference == null) {
             throw new EidNullPointerException(checkedEid);
@@ -313,8 +313,8 @@ public final class EidPreconditions {
      * @throws EidNullPointerException if {@code reference} is null
      */
     @Nonnull
-    public static <T> T checkNotNull(final @Nullable T reference, final @Nonnull Eid eid,
-                                     final @Nonnull String messageFormat, final Object... parameters) {
+    public static <T> T checkNotNull(@Nullable final T reference, @Nonnull final Eid eid,
+                                     @Nonnull final String messageFormat, final Object... parameters) {
         Eid checkedEid = checkNotNull(eid);
         if (reference == null) {
             throw new EidNullPointerException(checkedEid, messageFormat, parameters);
@@ -333,7 +333,7 @@ public final class EidPreconditions {
      * @throws EidIndexOutOfBoundsException if {@code index} is negative or is not less than {@code size}
      * @throws EidIllegalArgumentException  if {@code size} is negative
      */
-    public static int checkElementIndex(int index, int size, final @Nonnull String eid) {
+    public static int checkElementIndex(int index, int size, @Nonnull final String eid) {
         String checkedEid = checkNotNull(eid);
         return checkElementIndex(index, size, new Eid(checkedEid));
     }
@@ -351,8 +351,8 @@ public final class EidPreconditions {
      * @throws EidIndexOutOfBoundsException if {@code index} is negative or is not less than {@code size}
      * @throws EidIllegalArgumentException  if {@code size} is negative
      */
-    public static int checkElementIndex(int index, int size, final @Nonnull String eid,
-                                        final @Nonnull String messageFormat, final Object... parameters) {
+    public static int checkElementIndex(int index, int size, @Nonnull final String eid,
+                                        @Nonnull final String messageFormat, final Object... parameters) {
         String checkedEid = checkNotNull(eid);
         return checkElementIndex(index, size, new Eid(checkedEid), messageFormat, parameters);
     }
@@ -368,7 +368,7 @@ public final class EidPreconditions {
      * @throws EidIndexOutOfBoundsException if {@code index} is negative or is not less than {@code size}
      * @throws EidIllegalArgumentException  if {@code size} is negative
      */
-    public static int checkElementIndex(int index, int size, final @Nonnull Eid eid) {
+    public static int checkElementIndex(int index, int size, @Nonnull final Eid eid) {
         Eid checkedEid = checkNotNull(eid);
         if (isSizeIllegal(size)) {
             throw new EidIllegalArgumentException(checkedEid);
@@ -392,7 +392,7 @@ public final class EidPreconditions {
      * @throws EidIndexOutOfBoundsException if {@code index} is negative or is not less than {@code size}
      * @throws EidIllegalArgumentException  if {@code size} is negative
      */
-    public static int checkElementIndex(int index, int size, final @Nonnull Eid eid, final @Nonnull String messageFormat,
+    public static int checkElementIndex(int index, int size, @Nonnull final Eid eid, @Nonnull final String messageFormat,
                                         final Object... parameters) {
         Eid checkedEid = checkNotNull(eid);
         if (isSizeIllegal(size)) {
@@ -417,7 +417,7 @@ public final class EidPreconditions {
      */
     @Nullable
     @Deprecated
-    public static <R> R tryToExecute(final @Nonnull RiskyCode<R> code, final @Nonnull String eid) {
+    public static <R> R tryToExecute(@Nonnull final RiskyCode<R> code, @Nonnull final String eid) {
         return tryToExecute(new UnsafeSupplier<R>() {
             @Override
             public R get() throws Exception {
@@ -431,7 +431,7 @@ public final class EidPreconditions {
      */
     @Deprecated
     @Nullable
-    public static <R> R tryToExecute(final @Nonnull RiskyCode<R> code, final @Nonnull Eid eid) {
+    public static <R> R tryToExecute(@Nonnull final RiskyCode<R> code, @Nonnull final Eid eid) {
         return tryToExecute(new UnsafeSupplier<R>() {
             @Override
             public R get() throws Exception {
@@ -451,7 +451,7 @@ public final class EidPreconditions {
      * @see EidPreconditions#tryToExecute(UnsafeSupplier, Eid)
      */
     @Nullable
-    public static <R> R tryToExecute(final @Nonnull UnsafeSupplier<R> supplier, final @Nonnull String eid) {
+    public static <R> R tryToExecute(@Nonnull final UnsafeSupplier<R> supplier, @Nonnull final String eid) {
         String checkedEid = checkNotNull(eid);
         return tryToExecute(supplier, new Eid(checkedEid));
     }
@@ -464,7 +464,7 @@ public final class EidPreconditions {
      * @throws EidRuntimeException if code block thrown any exception, which in that case is wrapped in EidRuntimeException
      * @see EidPreconditions#tryToExecute(UnsafeProcedure, Eid)
      */
-    public static void tryToExecute(final @Nonnull UnsafeProcedure procedure, final @Nonnull String eid) {
+    public static void tryToExecute(@Nonnull final UnsafeProcedure procedure, @Nonnull final String eid) {
         String checkedEid = checkNotNull(eid);
         tryToExecute(procedure, new Eid(checkedEid));
     }
@@ -492,7 +492,7 @@ public final class EidPreconditions {
      * @throws EidRuntimeException if code block thrown any exception, which in that case is wrapped in EidRuntimeException
      */
     @Nullable
-    public static <R> R tryToExecute(final @Nonnull UnsafeSupplier<R> supplier, final @Nonnull Eid eid) {
+    public static <R> R tryToExecute(@Nonnull final UnsafeSupplier<R> supplier, @Nonnull final Eid eid) {
         Eid checkedEid = checkNotNull(eid);
         try {
             return supplier.get();
@@ -520,7 +520,7 @@ public final class EidPreconditions {
      * @param eid       unique developer identifier from date for ex.: "20150716:123200"
      * @throws EidRuntimeException if code block thrown any exception, which in that case is wrapped in EidRuntimeException
      */
-    public static void tryToExecute(final @Nonnull UnsafeProcedure procedure, final @Nonnull Eid eid) {
+    public static void tryToExecute(@Nonnull final UnsafeProcedure procedure, @Nonnull final Eid eid) {
         Eid checkedEid = checkNotNull(eid);
         try {
             procedure.execute();

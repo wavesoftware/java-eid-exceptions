@@ -259,7 +259,7 @@ public class Eid implements Serializable {
             return Integer.toString(abs(calc), BASE36);
         }
 
-        private Random getUnsecuredFastRandom() {
+        private static Random getUnsecuredFastRandom() {
             return new Random(System.currentTimeMillis());
         }
 

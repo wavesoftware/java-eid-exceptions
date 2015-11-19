@@ -23,8 +23,9 @@
         <netbeans.hint.license>apache20</netbeans.hint.license>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
-        <maven.compiler.source>1.6</maven.compiler.source>
-        <maven.compiler.target>1.6</maven.compiler.target>
+        <java.source.version>6</java.source.version>
+        <maven.compiler.source>1.${java.source.version}</maven.compiler.source>
+        <maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
         <coveralls.skip>${skipTests}</coveralls.skip>
     </properties>
     
@@ -41,6 +42,7 @@
         <developerConnection>scm:git:git@github.com:wavesoftware/java-eid-exceptions.git</developerConnection>
         <url>https://github.com/wavesoftware/java-eid-exceptions</url>
     </scm>
+
     <ciManagement>
         <system>travis-ci</system>
         <url>https://travis-ci.org/wavesoftware/java-eid-exceptions</url>
@@ -87,8 +89,7 @@
                     <plugin>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
-                        <!-- Version pin because 0.7.5 fails on SONAR -->
-                        <version>0.7.4.201502262128</version>
+                        <version>0.7.5.201505241946</version>
                         <executions>
                             <execution>
                                 <id>jacoco-initialize</id>

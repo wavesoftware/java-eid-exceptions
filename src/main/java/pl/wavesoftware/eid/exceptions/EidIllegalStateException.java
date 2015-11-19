@@ -25,7 +25,6 @@ package pl.wavesoftware.eid.exceptions;
  * @see EidRuntimeException
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
-@SuppressWarnings("unused")
 public class EidIllegalStateException extends EidRuntimeException {
 
     private static final long serialVersionUID = -9876432123423443L;

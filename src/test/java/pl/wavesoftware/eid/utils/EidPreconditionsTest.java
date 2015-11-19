@@ -42,7 +42,7 @@ import static org.junit.internal.matchers.ThrowableMessageMatcher.hasMessage;
  *
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
-@SuppressWarnings({"ConstantConditions"})
+@SuppressWarnings("ConstantConditions")
 public class EidPreconditionsTest {
 
     @Rule

@@ -24,10 +24,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <sonar.working.directory>${project.build.directory}/sonar</sonar.working.directory>
         <sonar.host.url>https://sonar.wavesoftware.pl</sonar.host.url>
-        <sonar.analysis.mode>preview</sonar.analysis.mode>
-        <sonar.issuesReport.console.enable>true</sonar.issuesReport.console.enable>
-        <sonar.issuesReport.html.enable>true</sonar.issuesReport.html.enable>
-        <sonar.report.export.path>issues.json</sonar.report.export.path>
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
         <java.source.version>6</java.source.version>
         <maven.compiler.source>1.${java.source.version}</maven.compiler.source>
@@ -131,6 +127,12 @@
                     <name>env.GDMSESSION</name>
                 </property>
             </activation>
+            <properties>
+                <sonar.analysis.mode>preview</sonar.analysis.mode>
+                <sonar.issuesReport.console.enable>true</sonar.issuesReport.console.enable>
+                <sonar.issuesReport.html.enable>true</sonar.issuesReport.html.enable>
+                <sonar.report.export.path>issues.json</sonar.report.export.path>
+            </properties>
             <build>
                 <plugins>
                     <plugin>

@@ -16,6 +16,7 @@
 package pl.wavesoftware.eid.exceptions;
 
 import javax.annotation.Nullable;
+import java.util.Locale;
 
 /**
  * <strong>This class shouldn't be used in any public API or library.</strong> It is designed to be used for in-house development
@@ -62,7 +63,6 @@ public class EidRuntimeException extends RuntimeException implements EidContaine
      * @param cause the cause (which is saved for later retrieval by the {@link #getCause()} method). (A <tt>null</tt>
      * value is permitted, and indicates that the cause is nonexistent or unknown.)
      */
-    @SuppressWarnings("WeakerAccess")
     public EidRuntimeException(String eid, Throwable cause) {
         this(new Eid(eid), cause);
     }
@@ -75,7 +75,6 @@ public class EidRuntimeException extends RuntimeException implements EidContaine
      * @param cause the cause (which is saved for later retrieval by the {@link #getCause()} method). (A <tt>null</tt> value is
      * permitted, and indicates that the cause is nonexistent or unknown.)
      */
-    @SuppressWarnings("WeakerAccess")
     public EidRuntimeException(String eid, String ref, Throwable cause) {
         this(new Eid(eid, ref), cause);
     }
@@ -85,7 +84,6 @@ public class EidRuntimeException extends RuntimeException implements EidContaine
      *
      * @param id exception ID
      */
-    @SuppressWarnings("WeakerAccess")
     public EidRuntimeException(Eid id) {
         super(id.toString());
         eid = id;
@@ -94,14 +92,33 @@ public class EidRuntimeException extends RuntimeException implements EidContaine
     /**
      * Constructs a new runtime exception with the specified Eid object and cause
      * <p>
-     * The detail message is computed as <tt>String.format(messageFormat, id.toString(), message(cause)</tt>
+     * The detail message is computed as <tt>String.format(Eid.getMessageFormat(), id.toString(), message(cause))</tt>
      *
      * @param id exception ID
      * @param cause the cause (which is saved for later retrieval by the {@link #getCause()} method). (A <tt>null</tt> value is
      * permitted, and indicates that the cause is nonexistent or unknown.)
      */
     public EidRuntimeException(Eid id, Throwable cause) {
-        super(String.format(Eid.getMessageFormat(), id.toString(), message(cause)), cause);
+        super(String.format(
+                Locale.ENGLISH, Eid.getMessageFormat(), id.toString(), message(cause)
+        ), cause);
+        eid = id;
+    }
+
+    /**
+     * Constructs a new runtime exception with specified Eid object and custom message
+     * <p>
+     * The detail message is computed as:
+     * <pre>String.format(Eid.getMessageFormat(), id.toString(), String.format(messageFormat, parameters))</pre>
+     * @param id exception ID
+     * @param messageFormat message format in form of {@link String#format(String, Object...)}
+     * @param parameters parameters in form of {@link String#format(String, Object...)}
+     */
+    public EidRuntimeException(Eid id, String messageFormat, Object... parameters) {
+        super(String.format(
+                Locale.ENGLISH, Eid.getMessageFormat(), id.toString(),
+                String.format(Locale.ENGLISH, messageFormat, parameters)
+        ));
         eid = id;
     }
 

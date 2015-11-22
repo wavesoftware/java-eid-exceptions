@@ -15,12 +15,13 @@
  */
 package pl.wavesoftware.eid.exceptions;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import pl.wavesoftware.eid.exceptions.Eid.UniqIdGenerator;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.fail;
 
 /**
  *
@@ -257,6 +258,20 @@ public class EidTest {
         String result2 = instance2.getUniq();
         assertThat(result).isNotEmpty();
         assertThat(result).isNotEqualTo(result2);
+    }
+
+    @Test
+    public void testMakeLogMessage() {
+        // given
+        String code = "20151117:192211";
+        Eid eid = new Eid(code);
+        int filesNumber = 18;
+
+        // when
+        String message = eid.makeLogMessage("Files: %d", filesNumber);
+
+        // then
+        assertThat(message).contains("[20151117:192211]<", "> => Files: 18");
     }
 
 }

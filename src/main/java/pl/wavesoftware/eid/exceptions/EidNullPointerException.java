@@ -25,7 +25,6 @@ package pl.wavesoftware.eid.exceptions;
  * @see EidRuntimeException
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  */
-@SuppressWarnings("unused")
 public class EidNullPointerException extends EidRuntimeException {
 
     private static final long serialVersionUID = -9876432123423469L;
@@ -73,6 +72,16 @@ public class EidNullPointerException extends EidRuntimeException {
      */
     public EidNullPointerException(Eid id) {
         super(id);
+    }
+
+    /**
+     * @see EidRuntimeException#EidRuntimeException(Eid, String, Object...)
+     * @param id see description on {@link EidRuntimeException#EidRuntimeException(Eid, String, Object...)}
+     * @param messageFormat see description on {@link EidRuntimeException#EidRuntimeException(Eid, String, Object...)}
+     * @param parameters see description on {@link EidRuntimeException#EidRuntimeException(Eid, String, Object...)}
+     */
+    public EidNullPointerException(Eid id, String messageFormat, Object... parameters) {
+        super(id, messageFormat, parameters);
     }
 
     /**

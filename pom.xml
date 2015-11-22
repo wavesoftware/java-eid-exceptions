@@ -10,7 +10,7 @@
     
     <groupId>pl.wavesoftware</groupId>
     <artifactId>eid-exceptions</artifactId>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     
     <name>EID Runtime Exceptions and Utilities</name>
@@ -22,9 +22,13 @@
     <properties>
         <netbeans.hint.license>apache20</netbeans.hint.license>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <sonar.working.directory>${project.build.directory}/sonar</sonar.working.directory>
+        <sonar.host.url>https://sonar.wavesoftware.pl</sonar.host.url>
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
-        <maven.compiler.source>1.6</maven.compiler.source>
-        <maven.compiler.target>1.6</maven.compiler.target>
+	<sonar.java.source>6</sonar.java.source>
+	<java.source.version>${sonar.java.source}</java.source.version>
+        <maven.compiler.source>1.${java.source.version}</maven.compiler.source>
+        <maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
         <coveralls.skip>${skipTests}</coveralls.skip>
     </properties>
     
@@ -41,6 +45,7 @@
         <developerConnection>scm:git:git@github.com:wavesoftware/java-eid-exceptions.git</developerConnection>
         <url>https://github.com/wavesoftware/java-eid-exceptions</url>
     </scm>
+
     <ciManagement>
         <system>travis-ci</system>
         <url>https://travis-ci.org/wavesoftware/java-eid-exceptions</url>
@@ -65,7 +70,7 @@
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
             <artifactId>jsr305</artifactId>
-            <version>3.0.0</version>
+            <version>3.0.1</version>
             <type>jar</type>
         </dependency>
         <dependency>
@@ -87,8 +92,7 @@
                     <plugin>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
-                        <!-- Version pin because 0.7.5 fails on SONAR -->
-                        <version>0.7.4.201502262128</version>
+                        <version>0.7.5.201505241946</version>
                         <executions>
                             <execution>
                                 <id>jacoco-initialize</id>
@@ -99,7 +103,7 @@
                             </execution>
                             <execution>
                                 <id>jacoco-site</id>
-                                <phase>verify</phase>
+                                <phase>post-integration-test</phase>
                                 <goals>
                                     <goal>report</goal>
                                     <goal>report-integration</goal>
@@ -111,6 +115,95 @@
                                 <include>pl/wavesoftware/**</include>
                             </includes>
                         </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>sonar</id>
+            <activation>
+                <property>
+                    <!-- tries to determine is interactive user session -->
+                    <name>env.GDMSESSION</name>
+                </property>
+            </activation>
+            <properties>
+                <sonar.analysis.mode>preview</sonar.analysis.mode>
+                <sonar.issuesReport.console.enable>true</sonar.issuesReport.console.enable>
+                <sonar.issuesReport.html.enable>true</sonar.issuesReport.html.enable>
+                <sonar.report.export.path>issues.json</sonar.report.export.path>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <version>0.7.5.201505241946</version>
+                        <executions>
+                            <execution>
+                                <id>jacoco-initialize</id>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                    <goal>prepare-agent-integration</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>jacoco-site</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>report</goal>
+                                    <goal>report-integration</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <includes>
+                                <include>pl/wavesoftware/**</include>
+                            </includes>
+                        </configuration>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>sonar-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>default</id>
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>sonar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+
+                    <plugin>
+                        <groupId>org.codehaus.gmaven</groupId>
+                        <artifactId>groovy-maven-plugin</artifactId>
+                        <version>2.0</version>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.codehaus.groovy</groupId>
+                                <artifactId>groovy-all</artifactId>
+                                <version>2.0.6</version>
+                            </dependency>
+                        </dependencies>
+                        <configuration>
+                            <defaults>
+                                <sonar.issues.file>${sonar.working.directory}/${sonar.report.export.path}</sonar.issues.file>
+                            </defaults>
+                            <source>${project.basedir}/src/test/groovy/verify-sonar-issues.groovy</source>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>verify-sonar-issues</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>execute</goal>
+                                </goals>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>
@@ -155,6 +248,7 @@
                 <configuration>
                     <compilerArgs>
                         <arg>-Werror</arg>
+                        <arg>-Xlint:-deprecation</arg>
                         <arg>-Xlint:all</arg>
                     </compilerArgs>
                 </configuration>
@@ -172,7 +266,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.18.1</version>
+                <version>2.19</version>
                 <configuration>
                     <trimStackTrace>false</trimStackTrace>
                 </configuration>
@@ -181,7 +275,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.18.1</version>
+                <version>2.19</version>
                 <configuration>
                     <trimStackTrace>false</trimStackTrace>
                     <encoding>UTF-8</encoding>
@@ -196,6 +290,16 @@
                 </executions>
             </plugin>
         </plugins>
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>sonar-maven-plugin</artifactId>
+                    <version>2.7.1</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
     
 </project>

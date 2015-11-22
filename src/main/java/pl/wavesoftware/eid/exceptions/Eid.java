@@ -15,12 +15,14 @@
  */
 package pl.wavesoftware.eid.exceptions;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.Serializable;
-import static java.lang.Math.abs;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import javax.annotation.Nullable;
+
+import static java.lang.Math.abs;
 
 /**
  * <strong>This class shouldn't be used in any public API or library.</strong> It is designed to be used for in-house development
@@ -93,7 +95,6 @@ public class Eid implements Serializable {
      * @throws IllegalArgumentException if given format hasn't got two format specifiers <tt>"%s"</tt>, or if given format was
      * null
      */
-    @SuppressWarnings("UnusedReturnValue")
     public static String setMessageFormat(String format) {
         validateFormat(format, MESSAGE_FORMAT_NUM_SPEC);
         String oldFormat = Eid.messageFormat;
@@ -155,6 +156,23 @@ public class Eid implements Serializable {
         String previously = Eid.refFormat;
         Eid.refFormat = refFormat;
         return previously;
+    }
+
+    /**
+     * Makes a log message from this EID object
+     * <p>
+     * <p>This method is for convenience of usage of EID in logging. You can use it like this:
+     * <p>
+     * <pre>
+     * log.debug(new Eid("20151025:202129").makeLogMessage("A request: %s", request));
+     * </pre>
+     * @param logMessageFormat a log message format as accepted by {@link String#format(String, Object...)}
+     * @param parameters a parameters for logMessageFormat to by passed to {@link String#format(String, Object...)}
+     * @return a formatted message
+     */
+    public String makeLogMessage(@Nonnull String logMessageFormat, @Nonnull Object... parameters) {
+        String message = String.format(logMessageFormat, parameters);
+        return String.format(getMessageFormat(), this.toString(), message);
     }
 
     @Override
@@ -238,11 +256,10 @@ public class Eid implements Serializable {
             long first = abs(random.nextLong() + 1);
             int second = abs(random.nextInt(Integer.MAX_VALUE));
             int calc = (int) (first + second);
-            return Integer.toString(calc, BASE36);
+            return Integer.toString(abs(calc), BASE36);
         }
 
-        @SuppressWarnings("squid:S2245")
-        private Random getUnsecuredFastRandom() {
+        private static Random getUnsecuredFastRandom() {
             return new Random(System.currentTimeMillis());
         }
 

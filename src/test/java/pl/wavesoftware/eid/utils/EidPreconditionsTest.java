@@ -15,9 +15,9 @@
  */
 package pl.wavesoftware.eid.utils;
 
+import org.hamcrest.CoreMatchers;
 import org.hamcrest.CustomMatcher;
 import org.hamcrest.Matcher;
-import org.hamcrest.Matchers;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -34,9 +34,9 @@ import java.lang.reflect.Constructor;
 import java.text.ParseException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.isA;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.isA;
 import static org.junit.internal.matchers.ThrowableMessageMatcher.hasMessage;
 
 /**
@@ -197,7 +197,7 @@ public class EidPreconditionsTest {
         // given
         Integer index = nullyValue();
         Integer size = nullyValue();
-        Matcher<String> m = Matchers.equalTo(null);
+        Matcher<String> m = CoreMatchers.equalTo(null);
         // then
         thrown.expect(NullPointerException.class);
         thrown.expectMessage(m);

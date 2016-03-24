@@ -64,8 +64,6 @@ public class Eid implements Serializable {
 
     private final Future<String> futureUniqueId;
 
-    private final Future<String> repr;
-
     /**
      * Constructor
      *
@@ -81,7 +79,6 @@ public class Eid implements Serializable {
         };
         this.id = id;
         this.ref = ref == null ? "" : ref;
-        repr = new ToStringRepr();
     }
 
     /**
@@ -185,7 +182,10 @@ public class Eid implements Serializable {
 
     @Override
     public String toString() {
-        return repr.get();
+        if ("".equals(ref)) {
+            return String.format(format, id, futureUniqueId.get());
+        }
+        return String.format(refFormat, id, ref, futureUniqueId.get());
     }
 
     /**
@@ -259,17 +259,6 @@ public class Eid implements Serializable {
                 future = produce();
             }
             return future;
-        }
-    }
-
-    private class ToStringRepr extends StdFuture<String> {
-
-        @Override
-        protected String produce() {
-            if ("".equals(ref)) {
-                return String.format(format, id, futureUniqueId.get());
-            }
-            return String.format(refFormat, id, ref, futureUniqueId.get());
         }
     }
 

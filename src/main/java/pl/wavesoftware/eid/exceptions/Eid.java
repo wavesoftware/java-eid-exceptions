@@ -62,7 +62,9 @@ public class Eid implements Serializable {
 
     private final String ref;
 
-    private final String uniq;
+    private final Future<String> futureUniqueId;
+
+    private final Future<String> repr;
 
     /**
      * Constructor
@@ -71,9 +73,15 @@ public class Eid implements Serializable {
      * @param ref an optional reference
      */
     public Eid(String id, @Nullable String ref) {
-        uniq = uniqIdGenerator.generateUniqId();
+        futureUniqueId = new StdFuture<String>() {
+            @Override
+            protected String produce() {
+                return uniqIdGenerator.generateUniqId();
+            }
+        };
         this.id = id;
         this.ref = ref == null ? "" : ref;
+        repr = new ToStringRepr();
     }
 
     /**
@@ -177,10 +185,7 @@ public class Eid implements Serializable {
 
     @Override
     public String toString() {
-        if ("".equals(ref)) {
-            return String.format(format, id, uniq);
-        }
-        return String.format(refFormat, id, ref, uniq);
+        return repr.get();
     }
 
     /**
@@ -207,7 +212,7 @@ public class Eid implements Serializable {
      * @return a unique string
      */
     public String getUniq() {
-        return uniq;
+        return futureUniqueId.get();
     }
 
     private static void validateFormat(String format, int numSpecifiers) {
@@ -239,6 +244,33 @@ public class Eid implements Serializable {
          * @return a generated unique ID
          */
         String generateUniqId();
+    }
+
+    private interface Future<T> {
+        T get();
+    }
+
+    private static abstract class StdFuture<T> implements Future<T> {
+        private T future;
+        protected abstract T produce();
+        @Override
+        public T get() {
+            if (future == null) {
+                future = produce();
+            }
+            return future;
+        }
+    }
+
+    private class ToStringRepr extends StdFuture<String> {
+
+        @Override
+        protected String produce() {
+            if ("".equals(ref)) {
+                return String.format(format, id, futureUniqueId.get());
+            }
+            return String.format(refFormat, id, ref, futureUniqueId.get());
+        }
     }
 
     private static final class StdUniqIdGenerator implements UniqIdGenerator {

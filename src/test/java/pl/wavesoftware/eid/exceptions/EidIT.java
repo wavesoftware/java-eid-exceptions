@@ -60,7 +60,7 @@ public class EidIT {
         double eidScore = eid.getAggregatedResult().getPrimaryResult().getScore();
 
         String title = "method speed quotient to the control sample";
-        String eidTitle = String.format("%s %s should be at least %.2f%%", "#exhibit()",
+        String eidTitle = String.format("%s %s should be at least %.2f%%", "#eid()",
                 title, SPEED_THRESHOLD * PERCENT);
 
         double eidTimes = eidScore / controlScore;

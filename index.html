@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>EID Runtime Exceptions and Utilities by wavesoftware</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">EID Runtime Exceptions and Utilities</h1>
+      <h2 class="project-tagline">EID Runtime Exceptions and Utilities</h2>
+      <a href="https://github.com/wavesoftware/java-eid-exceptions" class="btn">View on GitHub</a>
+      <a href="https://github.com/wavesoftware/java-eid-exceptions/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/wavesoftware/java-eid-exceptions/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="eid-runtime-exceptions-and-utilities" class="anchor" href="#eid-runtime-exceptions-and-utilities" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>EID Runtime Exceptions and Utilities</h1>
+
+<p><a href="https://travis-ci.org/wavesoftware/java-eid-exceptions"><img src="https://travis-ci.org/wavesoftware/java-eid-exceptions.svg?branch=master" alt="Build Status"></a> <a href="https://coveralls.io/github/wavesoftware/java-eid-exceptions?branch=master"><img src="https://coveralls.io/repos/wavesoftware/java-eid-exceptions/badge.svg?branch=master&amp;service=github" alt="Coverage Status"></a> <a href="http://sonar-ro.wavesoftware.pl/dashboard/index/2600"><img src="https://img.shields.io/sonar/http/sonar-ro.wavesoftware.pl/pl.wavesoftware:eid-exceptions/tech_debt.svg" alt="SonarQube Tech Debt"></a> <a href="https://www.versioneye.com/user/projects/55aafc74306535001b000440"><img src="https://www.versioneye.com/user/projects/55aafc74306535001b000440/badge.svg?style=flat" alt="Dependency Status"></a> <a href="http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22pl.wavesoftware%22%20AND%20a%3A%22eid-exceptions%22"><img src="https://img.shields.io/maven-central/v/pl.wavesoftware/eid-exceptions.svg" alt="Maven Central"></a></p>
+
+<p>This small library holds a set of exceptions and utilities that implements idea of fast, reusable, error codes that can be simply thrown fast in case of unpredictable and unrecoverable application failure. It is meant to be used for application bugs.</p>
+
+<h2>
+<a id="idea" class="anchor" href="#idea" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Idea</h2>
+
+<p>The idea is to use a set of simple runtime exceptions. They should always take the Exception ID (Eid) object in the making. This eid object will then be reported when displaying or logging that exception. It can also be viewed on the professional fatal error window of the application as a bug reference. EidRuntimeExceptions contains also additional unique ID to distinguish each single exception from others with same Eid. This approach simplifies the management of exceptions in the application and allows developers to focus on functionalities rather than coming up with the correct statement for the exception.</p>
+
+<p>This approach is best to use with tools and plugins like:</p>
+
+<ul>
+<li><a href="http://plugins.netbeans.org/plugin/53137/exception-id-eid-generator">EidGenerator for Netbeans IDE</a></li>
+<li><a href="https://github.com/wavesoftware/java-eid-exceptions/wiki/Generating%20Exception%20Id%20number%20in%20Intellij%20IDEA%20with%20Live%20Templates">Generating Exception Id number in Intellij IDEA with Live Templates</a></li>
+</ul>
+
+<p>Example:</p>
+
+<div class="highlight highlight-source-java"><pre><span class="pl-k">throw</span> <span class="pl-k">new</span> <span class="pl-smi">EidIllegalStateException</span>(<span class="pl-s"><span class="pl-pds">"</span>20150721:100554<span class="pl-pds">"</span></span>, cause);</pre></div>
+
+<p>Example log:</p>
+
+<pre><code>pl.wavesoftware.eid.exceptions.EidIllegalStateException: [20150721:100554]&lt;g0qrwx&gt; =&gt; Zipfile in invalid format
+    at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+    at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:57)
+
+Caused by: java.util.zip.DataFormatException: Zipfile in invalid format
+    at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+    at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:57)
+    ... 62 more
+</code></pre>
+
+<h2>
+<a id="caution" class="anchor" href="#caution" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Caution</h2>
+
+<p>This classes shouldn't be used in any public API or library. It is designed to be used for in-house development of end user applications which will report bugs in standardized error pages or post them to issue tracker.</p>
+
+<h2>
+<a id="maven" class="anchor" href="#maven" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Maven</h2>
+
+<div class="highlight highlight-text-xml"><pre>&lt;<span class="pl-ent">dependency</span>&gt;
+    &lt;<span class="pl-ent">groupId</span>&gt;pl.wavesoftware&lt;/<span class="pl-ent">groupId</span>&gt;
+    &lt;<span class="pl-ent">artifactId</span>&gt;eid-exceptions&lt;/<span class="pl-ent">artifactId</span>&gt;
+    &lt;<span class="pl-ent">version</span>&gt;1.1.0&lt;/<span class="pl-ent">version</span>&gt;
+&lt;/<span class="pl-ent">dependency</span>&gt;</pre></div>
+
+<h3>
+<a id="eidpreconditions-class" class="anchor" href="#eidpreconditions-class" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>EidPreconditions</code> class</h3>
+
+<h4>
+<a id="general-use" class="anchor" href="#general-use" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>General use</h4>
+
+<p><code>EidPreconditions</code> class consists static methods that help to use Eid in a method or constructor. This is solely for convenience purposes. Use them to check whether method or constructor was invoked correctly (whether its preconditions have been met). These methods generally accept a <code>boolean</code> expression which is expected to be <code>true</code> (or in the case of <code>checkNotNull</code>, an object reference which is expected to be non-null). When <code>false</code> (or <code>null</code>) is passed instead, the <code>EidPreconditions</code> method throws an unchecked exception, which helps the calling method communicate to its caller that that caller has made a mistake.</p>
+
+<p>Each method accepts a EID string or Eid object, which is designed to ease of use and provide strict ID for given exception usage. This approach speed up development of large application and helps support teams by giving both static and random ID for each possible bug that could occur.</p>
+
+<p>Each example uses static import:</p>
+
+<div class="highlight highlight-source-java"><pre><span class="pl-k">import static</span> <span class="pl-smi">pl.wavesoftware.eid.utils.EidPreconditions.*</span>;</pre></div>
+
+<h4>
+<a id="checkargument-method" class="anchor" href="#checkargument-method" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>checkArgument</code> method</h4>
+
+<p><code>checkArgument</code> method should be used to check argument of the method, and validate it in technical terms (not business terms).</p>
+
+<p>Example:</p>
+
+<div class="highlight highlight-source-java"><pre><span class="pl-c">// [..]</span>
+<span class="pl-k">public</span> <span class="pl-k">static</span> <span class="pl-k">double</span> sqrt(<span class="pl-k">double</span> value);
+  checkArgument(value <span class="pl-k">&gt;=</span> <span class="pl-c1">0.0</span>, <span class="pl-s"><span class="pl-pds">"</span>20150718:012333<span class="pl-pds">"</span></span>);
+  <span class="pl-c">// if ok, calculate the square root</span>
+}</pre></div>
+
+<p>In this example, <code>checkArgument</code> throws an <code>EidIllegalArgumentException</code> to indicate that developer made an error in its call to <code>sqrt</code>. </p>
+
+<h4>
+<a id="checkstate-method" class="anchor" href="#checkstate-method" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>checkState</code> method</h4>
+
+<p><code>checkState</code> method should be used to check state of the class in given moment, and validate it in technical terms (not business terms).</p>
+
+<p>Example:</p>
+
+<div class="highlight highlight-source-java"><pre>checkState(a <span class="pl-k">&gt;=</span> <span class="pl-c1">3.14</span> <span class="pl-k">&amp;&amp;</span> b <span class="pl-k">&lt;</span> <span class="pl-c1">0.</span>, <span class="pl-s"><span class="pl-pds">"</span>20150721:115016<span class="pl-pds">"</span></span>);</pre></div>
+
+<h4>
+<a id="checknotnull-method" class="anchor" href="#checknotnull-method" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>checkNotNull</code> method</h4>
+
+<p><code>checkNotNull</code> method should be used to check if given non null argument is actually <code>null</code></p>
+
+<p>Example:</p>
+
+<div class="highlight highlight-source-java"><pre><span class="pl-smi">String</span> nonNullUserName <span class="pl-k">=</span> checkNotNull(userName, <span class="pl-s"><span class="pl-pds">"</span>20150721:115515<span class="pl-pds">"</span></span>);</pre></div>
+
+<h4>
+<a id="checkelementindex-method" class="anchor" href="#checkelementindex-method" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><code>checkElementIndex</code> method</h4>
+
+<p><code>checkElementIndex</code> method can be used to test parameters of an array, before being used</p>
+
+<div class="highlight highlight-source-java"><pre>checkElementIndex(index, list<span class="pl-k">.</span>size(), <span class="pl-s"><span class="pl-pds">"</span>20150721:115749<span class="pl-pds">"</span></span>);</pre></div>
+
+<h4>
+<a id="formatted-message-support" class="anchor" href="#formatted-message-support" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Formatted message support</h4>
+
+<p>From release <code>1.1.0</code> there have been added methods to support additional formatted messages for <code>checkArgument</code>, <code>checkState</code>, <code>checkNotNull</code> and <code>checkElementIndex</code> method. Those method versions can sometimes be used to pass additional information to exceptions that will be displayed in log files.</p>
+
+<p>Message formatting is done using <code>String.format(String, Object[])</code> method.</p>
+
+<p>For example:</p>
+
+<div class="highlight highlight-source-java"><pre>checkState(transation<span class="pl-k">.</span>isValid(), <span class="pl-s"><span class="pl-pds">"</span>20151119:120238<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>Invalid transaction: %s, transaction);</span></pre></div>
+
+<p>Will produce output similar to;</p>
+
+<pre><code>pl.wavesoftware.eid.exceptions.EidIllegalStateException: [20151119:120238]&lt;xf4j1l&gt; =&gt; Invalid transaction: &lt;Transaction id=null, buyer=null, products=[]&gt;
+</code></pre>
+
+<h4>
+<a id="functional-try-to-execute-blocks" class="anchor" href="#functional-try-to-execute-blocks" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Functional try to execute blocks</h4>
+
+<p>You can use functional blocks to handle operations, that are intended to operate properly. This approach simplify the code and makes it more readable. It's also good way to deal with untested, uncovered <code>catch</code> blocks. It's easy and gives developers nice way of dealing with countless operations that suppose to work as intended.</p>
+
+<p>There are two versions. One with <code>UnsafeSupplier</code> and one with <code>UnsafeProcedure</code>. The difference is that unsafe procedure do not return anything.</p>
+
+<p>Example:</p>
+
+<div class="highlight highlight-source-java"><pre><span class="pl-smi">InputStream</span> is <span class="pl-k">=</span> <span class="pl-smi">EidPreconditions</span><span class="pl-k">.</span>tryToExecute(<span class="pl-k">new</span> <span class="pl-k">UnsafeSupplier&lt;<span class="pl-smi">InputStream</span>&gt;</span>() {
+    <span class="pl-k">@Override</span>
+    <span class="pl-k">public</span> <span class="pl-smi">InputStream</span> <span class="pl-en">get</span>() <span class="pl-k">throws</span> <span class="pl-smi">IOException</span> {
+        <span class="pl-k">return</span> <span class="pl-v">this</span><span class="pl-k">.</span>getClass()<span class="pl-k">.</span>getClassLoader()
+            .getResourceAsStream(<span class="pl-s"><span class="pl-pds">"</span>project.properties<span class="pl-pds">"</span></span>);
+    }
+}, <span class="pl-s"><span class="pl-pds">"</span>20150718:121521<span class="pl-pds">"</span></span>);</pre></div>
+
+<p>or with Java 8:</p>
+
+<div class="highlight highlight-source-java"><pre><span class="pl-k">import static</span> <span class="pl-smi">pl.wavesoftware.eid.utils.EidPreconditions.tryToExecute</span>;
+<span class="pl-c">// [..]</span>
+<span class="pl-smi">InputStream</span> is <span class="pl-k">=</span> tryToExecute(() <span class="pl-k">-</span><span class="pl-k">&gt;</span> { resource(<span class="pl-s"><span class="pl-pds">"</span>project.properties<span class="pl-pds">"</span></span>); }, <span class="pl-s"><span class="pl-pds">"</span>20150718:121521<span class="pl-pds">"</span></span>);</pre></div>
+
+<h4>
+<a id="logging" class="anchor" href="#logging" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Logging</h4>
+
+<p>Eid object can also be useful in logging. That are <code>makeLogMessage</code> method provided to do that. Message formatting is done using <code>String.format(String, Object[])</code> method.
+For example:</p>
+
+<div class="highlight highlight-source-java"><pre>log<span class="pl-k">.</span>debug(<span class="pl-k">new</span> <span class="pl-smi">Eid</span>(<span class="pl-s"><span class="pl-pds">"</span>20151119:121814<span class="pl-pds">"</span></span>)<span class="pl-k">.</span>makeLogMessage(<span class="pl-s"><span class="pl-pds">"</span>REST request received: %s<span class="pl-pds">"</span></span>, request));</pre></div>
+
+<p>will unfold to something similar to:</p>
+
+<pre><code>2017-01-08T16:45:34,334 DEBUG [a.b.c.RestBroker] [20151119:121814]&lt;d1afca&gt; REST request received: &lt;RestRequest user=&lt;User id=345&gt; flow=ShowLastTransactions step=Confirm&gt;
+</code></pre>
+
+<h3>
+<a id="contributing" class="anchor" href="#contributing" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Contributing</h3>
+
+<p>Contributions are welcome!</p>
+
+<p>To contribute, follow the standard <a href="http://danielkummer.github.io/git-flow-cheatsheet/">git flow</a> of:</p>
+
+<ol>
+<li>Fork it</li>
+<li>Create your feature branch (<code>git checkout -b feature/my-new-feature</code>)</li>
+<li>Commit your changes (<code>git commit -am 'Add some feature'</code>)</li>
+<li>Push to the branch (<code>git push origin feature/my-new-feature</code>)</li>
+<li>Create new Pull Request</li>
+</ol>
+
+<p>Even if you can't contribute code, if you have an idea for an improvement please open an <a href="https://github.com/wavesoftware/java-eid-exceptions/issues">issue</a>.</p>
+
+<h2>
+<a id="requirements" class="anchor" href="#requirements" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Requirements</h2>
+
+<ul>
+<li>JDK &gt;= 1.6</li>
+</ul>
+
+<h3>
+<a id="releases" class="anchor" href="#releases" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Releases</h3>
+
+<ul>
+<li>1.1.0
+
+<ul>
+<li>Adding support for formatted messages in exceptions and also in utility methods of <code>EidPreconditions</code><br>
+</li>
+</ul>
+</li>
+<li>1.0.1
+
+<ul>
+<li>Fixed handling for throwables as a cause with <code>message == null</code>. <code>cause.toString()</code> method is used </li>
+</ul>
+</li>
+<li>1.0.0
+
+<ul>
+<li>Support for JDK &gt;= 1.6</li>
+</ul>
+</li>
+<li>0.1.0
+
+<ul>
+<li>initial release</li>
+<li>idea imported from Guava Library and COI code</li>
+</ul>
+</li>
+</ul>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/wavesoftware/java-eid-exceptions">EID Runtime Exceptions and Utilities</a> is maintained by <a href="https://github.com/wavesoftware">wavesoftware</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>

@@ -71,12 +71,7 @@ public class Eid implements Serializable {
      * @param ref an optional reference
      */
     public Eid(String id, @Nullable String ref) {
-        futureUniqueId = new StdFuture<String>() {
-            @Override
-            protected String produce() {
-                return uniqIdGenerator.generateUniqId();
-            }
-        };
+        futureUniqueId = new UniqFuture();
         this.id = id;
         this.ref = ref == null ? "" : ref;
     }
@@ -246,17 +241,18 @@ public class Eid implements Serializable {
         String generateUniqId();
     }
 
-    private interface Future<T> {
+    private interface Future<T extends Serializable> extends Serializable {
         T get();
     }
 
-    private static abstract class StdFuture<T> implements Future<T> {
-        private T future;
-        protected abstract T produce();
+    private static final class UniqFuture implements Future<String> {
+        private static final long serialVersionUID = 20160325113314L;
+        private String future;
+        private UniqFuture() {}
         @Override
-        public T get() {
+        public String get() {
             if (future == null) {
-                future = produce();
+                future = uniqIdGenerator.generateUniqId();
             }
             return future;
         }

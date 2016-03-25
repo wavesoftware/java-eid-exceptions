@@ -1,5 +1,6 @@
 package pl.wavesoftware.eid.exceptions;
 
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Mode;
@@ -12,6 +13,7 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.openjdk.jmh.runner.options.TimeValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.wavesoftware.testing.JmhCleaner;
 
 import java.util.Collection;
 import java.util.Date;
@@ -25,10 +27,13 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class EidIT {
 
+    private static final int PERCENT = 100;
     private static final int OPERATIONS = 1000;
     private static final Logger LOG = LoggerFactory.getLogger(EidIT.class);
     private static final double SPEED_THRESHOLD = 0.75d;
-    public static final int PERCENT = 100;
+
+    @ClassRule
+    public static JmhCleaner cleaner = new JmhCleaner(EidIT.class);
 
     @Test
     public void doBenckmarking() throws Exception {

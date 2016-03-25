@@ -1,5 +1,7 @@
 package pl.wavesoftware.testing;
 
+import com.google.common.io.Files;
+import java.io.File;
 import org.junit.Test;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
@@ -9,12 +11,7 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.URISyntaxException;
-import java.nio.file.FileVisitResult;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.SimpleFileVisitor;
-import java.nio.file.attribute.BasicFileAttributes;
+import org.apache.commons.io.FileUtils;
 
 /**
  * @author <a href="mailto:krzysztof.suszynski@coi.gov.pl">Krzysztof Suszynski</a>
@@ -47,7 +44,6 @@ public class JmhCleaner implements TestRule {
 
     @Override
     public Statement apply(final Statement base, Description description) {
-
         return new Statement() {
             @Override
             public void evaluate() throws Throwable {
@@ -62,22 +58,19 @@ public class JmhCleaner implements TestRule {
 
     private void cleanup() throws IOException, URISyntaxException {
         String location = testClass.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
-        Path testAnnotationsPath = Paths.get(location).getParent().resolve(GENERATED_TEST_SOURCES).resolve(TEST_ANNOTATIONS);
-        if (!testAnnotationsPath.toFile().isDirectory()) {
+        File file = new File(location).getCanonicalFile().getParentFile();
+        File testAnnotationsPath = resolve(file, GENERATED_TEST_SOURCES, TEST_ANNOTATIONS);
+        if (!testAnnotationsPath.isDirectory()) {
             return;
         }
-        Files.walkFileTree(testAnnotationsPath, new SimpleFileVisitor<Path>() {
-            @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                Files.delete(file);
-                return FileVisitResult.CONTINUE;
-            }
-
-            @Override
-            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                Files.delete(dir);
-                return FileVisitResult.CONTINUE;
-            }
-        });
+        FileUtils.deleteDirectory(testAnnotationsPath);
+    }
+    
+    private File resolve(File parent, String... paths) {
+        StringBuilder sb = new StringBuilder(parent.getPath());
+        for (String path : paths) {
+            sb.append(File.separator).append(path);
+        }
+        return new File(sb.toString());
     }
 }

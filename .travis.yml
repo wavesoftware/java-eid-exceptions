@@ -1,8 +1,9 @@
 language: java
 sudo: false
-script: mvn clean install -Pci
+script: mvn clean install -P '!sonar,ci' --fail-at-end
 notifications:
-  email: false
+  email:
+    on_failure: true
 jdk:
   - openjdk6
   - openjdk7

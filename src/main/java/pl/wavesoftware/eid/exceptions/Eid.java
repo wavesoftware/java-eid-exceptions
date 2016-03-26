@@ -62,7 +62,7 @@ public class Eid implements Serializable {
 
     private final String ref;
 
-    private final String uniq;
+    private final Future<String> futureUniqueId;
 
     /**
      * Constructor
@@ -71,7 +71,7 @@ public class Eid implements Serializable {
      * @param ref an optional reference
      */
     public Eid(String id, @Nullable String ref) {
-        uniq = uniqIdGenerator.generateUniqId();
+        futureUniqueId = new UniqFuture();
         this.id = id;
         this.ref = ref == null ? "" : ref;
     }
@@ -178,9 +178,9 @@ public class Eid implements Serializable {
     @Override
     public String toString() {
         if ("".equals(ref)) {
-            return String.format(format, id, uniq);
+            return String.format(format, id, futureUniqueId.get());
         }
-        return String.format(refFormat, id, ref, uniq);
+        return String.format(refFormat, id, ref, futureUniqueId.get());
     }
 
     /**
@@ -207,7 +207,7 @@ public class Eid implements Serializable {
      * @return a unique string
      */
     public String getUniq() {
-        return uniq;
+        return futureUniqueId.get();
     }
 
     private static void validateFormat(String format, int numSpecifiers) {
@@ -239,6 +239,23 @@ public class Eid implements Serializable {
          * @return a generated unique ID
          */
         String generateUniqId();
+    }
+
+    private interface Future<T extends Serializable> extends Serializable {
+        T get();
+    }
+
+    private static final class UniqFuture implements Future<String> {
+        private static final long serialVersionUID = 20160325113314L;
+        private String future;
+        private UniqFuture() {}
+        @Override
+        public String get() {
+            if (future == null) {
+                future = uniqIdGenerator.generateUniqId();
+            }
+            return future;
+        }
     }
 
     private static final class StdUniqIdGenerator implements UniqIdGenerator {

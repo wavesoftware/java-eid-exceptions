@@ -8,8 +8,8 @@ import org.junit.rules.ExpectedException;
 import javax.xml.bind.JAXBException;
 import java.util.UnknownFormatConversionException;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.internal.matchers.ThrowableMessageMatcher.hasMessage;
 
 /**

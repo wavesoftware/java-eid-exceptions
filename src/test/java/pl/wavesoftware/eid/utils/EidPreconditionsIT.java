@@ -36,7 +36,7 @@ import static org.junit.Assume.assumeThat;
  */
 public class EidPreconditionsIT {
     private static final int OPERATIONS = 1000;
-    private static final double SPEED_THRESHOLD = 0.25;
+    private static final double SPEED_THRESHOLD = 0.80;
     private static final Logger LOG = LoggerFactory.getLogger(EidPreconditionsIT.class);
     private static final double PERCENT = 100;
 

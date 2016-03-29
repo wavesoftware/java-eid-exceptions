@@ -9,7 +9,6 @@ import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
-import org.openjdk.jmh.annotations.Threads;
 import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.results.RunResult;
 import org.openjdk.jmh.runner.Runner;
@@ -59,7 +58,7 @@ public class EidPreconditionsIT {
             .warmupIterations(1)
             .measurementTime(TimeValue.seconds(1))
             .measurementIterations(3)
-            .threads(Threads.MAX)
+            .threads(4)
             .forks(1)
             .shouldFailOnError(true)
             .shouldDoGC(true)

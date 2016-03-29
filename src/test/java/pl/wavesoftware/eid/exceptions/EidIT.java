@@ -5,7 +5,6 @@ import org.junit.Test;
 import org.junit.rules.RuleChain;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Mode;
-import org.openjdk.jmh.annotations.Threads;
 import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.results.RunResult;
 import org.openjdk.jmh.runner.Runner;
@@ -50,7 +49,7 @@ public class EidIT {
                 .warmupIterations(2)
                 .measurementTime(TimeValue.seconds(1))
                 .measurementIterations(5)
-                .threads(Threads.MAX)
+                .threads(4)
                 .forks(1)
                 .shouldFailOnError(true)
                 .shouldDoGC(true)

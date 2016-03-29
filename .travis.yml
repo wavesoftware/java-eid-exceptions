@@ -12,9 +12,11 @@ matrix:
     env: JACOCO=true COVERALLS=true
   - jdk: oraclejdk7
     env: JACOCO=true COVERALLS=true
-    script: mvn clean install sonar:sonar --fail-at-end
   - jdk: oraclejdk8
     env: JACOCO=true COVERALLS=true
+  - jdk: openjdk7
+    env: JACOCO=true GDMSESSION=sonar SONAR_ANALYSIS_MODE=publish
+    script: mvn clean install -Dsonar.analysis.mode=publish --fail-at-end
   - jdk: openjdk6
     env: JACOCO=false
   - jdk: openjdk7

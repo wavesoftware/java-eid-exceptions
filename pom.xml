@@ -80,10 +80,12 @@
         <sonar.java.source>${java.source.version}</sonar.java.source>
         <maven.compiler.source>1.${java.source.version}</maven.compiler.source>
         <maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
+        <jacoco.version>0.7.6.201602180812</jacoco.version>
 
         <skipTests/>
         <coveralls.skip>${skipTests}</coveralls.skip>
-        <jacoco.version>0.7.6.201602180812</jacoco.version>
+        <sonar.skip>${skipTests}</sonar.skip>
+        <failsafe.rerunFailingTestsCount>2</failsafe.rerunFailingTestsCount>
     </properties>
 
     <dependencies>

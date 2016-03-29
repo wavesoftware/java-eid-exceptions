@@ -5,6 +5,9 @@ import org.junit.ClassRule;
 import org.junit.Test;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Mode;
+import org.openjdk.jmh.annotations.Scope;
+import org.openjdk.jmh.annotations.Setup;
+import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Threads;
 import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.results.RunResult;
@@ -27,8 +30,6 @@ import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.greaterThanOrEqualTo;
-import static org.junit.Assume.assumeThat;
 
 /**
  * @author <a href="mailto:krzysztof.suszynski@coi.gov.pl">Krzysztof Suszynski</a>
@@ -36,7 +37,7 @@ import static org.junit.Assume.assumeThat;
  */
 public class EidPreconditionsIT {
     private static final int OPERATIONS = 1000;
-    private static final double SPEED_THRESHOLD = 0.80;
+    private static final double SPEED_THRESHOLD = 0.90;
     private static final Logger LOG = LoggerFactory.getLogger(EidPreconditionsIT.class);
     private static final double PERCENT = 100;
 
@@ -62,7 +63,7 @@ public class EidPreconditionsIT {
 
         Runner runner = new Runner(opt);
         Collection<RunResult> results = runner.run();
-        assertThat(results).hasSize(TestCase.values().length * 2);
+        assertThat(results.size()).isGreaterThanOrEqualTo(7);
 
         verifySpeedFor(TestCase.CHECK_ARGUMENT, results);
         verifySpeedFor(TestCase.CHECK_STATE, results);
@@ -121,6 +122,31 @@ public class EidPreconditionsIT {
         }
     }
 
+    @State(Scope.Benchmark)
+    public static class SupplierOfUnsafes {
+        private EidPreconditions.UnsafeSupplier<String> supplier;
+        private EidPreconditions.UnsafeProcedure procedure;
+
+        @Setup
+        public void setup() {
+            this.supplier = new EidPreconditions.UnsafeSupplier<String>() {
+
+                @Override
+                public String get() throws Exception {
+                    return "20160326:223746";
+                }
+            };
+        }
+    }
+
+    @Benchmark
+    @BenchmarkConfig(test = TestCase.TRY_TO_EXECUTE, framework = Framework.EID)
+    public void testTryToExecuteSupplier(SupplierOfUnsafes supplierOfUnsafes, Blackhole bh) {
+        for (int i = 0; i < OPERATIONS; i++) {
+            bh.consume(EidPreconditions.tryToExecute(supplierOfUnsafes.supplier, "20160326:223854"));
+        }
+    }
+
     private void verifySpeedFor(TestCase testCase, Collection<RunResult> results) {
         Method guavaMethod = findMethod(testCase, Framework.GUAVA);
         Method eidMethod = findMethod(testCase, Framework.EID);
@@ -133,11 +159,10 @@ public class EidPreconditionsIT {
 
         double quotient = eid / guava;
 
-        LOG.info(String.format("%s: Guava score = %.2f vs Eid score = %.2f ==> quotient: %.2f%%, expected: %.2f%%",
+        LOG.info(String.format("%s: Guava score = %.2f vs Eid score = %.2f ==> quotient: %.2f%%, " +
+            "minimum threshold: %.2f%%",
             testCase, guava, eid, quotient * PERCENT, SPEED_THRESHOLD * PERCENT));
-        // assertThat(quotient).isGreaterThanOrEqualTo(SPEED_THRESHOLD);
-        assumeThat("FIXME: wavesoftware/java-eid-exceptions#3 There should be a hard assert insead of assume :-/",
-                quotient, greaterThanOrEqualTo(SPEED_THRESHOLD));
+        assertThat(quotient).isGreaterThanOrEqualTo(SPEED_THRESHOLD);
     }
 
     private static double getScore(RunResult result) {
@@ -179,7 +204,7 @@ public class EidPreconditionsIT {
     private enum TestCase {
         CHECK_ARGUMENT,
         CHECK_STATE,
-        CHECK_NOTNULL
+        TRY_TO_EXECUTE, CHECK_NOTNULL
     }
 
     private enum Framework {

@@ -29,7 +29,6 @@ import pl.wavesoftware.eid.exceptions.EidNullPointerException;
 import pl.wavesoftware.eid.exceptions.EidRuntimeException;
 
 import javax.annotation.Nonnull;
-import java.io.InterruptedIOException;
 import java.lang.reflect.Constructor;
 import java.text.ParseException;
 
@@ -434,92 +433,6 @@ public class EidPreconditionsTest {
         int result = EidPreconditions.checkElementIndex(index, size, eidObject);
         // then
         assertThat(result).isEqualTo(index);
-    }
-
-    /**
-     * @deprecated Convert this test to new API after removal of {@link EidPreconditions.RiskyCode}
-     */
-    @Test
-    public void testTryToExecute_Ok() {
-        // given
-        final String expResult = "test string";
-        EidPreconditions.RiskyCode<String> riskyCode = new EidPreconditions.RiskyCode<String>() {
-
-            @Override
-            public String execute() {
-                return expResult;
-            }
-        };
-        // when
-        String result = EidPreconditions.tryToExecute(riskyCode, eid);
-        // then
-        assertThat(result).isEqualTo(expResult);
-    }
-
-    /**
-     * @deprecated Convert this test to new API after removal of {@link EidPreconditions.RiskyCode}
-     */
-    @Test
-    public void testTryToExecute() {
-        // given
-        final String causeMessage = "a cause message";
-        EidPreconditions.RiskyCode<String> riskyCode = new EidPreconditions.RiskyCode<String>() {
-
-            @Override
-            public String execute() throws InterruptedIOException {
-                throw new InterruptedIOException(causeMessage);
-            }
-        };
-        // then
-        thrown.expect(EidRuntimeException.class);
-        thrown.expectCause(isA(InterruptedIOException.class));
-        thrown.expectCause(hasMessage(equalTo(causeMessage)));
-        // when
-        EidPreconditions.tryToExecute(riskyCode, eid);
-    }
-
-    /**
-     * @deprecated Convert this test to new API after removal of {@link EidPreconditions.RiskyCode}
-     */
-    @Test
-    public void testTryToExecute_EidPreconditionsRiskyCode_Eid() {
-        // given
-        final String causeMessage = "a cause message";
-        Eid eidObject = getEid();
-        EidPreconditions.RiskyCode<String> riskyCode = new EidPreconditions.RiskyCode<String>() {
-
-            @Override
-            public String execute() throws InterruptedIOException {
-                throw new InterruptedIOException(causeMessage);
-            }
-        };
-        // then
-        thrown.expect(EidRuntimeException.class);
-        thrown.expectCause(isA(InterruptedIOException.class));
-        thrown.expectCause(hasMessage(equalTo(causeMessage)));
-        // when
-        EidPreconditions.tryToExecute(riskyCode, eidObject);
-    }
-
-    /**
-     * @deprecated Convert this test to new API after removal of {@link EidPreconditions.RiskyCode}
-     */
-    @Test
-    public void testTryToExecute_EidPreconditionsRiskyCode_Eid_Ok() {
-        // given
-        final String tester = "unit message";
-        Eid eidObject = getEid();
-        EidPreconditions.RiskyCode<String> riskyCode = new EidPreconditions.RiskyCode<String>() {
-
-            @Override
-            public String execute() {
-                return tester;
-            }
-        };
-        // when
-        String result = EidPreconditions.tryToExecute(riskyCode, eidObject);
-        // then
-        assertThat(result).isEqualTo(tester);
     }
 
     @Test

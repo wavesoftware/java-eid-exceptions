@@ -322,7 +322,7 @@
 
     <profiles>
         <profile>
-            <id>ci</id>
+            <id>jacoco</id>
             <activation>
                 <property>
                     <name>env.JACOCO</name>
@@ -389,6 +389,7 @@
                             <defaults>
                                 <sonar.issues.file>${sonar.working.directory}/${sonar.report.export.path}
                                 </sonar.issues.file>
+                                <sonar.skip>${sonar.skip}</sonar.skip>
                             </defaults>
                             <source>${project.basedir}/src/test/groovy/verify-sonar-issues.groovy</source>
                         </configuration>

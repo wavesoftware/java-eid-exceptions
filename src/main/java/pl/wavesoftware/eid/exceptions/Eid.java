@@ -49,6 +49,8 @@ public class Eid implements Serializable {
 
     private static final int MESSAGE_FORMAT_NUM_SPEC = 2;
 
+    private static final String EMPTY_REF = "";
+
     private static String messageFormat = DEFAULT_MESSAGE_FORMAT;
 
     private static UniqIdGenerator uniqIdGenerator = DEFAULT_UNIQ_ID_GENERATOR;
@@ -61,7 +63,7 @@ public class Eid implements Serializable {
 
     private final String ref;
 
-    private final Future<String> futureUniqueId;
+    private String uniqueId;
 
     /**
      * Constructor
@@ -70,9 +72,8 @@ public class Eid implements Serializable {
      * @param ref an optional reference
      */
     public Eid(String id, @Nullable String ref) {
-        futureUniqueId = new UniqFuture();
         this.id = id;
-        this.ref = ref == null ? "" : ref;
+        this.ref = ref == null ? EMPTY_REF : ref;
     }
 
     /**
@@ -81,7 +82,8 @@ public class Eid implements Serializable {
      * @param id the exception id, must be unique developer inserted string, from date
      */
     public Eid(String id) {
-        this(id, null);
+        this.id = id;
+        this.ref = EMPTY_REF;
     }
 
     /**
@@ -177,9 +179,9 @@ public class Eid implements Serializable {
     @Override
     public String toString() {
         if ("".equals(ref)) {
-            return String.format(format, id, futureUniqueId.get());
+            return String.format(format, id, getUniq());
         }
-        return String.format(refFormat, id, ref, futureUniqueId.get());
+        return String.format(refFormat, id, ref, getUniq());
     }
 
     /**
@@ -206,7 +208,10 @@ public class Eid implements Serializable {
      * @return a unique string
      */
     public String getUniq() {
-        return futureUniqueId.get();
+        if (uniqueId == null) {
+            uniqueId = uniqIdGenerator.generateUniqId();
+        }
+        return uniqueId;
     }
 
     private static void validateFormat(String format, int numSpecifiers) {
@@ -238,23 +243,6 @@ public class Eid implements Serializable {
          * @return a generated unique ID
          */
         String generateUniqId();
-    }
-
-    private interface Future<T extends Serializable> extends Serializable {
-        T get();
-    }
-
-    private static final class UniqFuture implements Future<String> {
-        private static final long serialVersionUID = 20160325113314L;
-        private String future;
-        private UniqFuture() {}
-        @Override
-        public String get() {
-            if (future == null) {
-                future = uniqIdGenerator.generateUniqId();
-            }
-            return future;
-        }
     }
 
     private static final class StdUniqIdGenerator implements UniqIdGenerator {

@@ -1,10 +1,14 @@
 package pl.wavesoftware.eid.exceptions;
 
+import org.junit.Before;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Mode;
+import org.openjdk.jmh.annotations.Scope;
+import org.openjdk.jmh.annotations.Setup;
+import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.results.RunResult;
 import org.openjdk.jmh.runner.Runner;
@@ -16,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import pl.wavesoftware.testing.JavaAgentSkip;
 import pl.wavesoftware.testing.JmhCleaner;
 
+import java.text.NumberFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -37,6 +42,26 @@ public class EidIT {
     public static RuleChain chain = RuleChain
         .outerRule(new JmhCleaner(EidIT.class))
         .around(JavaAgentSkip.ifActive());
+
+    @Before
+    public void before() {
+        printMemory();
+    }
+
+    public static void printMemory() {
+        Runtime runtime = Runtime.getRuntime();
+
+        NumberFormat format = NumberFormat.getInstance();
+
+        long maxMemory = runtime.maxMemory();
+        long allocatedMemory = runtime.totalMemory();
+        long freeMemory = runtime.freeMemory();
+
+        LOG.info("free memory: {} KiB", format.format(freeMemory / 1024));
+        LOG.info("allocated memory: {} KiB", format.format(allocatedMemory / 1024));
+        LOG.info("max memory: {} KiB", format.format(maxMemory / 1024));
+        LOG.info("total free memory: {} KiB", format.format((freeMemory + (maxMemory - allocatedMemory)) / 1024));
+    }
 
     @Test
     public void doBenckmarking() throws Exception {
@@ -69,7 +94,7 @@ public class EidIT {
 
         String title = "method speed quotient to the control sample";
         String eidTitle = String.format("%s %s should be at least %.2f%%", "#eid()",
-                title, SPEED_THRESHOLD * PERCENT);
+            title, SPEED_THRESHOLD * PERCENT);
 
         double eidTimes = eidScore / controlScore;
 
@@ -80,17 +105,28 @@ public class EidIT {
         assertThat(eidTimes).as(eidTitle).isGreaterThanOrEqualTo(SPEED_THRESHOLD);
     }
 
+    @State(Scope.Benchmark)
+    public static class MemoryState {
+        private String eid;
+
+        @Setup
+        public void setup() {
+            printMemory();
+            this.eid = "20160330:124244";
+        }
+    }
+
     @Benchmark
-    public void control(Blackhole bh) {
+    public void control(MemoryState state, Blackhole bh) {
         for (int i = 0; i < OPERATIONS; i++) {
             bh.consume(new Date());
         }
     }
 
     @Benchmark
-    public void eid(Blackhole bh) {
+    public void eid(MemoryState state, Blackhole bh) {
         for (int i = 0; i < OPERATIONS; i++) {
-            bh.consume(new Eid("20160324:223837"));
+            bh.consume(new Eid(state.eid));
         }
     }
 

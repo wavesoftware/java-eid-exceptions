@@ -83,6 +83,7 @@
 
         <skipTests/>
         <coveralls.skip>${skipTests}</coveralls.skip>
+        <jacoco.version>0.7.6.201602180812</jacoco.version>
     </properties>
 
     <dependencies>
@@ -169,7 +170,7 @@
                 <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>0.7.6.201602180812</version>
+                    <version>${jacoco.version}</version>
                     <executions>
                         <execution>
                             <id>jacoco-initialize</id>

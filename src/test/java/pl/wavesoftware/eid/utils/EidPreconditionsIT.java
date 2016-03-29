@@ -3,6 +3,7 @@ package pl.wavesoftware.eid.utils;
 import com.google.common.base.Preconditions;
 import org.junit.ClassRule;
 import org.junit.Test;
+import org.junit.rules.RuleChain;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.Scope;
@@ -19,6 +20,7 @@ import org.openjdk.jmh.runner.options.TimeValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.wavesoftware.eid.exceptions.EidRuntimeException;
+import pl.wavesoftware.testing.JavaAgentSkip;
 import pl.wavesoftware.testing.JmhCleaner;
 
 import java.lang.annotation.ElementType;
@@ -38,11 +40,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class EidPreconditionsIT {
     private static final int OPERATIONS = 1000;
     private static final double SPEED_THRESHOLD = 0.90;
-    private static final Logger LOG = LoggerFactory.getLogger(EidPreconditionsIT.class);
     private static final double PERCENT = 100;
+    private static final Logger LOG = LoggerFactory.getLogger(EidPreconditionsIT.class);
 
     @ClassRule
-    public static JmhCleaner cleaner = new JmhCleaner(EidPreconditionsIT.class);
+    public static RuleChain chain = RuleChain
+        .outerRule(new JmhCleaner(EidPreconditionsIT.class))
+        .around(JavaAgentSkip.ifActive());
 
     @Test
     public void doBenchmarking() throws RunnerException {
@@ -157,12 +161,12 @@ public class EidPreconditionsIT {
         double guava = getScore(guavaResult);
         double eid = getScore(eidResult);
 
-        double quotient = eid / guava;
+        double ratio = eid / guava;
 
-        LOG.info(String.format("%s: Guava score = %.2f vs Eid score = %.2f ==> quotient: %.2f%%, " +
+        LOG.info(String.format("%s: Guava score = %.2f vs Eid score = %.2f ==> ratio: %.2f%%, " +
             "minimum threshold: %.2f%%",
-            testCase, guava, eid, quotient * PERCENT, SPEED_THRESHOLD * PERCENT));
-        assertThat(quotient).isGreaterThanOrEqualTo(SPEED_THRESHOLD);
+            testCase, guava, eid, ratio * PERCENT, SPEED_THRESHOLD * PERCENT));
+        assertThat(ratio).isGreaterThanOrEqualTo(SPEED_THRESHOLD);
     }
 
     private static double getScore(RunResult result) {

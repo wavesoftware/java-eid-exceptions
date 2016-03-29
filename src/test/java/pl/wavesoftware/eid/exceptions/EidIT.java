@@ -2,6 +2,7 @@ package pl.wavesoftware.eid.exceptions;
 
 import org.junit.ClassRule;
 import org.junit.Test;
+import org.junit.rules.RuleChain;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Mode;
 import org.openjdk.jmh.annotations.Threads;
@@ -13,6 +14,7 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.openjdk.jmh.runner.options.TimeValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.wavesoftware.testing.JavaAgentSkip;
 import pl.wavesoftware.testing.JmhCleaner;
 
 import java.util.Collection;
@@ -33,7 +35,9 @@ public class EidIT {
     private static final double SPEED_THRESHOLD = 0.75d;
 
     @ClassRule
-    public static JmhCleaner cleaner = new JmhCleaner(EidIT.class);
+    public static RuleChain chain = RuleChain
+        .outerRule(new JmhCleaner(EidIT.class))
+        .around(JavaAgentSkip.ifActive());
 
     @Test
     public void doBenckmarking() throws Exception {

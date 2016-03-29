@@ -103,7 +103,7 @@ import javax.annotation.Nullable;
  *     }, "20150718:121521");
  * </code></pre>
  *
- * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
+ * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
  * @since 0.1.0 (idea imported from Guava Library and COI code)
  */
 public final class EidPreconditions {

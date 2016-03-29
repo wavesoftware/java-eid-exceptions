@@ -15,7 +15,6 @@
  */
 package pl.wavesoftware.eid.exceptions;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -30,7 +29,7 @@ import static java.lang.Math.abs;
  * <p>
  * Exception identifier for all Eid Runtime Exceptions.
  *
- * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
+ * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
  */
 public class Eid implements Serializable {
 
@@ -170,7 +169,7 @@ public class Eid implements Serializable {
      * @param parameters a parameters for logMessageFormat to by passed to {@link String#format(String, Object...)}
      * @return a formatted message
      */
-    public String makeLogMessage(@Nonnull String logMessageFormat, @Nonnull Object... parameters) {
+    public String makeLogMessage(String logMessageFormat, Object... parameters) {
         String message = String.format(logMessageFormat, parameters);
         return String.format(getMessageFormat(), this.toString(), message);
     }

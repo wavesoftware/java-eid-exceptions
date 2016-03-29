@@ -1,11 +1,25 @@
 language: java
 sudo: false
-script: mvn clean install -P '!sonar,ci' --fail-at-end
+script: mvn clean install --fail-at-end
 notifications:
   email:
     on_failure: true
-jdk:
-  - openjdk6
-  - openjdk7
-  - oraclejdk7
-  - oraclejdk8
+matrix:
+  include:
+  - jdk: openjdk6
+    env: JACOCO=true COVERALLS=true
+  - jdk: openjdk7
+    env: JACOCO=true COVERALLS=true
+  - jdk: oraclejdk7
+    env: JACOCO=true COVERALLS=true
+    script: mvn clean install sonar:sonar --fail-at-end
+  - jdk: oraclejdk8
+    env: JACOCO=true COVERALLS=true
+  - jdk: openjdk6
+    env: JACOCO=false
+  - jdk: openjdk7
+    env: JACOCO=false
+  - jdk: oraclejdk7
+    env: JACOCO=false
+  - jdk: oraclejdk8
+    env: JACOCO=false

@@ -122,7 +122,7 @@ public final class EidPreconditions {
      */
     public static void checkArgument(final boolean expression, final String eid) {
         if (!expression) {
-            throw new EidIllegalArgumentException(new Eid(eid));
+            throw new EidIllegalArgumentException(ensureEid(eid));
         }
     }
 
@@ -139,7 +139,7 @@ public final class EidPreconditions {
     public static void checkArgument(final boolean expression, final String eid,
                                      final String messageFormat, final Object... parameters) {
         if (!expression) {
-            throw new EidIllegalArgumentException(new Eid(eid), messageFormat, parameters);
+            throw new EidIllegalArgumentException(ensureEid(eid), messageFormat, parameters);
         }
     }
 
@@ -153,7 +153,7 @@ public final class EidPreconditions {
      */
     public static void checkArgument(final boolean expression, final Eid eid) {
         if (!expression) {
-            throw new EidIllegalArgumentException(eid);
+            throw new EidIllegalArgumentException(ensureEid(eid));
         }
     }
 
@@ -170,7 +170,7 @@ public final class EidPreconditions {
     public static void checkArgument(final boolean expression, final Eid eid,
                                      final String messageFormat, final Object... parameters) {
         if (!expression) {
-            throw new EidIllegalArgumentException(eid, messageFormat, parameters);
+            throw new EidIllegalArgumentException(ensureEid(eid), messageFormat, parameters);
         }
     }
 
@@ -185,7 +185,7 @@ public final class EidPreconditions {
      */
     public static void checkState(final boolean expression, final String eid) {
         if (!expression) {
-            throw new EidIllegalStateException(new Eid(eid));
+            throw new EidIllegalStateException(ensureEid(eid));
         }
     }
 
@@ -203,7 +203,7 @@ public final class EidPreconditions {
     public static void checkState(final boolean expression, final String eid,
                                   final String messageFormat, final Object... parameters) {
         if (!expression) {
-            throw new EidIllegalStateException(new Eid(eid), messageFormat, parameters);
+            throw new EidIllegalStateException(ensureEid(eid), messageFormat, parameters);
         }
     }
 
@@ -218,7 +218,7 @@ public final class EidPreconditions {
      */
     public static void checkState(final Boolean expression, final Eid eid) {
         if (!expression) {
-            throw new EidIllegalStateException(eid);
+            throw new EidIllegalStateException(ensureEid(eid));
         }
     }
 
@@ -236,7 +236,7 @@ public final class EidPreconditions {
     public static void checkState(final boolean expression, final Eid eid,
                                   final String messageFormat, final Object... parameters) {
         if (!expression) {
-            throw new EidIllegalStateException(eid, messageFormat, parameters);
+            throw new EidIllegalStateException(ensureEid(eid), messageFormat, parameters);
         }
     }
 
@@ -252,7 +252,7 @@ public final class EidPreconditions {
      */
     public static <T> T checkNotNull(@Nullable final T reference, final String eid) {
         if (reference == null) {
-            throw new EidNullPointerException(new Eid(eid));
+            throw new EidNullPointerException(ensureEid(eid));
         }
         return reference;
     }
@@ -272,7 +272,7 @@ public final class EidPreconditions {
     public static <T> T checkNotNull(@Nullable final T reference, final String eid,
                                      final String messageFormat, final Object... parameters) {
         if (reference == null) {
-            throw new EidNullPointerException(new Eid(eid), messageFormat, parameters);
+            throw new EidNullPointerException(ensureEid(eid), messageFormat, parameters);
         }
         return reference;
     }
@@ -289,7 +289,7 @@ public final class EidPreconditions {
      */
     public static <T> T checkNotNull(@Nullable final T reference, final Eid eid) {
         if (reference == null) {
-            throw new EidNullPointerException(eid);
+            throw new EidNullPointerException(ensureEid(eid));
         }
         return reference;
     }
@@ -310,7 +310,7 @@ public final class EidPreconditions {
     public static <T> T checkNotNull(@Nullable final T reference, final Eid eid,
                                      final String messageFormat, final Object... parameters) {
         if (reference == null) {
-            throw new EidNullPointerException(eid, messageFormat, parameters);
+            throw new EidNullPointerException(ensureEid(eid), messageFormat, parameters);
         }
         return reference;
     }
@@ -328,10 +328,10 @@ public final class EidPreconditions {
      */
     public static int checkElementIndex(int index, int size, final String eid) {
         if (isSizeIllegal(size)) {
-            throw new EidIllegalArgumentException(new Eid(eid));
+            throw new EidIllegalArgumentException(ensureEid(eid));
         }
         if (isIndexAndSizeIllegal(index, size)) {
-            throw new EidIndexOutOfBoundsException(new Eid(eid));
+            throw new EidIndexOutOfBoundsException(ensureEid(eid));
         }
         return index;
     }
@@ -352,10 +352,10 @@ public final class EidPreconditions {
     public static int checkElementIndex(int index, int size, final String eid,
                                         final String messageFormat, final Object... parameters) {
         if (isSizeIllegal(size)) {
-            throw new EidIllegalArgumentException(new Eid(eid), messageFormat, parameters);
+            throw new EidIllegalArgumentException(ensureEid(eid), messageFormat, parameters);
         }
         if (isIndexAndSizeIllegal(index, size)) {
-            throw new EidIndexOutOfBoundsException(new Eid(eid), messageFormat, parameters);
+            throw new EidIndexOutOfBoundsException(ensureEid(eid), messageFormat, parameters);
         }
         return index;
     }
@@ -373,10 +373,10 @@ public final class EidPreconditions {
      */
     public static int checkElementIndex(int index, int size, final Eid eid) {
         if (isSizeIllegal(size)) {
-            throw new EidIllegalArgumentException(eid);
+            throw new EidIllegalArgumentException(ensureEid(eid));
         }
         if (isIndexAndSizeIllegal(index, size)) {
-            throw new EidIndexOutOfBoundsException(eid);
+            throw new EidIndexOutOfBoundsException(ensureEid(eid));
         }
         return index;
     }
@@ -397,10 +397,10 @@ public final class EidPreconditions {
     public static int checkElementIndex(int index, int size, final Eid eid, final String messageFormat,
                                         final Object... parameters) {
         if (isSizeIllegal(size)) {
-            throw new EidIllegalArgumentException(eid, messageFormat, parameters);
+            throw new EidIllegalArgumentException(ensureEid(eid), messageFormat, parameters);
         }
         if (isIndexAndSizeIllegal(index, size)) {
-            throw new EidIndexOutOfBoundsException(eid, messageFormat, parameters);
+            throw new EidIndexOutOfBoundsException(ensureEid(eid), messageFormat, parameters);
         }
         return index;
     }
@@ -427,7 +427,7 @@ public final class EidPreconditions {
         try {
             return supplier.get();
         } catch (Exception throwable) {
-            throw new EidRuntimeException(new Eid(eid), throwable);
+            throw new EidRuntimeException(ensureEid(eid), throwable);
         }
     }
 
@@ -443,7 +443,7 @@ public final class EidPreconditions {
         try {
             procedure.execute();
         } catch (Exception throwable) {
-            throw new EidRuntimeException(new Eid(eid), throwable);
+            throw new EidRuntimeException(ensureEid(eid), throwable);
         }
     }
 
@@ -473,7 +473,7 @@ public final class EidPreconditions {
         try {
             return supplier.get();
         } catch (Exception throwable) {
-            throw new EidRuntimeException(eid, throwable);
+            throw new EidRuntimeException(ensureEid(eid), throwable);
         }
     }
 
@@ -500,7 +500,7 @@ public final class EidPreconditions {
         try {
             procedure.execute();
         } catch (Exception throwable) {
-            throw new EidRuntimeException(eid, throwable);
+            throw new EidRuntimeException(ensureEid(eid), throwable);
         }
     }
 
@@ -535,5 +535,19 @@ public final class EidPreconditions {
          * @throws Exception this exception should be set to concrete one ex. IOException
          */
         void execute() throws Exception;
+    }
+
+    private static Eid ensureEid(@Nullable Eid eid) {
+        if (eid == null) {
+            return new Eid("20160329:132823", "EID-NULL");
+        }
+        return eid;
+    }
+
+    private static Eid ensureEid(@Nullable String eid) {
+        if (eid == null) {
+            return new Eid("20160329:133052", "EID-NULL");
+        }
+        return new Eid(eid);
     }
 }

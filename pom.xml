@@ -321,7 +321,12 @@
     <profiles>
         <profile>
             <id>ci</id>
-
+            <activation>
+                <property>
+                    <name>env.JACOCO</name>
+                    <value>true</value>
+                </property>
+            </activation>
             <build>
                 <plugins>
                     <plugin>
@@ -400,10 +405,10 @@
         </profile>
 
         <profile>
-            <id>travis</id>
+            <id>coveralls</id>
             <activation>
                 <property>
-                    <name>env.TRAVIS</name>
+                    <name>env.COVERALLS</name>
                     <value>true</value>
                 </property>
             </activation>

@@ -62,6 +62,7 @@ public class EidPreconditionsIT {
             .forks(1)
             .shouldFailOnError(true)
             .shouldDoGC(true)
+            .jvmArgs("-server", "-Xms256m", "-Xmx256m", "-XX:PermSize=128m", "-XX:MaxPermSize=128m", "-XX:+UseParallelGC")
             .build();
 
         Runner runner = new Runner(opt);

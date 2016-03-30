@@ -29,14 +29,11 @@ import pl.wavesoftware.eid.exceptions.EidNullPointerException;
 import pl.wavesoftware.eid.exceptions.EidRuntimeException;
 
 import javax.annotation.Nonnull;
-import java.io.InterruptedIOException;
 import java.lang.reflect.Constructor;
 import java.text.ParseException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.isA;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.internal.matchers.ThrowableMessageMatcher.hasMessage;
 
 /**
@@ -84,6 +81,28 @@ public class EidPreconditionsTest {
     }
 
     @Test
+    public void testCheckArgument_Eid_WithMessage() {
+        // given
+        boolean expression = falsyValue();
+        // then
+        thrown.expect(EidIllegalArgumentException.class);
+        thrown.expectMessage(containsString(eid));
+        thrown.expectMessage(containsString("PI value is 3.14"));
+        // when
+        EidPreconditions.checkArgument(expression, new Eid(eid), "PI value is %.2f", Math.PI);
+    }
+
+    @Test
+    public void testCheckArgument_Eid_Ok_WithMessage() {
+        // given
+        boolean expression = truthyValue();
+        // when
+        EidPreconditions.checkArgument(expression, new Eid(eid), "PI value is %.2f", Math.PI);
+        // then
+        assertThat(thrown).isNotNull();
+    }
+
+    @Test
     public void testCheckArgument_Ok() {
         // when
         boolean expression = truthyValue();
@@ -122,6 +141,28 @@ public class EidPreconditionsTest {
         boolean expression = truthyValue();
         // when
         EidPreconditions.checkState(expression, eid, "PI is %.4f", Math.PI);
+        // then
+        assertThat(thrown).isNotNull();
+    }
+
+    @Test
+    public void testCheckState_Eid_WithMessage() {
+        // given
+        boolean expression = falsyValue();
+        // then
+        thrown.expect(EidIllegalStateException.class);
+        thrown.expectMessage(containsString(eid));
+        thrown.expectMessage(containsString("PI is 3.1416"));
+        // when
+        EidPreconditions.checkState(expression, new Eid(eid), "PI is %.4f", Math.PI);
+    }
+
+    @Test
+    public void testCheckState_Ok_Eid_WithMessage() {
+        // given
+        boolean expression = truthyValue();
+        // when
+        EidPreconditions.checkState(expression, new Eid(eid), "PI is %.4f", Math.PI);
         // then
         assertThat(thrown).isNotNull();
     }
@@ -181,6 +222,28 @@ public class EidPreconditionsTest {
     }
 
     @Test
+    public void testCheckNotNull_Eid_WithMessage() {
+        // given
+        Object reference = nullyValue();
+        // then
+        thrown.expect(EidNullPointerException.class);
+        thrown.expectMessage(containsString(eid));
+        thrown.expectMessage(containsString("π <=> 3.142"));
+        // when
+        EidPreconditions.checkNotNull(reference, new Eid(eid), "π <=> %.3f", Math.PI);
+    }
+
+    @Test
+    public void testCheckNotNull_Ok_Eid_WithMessage() {
+        // given
+        Object reference = "A test";
+        // when
+        Object checked = EidPreconditions.checkNotNull(reference, new Eid(eid), "π <=> %.3f", Math.PI);
+        // then
+        assertThat(checked).isSameAs(reference);
+    }
+
+    @Test
     public void testCheckElementIndex_Ok() {
         // given
         int index = 2;
@@ -231,6 +294,19 @@ public class EidPreconditionsTest {
     }
 
     @Test
+    public void testCheckElementIndex_Eid_WithMessage() {
+        // given
+        int index = -1;
+        int size = 0;
+        // then
+        thrown.expect(EidIndexOutOfBoundsException.class);
+        thrown.expectMessage(containsString(eid));
+        thrown.expectMessage(containsString("Pi (π): 3.14"));
+        // when
+        EidPreconditions.checkElementIndex(index, size, new Eid(eid), "Pi (π): %.2f", Math.PI);
+    }
+
+    @Test
     public void testCheckElementIndex_SizeIllegal_WithMessage() {
         // given
         int index = 0;
@@ -244,12 +320,36 @@ public class EidPreconditionsTest {
     }
 
     @Test
+    public void testCheckElementIndex_SizeIllegal_Eid_WithMessage() {
+        // given
+        int index = 0;
+        int size = -45;
+        // then
+        thrown.expect(EidIllegalArgumentException.class);
+        thrown.expectMessage(containsString(eid));
+        thrown.expectMessage(containsString("Pi (π): 3.142"));
+        // when
+        EidPreconditions.checkElementIndex(index, size, new Eid(eid), "Pi (π): %.3f", Math.PI);
+    }
+
+    @Test
     public void testCheckElementIndex_Ok_WithMessage() {
         // given
         int index = 234;
         int size = 450;
         // when
         int checked = EidPreconditions.checkElementIndex(index, size, eid, "Pi (π): %.1f", Math.PI);
+        // then
+        assertThat(checked).isEqualTo(index);
+    }
+
+    @Test
+    public void testCheckElementIndex_Ok_Eid_WithMessage() {
+        // given
+        int index = 234;
+        int size = 450;
+        // when
+        int checked = EidPreconditions.checkElementIndex(index, size, new Eid(eid), "Pi (π): %.1f", Math.PI);
         // then
         assertThat(checked).isEqualTo(index);
     }
@@ -320,10 +420,22 @@ public class EidPreconditionsTest {
     public void testCheckArgument_boolean_Eid_Null() {
         // given
         boolean expression = falsyValue();
-        Eid eidObject = getNullEid();
+        Eid eidObject = nullyValue();
         // then
-        thrown.expect(IllegalArgumentException.class);
-        thrown.expectMessage("Pass not-null Eid to EidPreconditions first!");
+        thrown.expect(EidIllegalArgumentException.class);
+        thrown.expectMessage(containsString("20160329:132823|EID-NULL"));
+        // when
+        EidPreconditions.checkArgument(expression, eidObject);
+    }
+
+    @Test
+    public void testCheckArgument_boolean_String_Null() {
+        // given
+        boolean expression = falsyValue();
+        String eidObject = nullyValue();
+        // then
+        thrown.expect(EidIllegalArgumentException.class);
+        thrown.expectMessage(containsString("20160329:133052|EID-NULL"));
         // when
         EidPreconditions.checkArgument(expression, eidObject);
     }
@@ -436,92 +548,6 @@ public class EidPreconditionsTest {
         assertThat(result).isEqualTo(index);
     }
 
-    /**
-     * @deprecated Convert this test to new API after removal of {@link EidPreconditions.RiskyCode}
-     */
-    @Test
-    public void testTryToExecute_Ok() {
-        // given
-        final String expResult = "test string";
-        EidPreconditions.RiskyCode<String> riskyCode = new EidPreconditions.RiskyCode<String>() {
-
-            @Override
-            public String execute() {
-                return expResult;
-            }
-        };
-        // when
-        String result = EidPreconditions.tryToExecute(riskyCode, eid);
-        // then
-        assertThat(result).isEqualTo(expResult);
-    }
-
-    /**
-     * @deprecated Convert this test to new API after removal of {@link EidPreconditions.RiskyCode}
-     */
-    @Test
-    public void testTryToExecute() {
-        // given
-        final String causeMessage = "a cause message";
-        EidPreconditions.RiskyCode<String> riskyCode = new EidPreconditions.RiskyCode<String>() {
-
-            @Override
-            public String execute() throws InterruptedIOException {
-                throw new InterruptedIOException(causeMessage);
-            }
-        };
-        // then
-        thrown.expect(EidRuntimeException.class);
-        thrown.expectCause(isA(InterruptedIOException.class));
-        thrown.expectCause(hasMessage(equalTo(causeMessage)));
-        // when
-        EidPreconditions.tryToExecute(riskyCode, eid);
-    }
-
-    /**
-     * @deprecated Convert this test to new API after removal of {@link EidPreconditions.RiskyCode}
-     */
-    @Test
-    public void testTryToExecute_EidPreconditionsRiskyCode_Eid() {
-        // given
-        final String causeMessage = "a cause message";
-        Eid eidObject = getEid();
-        EidPreconditions.RiskyCode<String> riskyCode = new EidPreconditions.RiskyCode<String>() {
-
-            @Override
-            public String execute() throws InterruptedIOException {
-                throw new InterruptedIOException(causeMessage);
-            }
-        };
-        // then
-        thrown.expect(EidRuntimeException.class);
-        thrown.expectCause(isA(InterruptedIOException.class));
-        thrown.expectCause(hasMessage(equalTo(causeMessage)));
-        // when
-        EidPreconditions.tryToExecute(riskyCode, eidObject);
-    }
-
-    /**
-     * @deprecated Convert this test to new API after removal of {@link EidPreconditions.RiskyCode}
-     */
-    @Test
-    public void testTryToExecute_EidPreconditionsRiskyCode_Eid_Ok() {
-        // given
-        final String tester = "unit message";
-        Eid eidObject = getEid();
-        EidPreconditions.RiskyCode<String> riskyCode = new EidPreconditions.RiskyCode<String>() {
-
-            @Override
-            public String execute() {
-                return tester;
-            }
-        };
-        // when
-        String result = EidPreconditions.tryToExecute(riskyCode, eidObject);
-        // then
-        assertThat(result).isEqualTo(tester);
-    }
-
     @Test
     public void testTryToExecute_UnsafeProcedure_String() {
         // given
@@ -555,8 +581,109 @@ public class EidPreconditionsTest {
         assertThat(procedure).isNotNull();
     }
 
-    private Eid getNullEid() {
-        return nullyValue();
+    @Test
+    public void testTryToExecute_UnsafeProcedure_Eid() {
+        // given
+        final String causeMessage = "An error occured while parsing JSON document at char 178";
+        EidPreconditions.UnsafeProcedure procedure = new EidPreconditions.UnsafeProcedure() {
+            @Override
+            public void execute() throws ParseException {
+                throw new ParseException(causeMessage, 178);
+            }
+        };
+        // then
+        thrown.expect(EidRuntimeException.class);
+        thrown.expectCause(isA(ParseException.class));
+        thrown.expectCause(hasMessage(equalTo(causeMessage)));
+        // when
+        EidPreconditions.tryToExecute(procedure, new Eid(eid));
+    }
+
+    @Test
+    public void testTryToExecute_UnsafeProcedure_Eid_Ok() {
+        // given
+        EidPreconditions.UnsafeProcedure procedure = new EidPreconditions.UnsafeProcedure() {
+            @Override
+            public void execute() {
+                // nothing special here, for unit test
+            }
+        };
+        // when
+        EidPreconditions.tryToExecute(procedure, new Eid(eid));
+        // then
+        assertThat(procedure).isNotNull();
+    }
+
+    @Test
+    public void testTryToExecute_UnsafeSupplier_String() {
+        // given
+        final String causeMessage = "An error occured while parsing JSON document at char 178";
+        EidPreconditions.UnsafeSupplier<String> supplier = new EidPreconditions.UnsafeSupplier<String>() {
+
+            @Override
+            public String get() throws ParseException {
+                throw new ParseException(causeMessage, 178);
+            }
+        };
+        // then
+        thrown.expect(EidRuntimeException.class);
+        thrown.expectCause(isA(ParseException.class));
+        thrown.expectCause(hasMessage(equalTo(causeMessage)));
+        // when
+        EidPreconditions.tryToExecute(supplier, eid);
+    }
+
+    @Test
+    public void testTryToExecute_UnsafeSupplier_String_Ok() {
+        // given
+        final String returning = "An answer to universe and everything";
+        EidPreconditions.UnsafeSupplier<String> supplier = new EidPreconditions.UnsafeSupplier<String>() {
+            @Override
+            public String get() throws ParseException {
+                return returning;
+            }
+        };
+        // when
+        String answer = EidPreconditions.tryToExecute(supplier, eid);
+        // then
+        assertThat(supplier).isNotNull();
+        assertThat(answer).isNotNull().isNotEmpty().isEqualTo(returning);
+    }
+
+    @Test
+    public void testTryToExecute_UnsafeSupplier_Eid() {
+        // given
+        final String causeMessage = "An error occured while parsing JSON document at char 178";
+        EidPreconditions.UnsafeSupplier<String> supplier = new EidPreconditions.UnsafeSupplier<String>() {
+
+            @Override
+            public String get() throws ParseException {
+                throw new ParseException(causeMessage, 178);
+            }
+        };
+        // then
+        thrown.expect(EidRuntimeException.class);
+        thrown.expectCause(isA(ParseException.class));
+        thrown.expectCause(hasMessage(equalTo(causeMessage)));
+        // when
+        EidPreconditions.tryToExecute(supplier, new Eid(eid));
+    }
+
+    @Test
+    public void testTryToExecute_UnsafeSupplier_Eid_Ok() {
+        // given
+        final String returning = "An answer to universe and everything";
+        EidPreconditions.UnsafeSupplier<String> supplier = new EidPreconditions.UnsafeSupplier<String>() {
+            @Override
+            public String get() throws ParseException {
+                return returning;
+            }
+        };
+        // when
+        String answer = EidPreconditions.tryToExecute(supplier, new Eid(eid));
+        // then
+        assertThat(supplier).isNotNull();
+        assertThat(answer).isNotNull().isNotEmpty().isEqualTo(returning);
     }
 
     @Nonnull

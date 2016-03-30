@@ -2,9 +2,9 @@ package pl.wavesoftware.eid.exceptions;
 
 import org.junit.ClassRule;
 import org.junit.Test;
+import org.junit.rules.RuleChain;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Mode;
-import org.openjdk.jmh.annotations.Threads;
 import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.results.RunResult;
 import org.openjdk.jmh.runner.Runner;
@@ -13,6 +13,7 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.openjdk.jmh.runner.options.TimeValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.wavesoftware.testing.JavaAgentSkip;
 import pl.wavesoftware.testing.JmhCleaner;
 
 import java.util.Collection;
@@ -33,7 +34,9 @@ public class EidIT {
     private static final double SPEED_THRESHOLD = 0.75d;
 
     @ClassRule
-    public static JmhCleaner cleaner = new JmhCleaner(EidIT.class);
+    public static RuleChain chain = RuleChain
+        .outerRule(new JmhCleaner(EidIT.class))
+        .around(JavaAgentSkip.ifActive());
 
     @Test
     public void doBenckmarking() throws Exception {
@@ -46,10 +49,11 @@ public class EidIT {
                 .warmupIterations(2)
                 .measurementTime(TimeValue.seconds(1))
                 .measurementIterations(5)
-                .threads(Threads.MAX)
+                .threads(4)
                 .forks(1)
                 .shouldFailOnError(true)
                 .shouldDoGC(true)
+                .jvmArgs("-server", "-Xms256m", "-Xmx256m", "-XX:PermSize=128m", "-XX:MaxPermSize=128m", "-XX:+UseParallelGC")
                 .build();
 
         Runner runner = new Runner(opt);
@@ -66,12 +70,12 @@ public class EidIT {
 
         String title = "method speed quotient to the control sample";
         String eidTitle = String.format("%s %s should be at least %.2f%%", "#eid()",
-                title, SPEED_THRESHOLD * PERCENT);
+            title, SPEED_THRESHOLD * PERCENT);
 
         double eidTimes = eidScore / controlScore;
 
-        LOG.info(String.format("Control sample method time per operation: %.2f µsec", controlScore));
-        LOG.info(String.format("#eid() method time per operation:         %.2f µsec", eidScore));
+        LOG.info(String.format("Control sample method time per operation: %.2f ops / µsec", controlScore));
+        LOG.info(String.format("#eid() method time per operation:         %.2f ops / µsec", eidScore));
         LOG.info(String.format("%s and is %.2f%%", eidTitle, eidTimes * PERCENT));
 
         assertThat(eidTimes).as(eidTitle).isGreaterThanOrEqualTo(SPEED_THRESHOLD);
@@ -87,7 +91,7 @@ public class EidIT {
     @Benchmark
     public void eid(Blackhole bh) {
         for (int i = 0; i < OPERATIONS; i++) {
-            bh.consume(new Eid("20160324:223837"));
+            bh.consume(new Eid("20160330:144947"));
         }
     }
 

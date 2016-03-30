@@ -18,7 +18,7 @@ package pl.wavesoftware.eid.exceptions;
 /**
  * Indicate that object contains a Eid object
  *
- * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
+ * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
  */
 public interface EidContainer {
 

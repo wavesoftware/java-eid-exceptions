@@ -1,23 +1,20 @@
 package pl.wavesoftware.testing;
 
-import com.google.common.io.Files;
-import java.io.File;
+import org.apache.commons.io.FileUtils;
 import org.junit.Test;
-import org.junit.rules.TestRule;
-import org.junit.runner.Description;
-import org.junit.runners.model.Statement;
+import org.junit.rules.ExternalResource;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.URISyntaxException;
-import org.apache.commons.io.FileUtils;
 
 /**
  * @author <a href="mailto:krzysztof.suszynski@coi.gov.pl">Krzysztof Suszynski</a>
  * @since 25.03.16
  */
-public class JmhCleaner implements TestRule {
+public class JmhCleaner extends ExternalResource {
     private static final String GENERATED_TEST_SOURCES = "generated-test-sources";
     private static final String TEST_ANNOTATIONS = "test-annotations";
     private final Class<?> testClass;
@@ -41,19 +38,15 @@ public class JmhCleaner implements TestRule {
         return testClass;
     }
 
-
     @Override
-    public Statement apply(final Statement base, Description description) {
-        return new Statement() {
-            @Override
-            public void evaluate() throws Throwable {
-                try {
-                    base.evaluate();
-                } finally {
-                    cleanup();
-                }
-            }
-        };
+    protected void after() {
+        try {
+            cleanup();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        } catch (URISyntaxException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     private void cleanup() throws IOException, URISyntaxException {

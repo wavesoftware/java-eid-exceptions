@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>pl.wavesoftware</groupId>
     <artifactId>eid-exceptions</artifactId>
-    <version>1.1.1-SNAPSHOT</version>
+    <version>1.2.0</version>
     <packaging>jar</packaging>
 
     <name>EID Runtime Exceptions and Utilities</name>
@@ -80,9 +79,12 @@
         <sonar.java.source>${java.source.version}</sonar.java.source>
         <maven.compiler.source>1.${java.source.version}</maven.compiler.source>
         <maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
+        <jacoco.version>0.7.6.201602180812</jacoco.version>
 
-        <skipTests/>
+        <skipTests />
         <coveralls.skip>${skipTests}</coveralls.skip>
+        <sonar.skip>${skipTests}</sonar.skip>
+        <failsafe.rerunFailingTestsCount>2</failsafe.rerunFailingTestsCount>
     </properties>
 
     <dependencies>
@@ -129,7 +131,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>1.7.19</version>
+            <version>1.7.20</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -169,7 +171,7 @@
                 <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>0.7.6.201602180812</version>
+                    <version>${jacoco.version}</version>
                     <executions>
                         <execution>
                             <id>jacoco-initialize</id>
@@ -319,8 +321,13 @@
 
     <profiles>
         <profile>
-            <id>ci</id>
-
+            <id>jacoco</id>
+            <activation>
+                <property>
+                    <name>env.JACOCO</name>
+                    <value>true</value>
+                </property>
+            </activation>
             <build>
                 <plugins>
                     <plugin>
@@ -374,13 +381,14 @@
                             <dependency>
                                 <groupId>org.codehaus.groovy</groupId>
                                 <artifactId>groovy-all</artifactId>
-                                <version>2.4.5</version>
+                                <version>2.4.6</version>
                             </dependency>
                         </dependencies>
                         <configuration>
                             <defaults>
                                 <sonar.issues.file>${sonar.working.directory}/${sonar.report.export.path}
                                 </sonar.issues.file>
+                                <sonar.skip>${sonar.skip}</sonar.skip>
                             </defaults>
                             <source>${project.basedir}/src/test/groovy/verify-sonar-issues.groovy</source>
                         </configuration>
@@ -399,10 +407,10 @@
         </profile>
 
         <profile>
-            <id>travis</id>
+            <id>coveralls</id>
             <activation>
                 <property>
-                    <name>env.TRAVIS</name>
+                    <name>env.COVERALLS</name>
                     <value>true</value>
                 </property>
             </activation>

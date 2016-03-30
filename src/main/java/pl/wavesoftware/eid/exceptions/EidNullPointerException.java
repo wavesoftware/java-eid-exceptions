@@ -23,7 +23,7 @@ package pl.wavesoftware.eid.exceptions;
  *
  * @see NullPointerException
  * @see EidRuntimeException
- * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
+ * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
  */
 public class EidNullPointerException extends EidRuntimeException {
 
@@ -85,7 +85,6 @@ public class EidNullPointerException extends EidRuntimeException {
     }
 
     /**
-     * @inheritdoc
      * @return {@link NullPointerException} class
      */
     @Override

@@ -27,83 +27,74 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * <strong>This class shouldn't be used in any public API or library.</strong> It is designed to be used for in-house development
- * of end user applications which will report Bugs in standardized error pages or post them to issue tracker.
- * <p/>
+ * <p>
+ * <strong>This class shouldn't be used in any public API or library.</strong> It is designed to be used for in-house
+ * development of end user applications which will report Bugs in standardized error pages or post them to issue
+ * tracker.
+ * <p>
  * Static convenience methods that help a method or constructor check whether it was invoked correctly (whether its
- * <i>preconditions</i>
- * have been met). These methods generally accept a {@code boolean} expression which is expected to be {@code true} (or in the
- * case of {@code
- * checkNotNull}, an object reference which is expected to be non-null). When {@code false} (or {@code null}) is passed instead,
- * the {@code EidPreconditions} method throws an unchecked exception, which helps the calling method communicate to <i>its</i>
- * caller that
- * <i>that</i> caller has made a mistake.
- * <p/>
- * Each method accepts a EID String or {@link Eid} object, which is designed to ease of use and provide strict ID for given
- * Exception usage. This approach speed up development of large application and helps support teams to by giving the both static
- * and random ID for each possible unpredicted bug.
- * <p/>
+ * <i>preconditions</i> have been met). These methods generally accept a {@code boolean} expression which is expected
+ * to be {@code true} (or in the case of {@link #checkNotNull(Object, String)}, an object reference which is expected
+ * to be non-null). When {@code false} (or {@code null}) is passed instead, the {@link EidPreconditions} method throws
+ * an unchecked exception, which helps the calling method communicate to <i>its</i> caller <i>that</i> caller has made
+ * a mistake.
+ * <p>
+ * Each method accepts a EID String or {@link Eid} object, which is designed to ease of use and provide strict ID for
+ * given Exception usage. This approach speed up development of large application and helps support teams to by giving
+ * the both static and random ID for each possible unpredicted bug.
+ * <p>
  * This is best to use with tools and plugins like
  * <a href="http://plugins.netbeans.org/plugin/53137/exception-id-eid-generator">EidGenerator for Netbeans IDE</a>
- * <p/>
+ * <p>
  * Example:
- * <pre>   {@code
- *
- *   /**
- *    * Returns the positive square root of the given value.
- *    *
- *    * @throws EidIllegalArgumentException if the value is negative
- *    *}{@code /
- *   public static double sqrt(double value) {
- *     EidPreconditions.checkArgument(value >= 0.0, "20150718:012333");
- *     // calculate the square root
- *   }
- *
- *   void exampleBadCaller() {
- *     double d = sqrt(-1.0);
- *   }
- * }</pre>
- * <p/>
- * In this example, {@code checkArgument} throws an {@code EidIllegalArgumentException} to indicate that {@code exampleBadCaller}
- * made an error in <i>its</i> call to {@code sqrt}. Exception, when it will be printed will contain user given Eid and also
- * Randomly generated ID. Those fields can be displayed to user on error page on posted directly to issue tracker.
- * <p/>
- * Example:
- * <p/>
  * <pre>
+ * &#47;**
+ *  * Returns the positive square root of the given value.
+ *  *
+ *  * &#64;throws EidIllegalArgumentException if the value is negative
+ *  *&#47;
+ * public static double sqrt(double value) {
+ *     EidPreconditions.checkArgument(value &gt;= 0.0, "20150718:012333");
+ *     // calculate the square root
+ * }
  *
- * {@code
- *   // Main application class for ex.: http servlet
- *    try {
- *        performRequest(request, response);
- *    } catch (EidRuntimeException ex) {
- *        issuesTracker.put(ex);
- *        throw ex;
- *    }
- * }</pre>
- * <p/>
- * <p/>
+ * void exampleBadCaller() {
+ *     double d = sqrt(-1.0);
+ * }
+ * </pre>
+ * <p>
+ * In this example, {@link #checkArgument(boolean, String)} throws an {@link EidIllegalArgumentException} to indicate
+ * that {@code exampleBadCaller} made an error in <i>its</i> call to {@code sqrt}. Exception, when it will be printed
+ * will contain user given Eid and also randomly generated ID. Those fields can be displayed to user on error page on
+ * posted directly to issue tracker.
+ * <p>
+ * Example:
+ * <pre>
+ * // Main application class for ex.: http servlet
+ * try {
+ *     performRequest(request, response);
+ * } catch (EidRuntimeException ex) {
+ *     issuesTracker.put(ex);
+ *     throw ex;
+ * }
+ * </pre>
  * <h3>Functional try to execute blocks</h3>
- * <p/>
- * <p/>
  * Using functional blocks to handle operations, that are intended to operate properly, simplify the code and makes it more
  * readable. It's also good way to deal with untested, uncovered {@code catch} blocks. It's easy and gives developers nice way of
  * dealing with countless operations that suppose to work as intended.
- * <p/>
- * <p/>
+ * <p>
  * Example:
- * <pre><code>
+ * <pre>
+ * InputStream is = EidPreconditions.tryToExecute(new UnsafeSupplier&lt;InputStream&gt;() {
+ *     &#64;Override
+ *     public InputStream get() throws IOException {
+ *         return this.getClass().getClassLoader()
+ *             .getResourceAsStream("project.properties");
+ *     }
+ * }, "20150718:121521");
+ * </pre>
  *
- *     InputStream is = EidPreconditions.tryToExecute({@code new UnsafeSupplier<InputStream>}() {
- *        {@literal @}Override
- *         public InputStream get() throws IOException {
- *             return this.getClass().getClassLoader()
- *                 .getResourceAsStream("project.properties");
- *         }
- *     }, "20150718:121521");
- * </code></pre>
- *
- * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
+ * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
  * @since 0.1.0 (idea imported from Guava Library and COI code)
  */
 public final class EidPreconditions {
@@ -115,66 +106,62 @@ public final class EidPreconditions {
     /**
      * Ensures the truth of an expression involving one or more parameters to the calling method.
      *
-     * @param expression ({@link Nullable}) a boolean expression
-     * @param eid        ({@link Nonnull}) the exception ID to use if the check fails; will be converted to
+     * @param expression a boolean expression
+     * @param eid        the exception ID to use if the check fails; will be converted to
      *                   {@link pl.wavesoftware.eid.exceptions.Eid}
      * @throws EidIllegalArgumentException if {@code expression} is false
-     * @throws EidNullPointerException     if {@code expression} is null
      */
-    public static void checkArgument(@Nullable final Boolean expression, @Nonnull final String eid) {
-        String checkedEid = checkNotNull(eid);
-        checkArgument(expression, new Eid(checkedEid));
+    public static void checkArgument(final boolean expression, final String eid) {
+        if (!expression) {
+            throw new EidIllegalArgumentException(ensureEid(eid));
+        }
     }
 
     /**
      * Ensures the truth of an expression involving one or more parameters to the calling method.
      *
-     * @param expression    ({@link Nullable}) a boolean expression
-     * @param eid           ({@link Nonnull}) the exception ID to use if the check fails; will be converted to
+     * @param expression    a boolean expression
+     * @param eid           the exception ID to use if the check fails; will be converted to
      *                      {@link pl.wavesoftware.eid.exceptions.Eid}
      * @param messageFormat message format in form of {@link String#format(String, Object...)}
      * @param parameters    parameters fo message format in for of {@link String#format(String, Object...)}
      * @throws EidIllegalArgumentException if {@code expression} is false
-     * @throws EidNullPointerException     if {@code expression} or {@code eid} are null
      */
-    public static void checkArgument(@Nullable final Boolean expression, @Nonnull final String eid,
-                                     @Nonnull final String messageFormat, final Object... parameters) {
-        String checkedEid = checkNotNull(eid);
-        checkArgument(expression, new Eid(checkedEid), messageFormat, parameters);
-    }
-
-    /**
-     * Ensures the truth of an expression involving one or more parameters to the calling method.
-     *
-     * @param expression ({@link Nullable}) a boolean expression
-     * @param eid        ({@link Nonnull}) the exception ID to use if the check fails; will be converted to
-     *                   {@link pl.wavesoftware.eid.exceptions.Eid}
-     * @throws EidIllegalArgumentException if {@code expression} is false
-     * @throws EidNullPointerException     if {@code expression} is null
-     */
-    public static void checkArgument(@Nullable final Boolean expression, @Nonnull final Eid eid) {
-        Eid checkedEid = checkNotNull(eid);
-        if (!checkNotNull(expression, checkedEid)) {
-            throw new EidIllegalArgumentException(checkedEid);
+    public static void checkArgument(final boolean expression, final String eid,
+                                     final String messageFormat, final Object... parameters) {
+        if (!expression) {
+            throw new EidIllegalArgumentException(ensureEid(eid), messageFormat, parameters);
         }
     }
 
     /**
      * Ensures the truth of an expression involving one or more parameters to the calling method.
      *
-     * @param expression    ({@link Nullable}) a boolean expression
-     * @param eid           ({@link Nonnull}) the exception ID to use if the check fails; will be converted to
+     * @param expression a boolean expression
+     * @param eid        the exception ID to use if the check fails; will be converted to
+     *                   {@link pl.wavesoftware.eid.exceptions.Eid}
+     * @throws EidIllegalArgumentException if {@code expression} is false
+     */
+    public static void checkArgument(final boolean expression, final Eid eid) {
+        if (!expression) {
+            throw new EidIllegalArgumentException(ensureEid(eid));
+        }
+    }
+
+    /**
+     * Ensures the truth of an expression involving one or more parameters to the calling method.
+     *
+     * @param expression    a boolean expression
+     * @param eid           the exception ID to use if the check fails; will be converted to
      *                      {@link pl.wavesoftware.eid.exceptions.Eid}
      * @param messageFormat message format in form of {@link String#format(String, Object...)}
      * @param parameters    parameters fo message format in for of {@link String#format(String, Object...)}
      * @throws EidIllegalArgumentException if {@code expression} is false
-     * @throws EidNullPointerException     if {@code expression} is null
      */
-    public static void checkArgument(@Nullable final Boolean expression, @Nonnull final Eid eid,
-                                     @Nonnull final String messageFormat, final Object... parameters) {
-        Eid checkedEid = checkNotNull(eid);
-        if (!checkNotNull(expression, checkedEid)) {
-            throw new EidIllegalArgumentException(checkedEid, messageFormat, parameters);
+    public static void checkArgument(final boolean expression, final Eid eid,
+                                     final String messageFormat, final Object... parameters) {
+        if (!expression) {
+            throw new EidIllegalArgumentException(ensureEid(eid), messageFormat, parameters);
         }
     }
 
@@ -182,48 +169,14 @@ public final class EidPreconditions {
      * Ensures the truth of an expression involving the state of the calling instance, but not involving any parameters to the
      * calling method.
      *
-     * @param expression ({@link Nullable}) a boolean expression
-     * @param eid        ({@link Nonnull}) the exception message to use if the check fails; will be converted to a string using
-     *                   {@link String#valueOf(Object)}
-     * @throws EidIllegalStateException if {@code expression} is false
-     * @throws EidNullPointerException  if {@code expression} is null
-     */
-    public static void checkState(@Nullable final Boolean expression, @Nonnull final String eid) {
-        String checkedEid = checkNotNull(eid);
-        checkState(expression, new Eid(checkedEid));
-    }
-
-    /**
-     * Ensures the truth of an expression involving the state of the calling instance, but not involving any parameters to the
-     * calling method.
-     *
-     * @param expression    ({@link Nullable}) a boolean expression
-     * @param eid           ({@link Nonnull}) the exception message to use if the check fails; will be converted to a string using
-     *                      {@link String#valueOf(Object)}
-     * @param messageFormat message format in form of {@link String#format(String, Object...)}
-     * @param parameters    parameters fo message format in for of {@link String#format(String, Object...)}
-     * @throws EidIllegalStateException if {@code expression} is false
-     * @throws EidNullPointerException  if {@code expression} is null
-     */
-    public static void checkState(@Nullable final Boolean expression, @Nonnull final String eid,
-                                  @Nonnull final String messageFormat, final Object... parameters) {
-        String checkedEid = checkNotNull(eid);
-        checkState(expression, new Eid(checkedEid), messageFormat, parameters);
-    }
-
-    /**
-     * Ensures the truth of an expression involving the state of the calling instance, but not involving any parameters to the
-     * calling method.
-     *
-     * @param expression ({@link Nullable}) a boolean expression
-     * @param eid        ({@link Nonnull}) the exception message to use if the check fails; will be converted to a string using
+     * @param expression a boolean expression
+     * @param eid        the exception message to use if the check fails; will be converted to a string using
      *                   {@link String#valueOf(Object)}
      * @throws EidIllegalStateException if {@code expression} is false
      */
-    public static void checkState(@Nullable final Boolean expression, @Nonnull final Eid eid) {
-        Eid checkedEid = checkNotNull(eid);
-        if (!checkNotNull(expression, checkedEid)) {
-            throw new EidIllegalStateException(checkedEid);
+    public static void checkState(final boolean expression, final String eid) {
+        if (!expression) {
+            throw new EidIllegalStateException(ensureEid(eid));
         }
     }
 
@@ -231,18 +184,50 @@ public final class EidPreconditions {
      * Ensures the truth of an expression involving the state of the calling instance, but not involving any parameters to the
      * calling method.
      *
-     * @param expression    ({@link Nullable}) a boolean expression
-     * @param eid           ({@link Nonnull}) the exception message to use if the check fails; will be converted to a string using
+     * @param expression    a boolean expression
+     * @param eid           the exception message to use if the check fails; will be converted to a string using
      *                      {@link String#valueOf(Object)}
      * @param messageFormat message format in form of {@link String#format(String, Object...)}
      * @param parameters    parameters fo message format in for of {@link String#format(String, Object...)}
      * @throws EidIllegalStateException if {@code expression} is false
      */
-    public static void checkState(@Nullable final Boolean expression, @Nonnull final Eid eid,
-                                  @Nonnull final String messageFormat, final Object... parameters) {
-        Eid checkedEid = checkNotNull(eid);
-        if (!checkNotNull(expression, checkedEid)) {
-            throw new EidIllegalStateException(checkedEid, messageFormat, parameters);
+    public static void checkState(final boolean expression, final String eid,
+                                  final String messageFormat, final Object... parameters) {
+        if (!expression) {
+            throw new EidIllegalStateException(ensureEid(eid), messageFormat, parameters);
+        }
+    }
+
+    /**
+     * Ensures the truth of an expression involving the state of the calling instance, but not involving any parameters to the
+     * calling method.
+     *
+     * @param expression a boolean expression
+     * @param eid        the exception message to use if the check fails; will be converted to a string using
+     *                   {@link String#valueOf(Object)}
+     * @throws EidIllegalStateException if {@code expression} is false
+     */
+    public static void checkState(final Boolean expression, final Eid eid) {
+        if (!expression) {
+            throw new EidIllegalStateException(ensureEid(eid));
+        }
+    }
+
+    /**
+     * Ensures the truth of an expression involving the state of the calling instance, but not involving any parameters to the
+     * calling method.
+     *
+     * @param expression    a boolean expression
+     * @param eid           the exception message to use if the check fails; will be converted to a string using
+     *                      {@link String#valueOf(Object)}
+     * @param messageFormat message format in form of {@link String#format(String, Object...)}
+     * @param parameters    parameters fo message format in for of {@link String#format(String, Object...)}
+     * @throws EidIllegalStateException if {@code expression} is false
+     */
+    public static void checkState(final boolean expression, final Eid eid,
+                                  final String messageFormat, final Object... parameters) {
+        if (!expression) {
+            throw new EidIllegalStateException(ensureEid(eid), messageFormat, parameters);
         }
     }
 
@@ -256,10 +241,11 @@ public final class EidPreconditions {
      * @return the non-null reference that was validated
      * @throws EidNullPointerException if {@code reference} is null
      */
-    @Nonnull
-    public static <T> T checkNotNull(@Nullable final T reference, @Nonnull final String eid) {
-        String checkedEid = checkNotNull(eid);
-        return checkNotNull(reference, new Eid(checkedEid));
+    public static <T> T checkNotNull(@Nullable final T reference, final String eid) {
+        if (reference == null) {
+            throw new EidNullPointerException(ensureEid(eid));
+        }
+        return reference;
     }
 
     /**
@@ -274,11 +260,12 @@ public final class EidPreconditions {
      * @return the non-null reference that was validated
      * @throws EidNullPointerException if {@code reference} is null
      */
-    @Nonnull
-    public static <T> T checkNotNull(@Nullable final T reference, @Nonnull final String eid,
-                                     @Nonnull final String messageFormat, final Object... parameters) {
-        String checkedEid = checkNotNull(eid);
-        return checkNotNull(reference, new Eid(checkedEid), messageFormat, parameters);
+    public static <T> T checkNotNull(@Nullable final T reference, final String eid,
+                                     final String messageFormat, final Object... parameters) {
+        if (reference == null) {
+            throw new EidNullPointerException(ensureEid(eid), messageFormat, parameters);
+        }
+        return reference;
     }
 
     /**
@@ -291,11 +278,9 @@ public final class EidPreconditions {
      * @return the non-null reference that was validated
      * @throws EidNullPointerException if {@code reference} is null
      */
-    @Nonnull
-    public static <T> T checkNotNull(@Nullable final T reference, @Nonnull final Eid eid) {
-        Eid checkedEid = checkNotNull(eid);
+    public static <T> T checkNotNull(@Nullable final T reference, final Eid eid) {
         if (reference == null) {
-            throw new EidNullPointerException(checkedEid);
+            throw new EidNullPointerException(ensureEid(eid));
         }
         return reference;
     }
@@ -313,11 +298,10 @@ public final class EidPreconditions {
      * @throws EidNullPointerException if {@code reference} is null
      */
     @Nonnull
-    public static <T> T checkNotNull(@Nullable final T reference, @Nonnull final Eid eid,
-                                     @Nonnull final String messageFormat, final Object... parameters) {
-        Eid checkedEid = checkNotNull(eid);
+    public static <T> T checkNotNull(@Nullable final T reference, final Eid eid,
+                                     final String messageFormat, final Object... parameters) {
         if (reference == null) {
-            throw new EidNullPointerException(checkedEid, messageFormat, parameters);
+            throw new EidNullPointerException(ensureEid(eid), messageFormat, parameters);
         }
         return reference;
     }
@@ -333,48 +317,12 @@ public final class EidPreconditions {
      * @throws EidIndexOutOfBoundsException if {@code index} is negative or is not less than {@code size}
      * @throws EidIllegalArgumentException  if {@code size} is negative
      */
-    public static int checkElementIndex(int index, int size, @Nonnull final String eid) {
-        String checkedEid = checkNotNull(eid);
-        return checkElementIndex(index, size, new Eid(checkedEid));
-    }
-
-    /**
-     * Ensures that {@code index} specifies a valid <i>element</i> in an array, list or string of size {@code size}. An element
-     * index may range from zero, inclusive, to {@code size}, exclusive.
-     *
-     * @param index         a user-supplied index identifying an element of an array, list or string
-     * @param size          the size of that array, list or string
-     * @param eid           the text to use to describe this index in an error message
-     * @param messageFormat message format in form of {@link String#format(String, Object...)}
-     * @param parameters    parameters fo message format in for of {@link String#format(String, Object...)}
-     * @return the value of {@code index}
-     * @throws EidIndexOutOfBoundsException if {@code index} is negative or is not less than {@code size}
-     * @throws EidIllegalArgumentException  if {@code size} is negative
-     */
-    public static int checkElementIndex(int index, int size, @Nonnull final String eid,
-                                        @Nonnull final String messageFormat, final Object... parameters) {
-        String checkedEid = checkNotNull(eid);
-        return checkElementIndex(index, size, new Eid(checkedEid), messageFormat, parameters);
-    }
-
-    /**
-     * Ensures that {@code index} specifies a valid <i>element</i> in an array, list or string of size {@code size}. An element
-     * index may range from zero, inclusive, to {@code size}, exclusive.
-     *
-     * @param index a user-supplied index identifying an element of an array, list or string
-     * @param size  the size of that array, list or string
-     * @param eid   the text to use to describe this index in an error message
-     * @return the value of {@code index}
-     * @throws EidIndexOutOfBoundsException if {@code index} is negative or is not less than {@code size}
-     * @throws EidIllegalArgumentException  if {@code size} is negative
-     */
-    public static int checkElementIndex(int index, int size, @Nonnull final Eid eid) {
-        Eid checkedEid = checkNotNull(eid);
+    public static int checkElementIndex(int index, int size, final String eid) {
         if (isSizeIllegal(size)) {
-            throw new EidIllegalArgumentException(checkedEid);
+            throw new EidIllegalArgumentException(ensureEid(eid));
         }
         if (isIndexAndSizeIllegal(index, size)) {
-            throw new EidIndexOutOfBoundsException(checkedEid);
+            throw new EidIndexOutOfBoundsException(ensureEid(eid));
         }
         return index;
     }
@@ -392,14 +340,58 @@ public final class EidPreconditions {
      * @throws EidIndexOutOfBoundsException if {@code index} is negative or is not less than {@code size}
      * @throws EidIllegalArgumentException  if {@code size} is negative
      */
-    public static int checkElementIndex(int index, int size, @Nonnull final Eid eid, @Nonnull final String messageFormat,
-                                        final Object... parameters) {
-        Eid checkedEid = checkNotNull(eid);
+    public static int checkElementIndex(int index, int size, final String eid,
+                                        final String messageFormat, final Object... parameters) {
         if (isSizeIllegal(size)) {
-            throw new EidIllegalArgumentException(checkedEid, messageFormat, parameters);
+            throw new EidIllegalArgumentException(ensureEid(eid), messageFormat, parameters);
         }
         if (isIndexAndSizeIllegal(index, size)) {
-            throw new EidIndexOutOfBoundsException(checkedEid, messageFormat, parameters);
+            throw new EidIndexOutOfBoundsException(ensureEid(eid), messageFormat, parameters);
+        }
+        return index;
+    }
+
+    /**
+     * Ensures that {@code index} specifies a valid <i>element</i> in an array, list or string of size {@code size}. An element
+     * index may range from zero, inclusive, to {@code size}, exclusive.
+     *
+     * @param index a user-supplied index identifying an element of an array, list or string
+     * @param size  the size of that array, list or string
+     * @param eid   the text to use to describe this index in an error message
+     * @return the value of {@code index}
+     * @throws EidIndexOutOfBoundsException if {@code index} is negative or is not less than {@code size}
+     * @throws EidIllegalArgumentException  if {@code size} is negative
+     */
+    public static int checkElementIndex(int index, int size, final Eid eid) {
+        if (isSizeIllegal(size)) {
+            throw new EidIllegalArgumentException(ensureEid(eid));
+        }
+        if (isIndexAndSizeIllegal(index, size)) {
+            throw new EidIndexOutOfBoundsException(ensureEid(eid));
+        }
+        return index;
+    }
+
+    /**
+     * Ensures that {@code index} specifies a valid <i>element</i> in an array, list or string of size {@code size}. An element
+     * index may range from zero, inclusive, to {@code size}, exclusive.
+     *
+     * @param index         a user-supplied index identifying an element of an array, list or string
+     * @param size          the size of that array, list or string
+     * @param eid           the text to use to describe this index in an error message
+     * @param messageFormat message format in form of {@link String#format(String, Object...)}
+     * @param parameters    parameters fo message format in for of {@link String#format(String, Object...)}
+     * @return the value of {@code index}
+     * @throws EidIndexOutOfBoundsException if {@code index} is negative or is not less than {@code size}
+     * @throws EidIllegalArgumentException  if {@code size} is negative
+     */
+    public static int checkElementIndex(int index, int size, final Eid eid, final String messageFormat,
+                                        final Object... parameters) {
+        if (isSizeIllegal(size)) {
+            throw new EidIllegalArgumentException(ensureEid(eid), messageFormat, parameters);
+        }
+        if (isIndexAndSizeIllegal(index, size)) {
+            throw new EidIndexOutOfBoundsException(ensureEid(eid), messageFormat, parameters);
         }
         return index;
     }
@@ -413,34 +405,6 @@ public final class EidPreconditions {
     }
 
     /**
-     * @deprecated Use instead {@link EidPreconditions#tryToExecute(UnsafeSupplier, String)}. To be removed in next release.
-     */
-    @Nullable
-    @Deprecated
-    public static <R> R tryToExecute(@Nonnull final RiskyCode<R> code, @Nonnull final String eid) {
-        return tryToExecute(new UnsafeSupplier<R>() {
-            @Override
-            public R get() throws Exception {
-                return code.execute();
-            }
-        }, eid);
-    }
-
-    /**
-     * @deprecated Use instead {@link EidPreconditions#tryToExecute(UnsafeSupplier, Eid)}. To be removed in next release.
-     */
-    @Deprecated
-    @Nullable
-    public static <R> R tryToExecute(@Nonnull final RiskyCode<R> code, @Nonnull final Eid eid) {
-        return tryToExecute(new UnsafeSupplier<R>() {
-            @Override
-            public R get() throws Exception {
-                return code.execute();
-            }
-        }, eid);
-    }
-
-    /**
      * For more info in JavaDoc see {@link EidPreconditions#tryToExecute(UnsafeSupplier, Eid)}
      *
      * @param <R>      return type
@@ -450,10 +414,12 @@ public final class EidPreconditions {
      * @throws EidRuntimeException if code block thrown any exception, which in that case is wrapped in EidRuntimeException
      * @see EidPreconditions#tryToExecute(UnsafeSupplier, Eid)
      */
-    @Nullable
-    public static <R> R tryToExecute(@Nonnull final UnsafeSupplier<R> supplier, @Nonnull final String eid) {
-        String checkedEid = checkNotNull(eid);
-        return tryToExecute(supplier, new Eid(checkedEid));
+    public static <R> R tryToExecute(final UnsafeSupplier<R> supplier, final String eid) {
+        try {
+            return supplier.get();
+        } catch (Exception throwable) {
+            throw new EidRuntimeException(ensureEid(eid), throwable);
+        }
     }
 
     /**
@@ -464,26 +430,28 @@ public final class EidPreconditions {
      * @throws EidRuntimeException if code block thrown any exception, which in that case is wrapped in EidRuntimeException
      * @see EidPreconditions#tryToExecute(UnsafeProcedure, Eid)
      */
-    public static void tryToExecute(@Nonnull final UnsafeProcedure procedure, @Nonnull final String eid) {
-        String checkedEid = checkNotNull(eid);
-        tryToExecute(procedure, new Eid(checkedEid));
+    public static void tryToExecute(final UnsafeProcedure procedure, final String eid) {
+        try {
+            procedure.execute();
+        } catch (Exception throwable) {
+            throw new EidRuntimeException(ensureEid(eid), throwable);
+        }
     }
 
     /**
      * Tries to execute code in given unsafe supplier code block, and if exception is thrown, it will gets rethrown as a
      * {@link EidRuntimeException} with eid given as a argument. This is because this exception is threaded as a software bug!
-     * <p/>
+     * <p>
      * Example:
-     * <pre><code>
-     *
-     * Document doc = EidPreconditions.tryToExecute({@code new UnsafeSupplier<Document>}() {
-     *    {@literal @}Override
+     * <pre>
+     * Document doc = EidPreconditions.tryToExecute(new UnsafeSupplier&lt;Document&gt;}() {
+     *     &#64;Override
      *     public Document get() throws SAXException, IOException {
-     *          DocumentBuilder docBuilder = ...
-     *          return docBuilder.parse(new InputSource(reader));
+     *         DocumentBuilder docBuilder = ...
+     *         return docBuilder.parse(new InputSource(reader));
      *     }
      * }, new Eid("20150718:121521"));
-     * </code></pre>
+     * </pre>
      *
      * @param <R>      return type
      * @param supplier unsafe supplier code to be executed within a try-catch block
@@ -491,60 +459,38 @@ public final class EidPreconditions {
      * @return A block of code return type, if exception is not thrown
      * @throws EidRuntimeException if code block thrown any exception, which in that case is wrapped in EidRuntimeException
      */
-    @Nullable
-    public static <R> R tryToExecute(@Nonnull final UnsafeSupplier<R> supplier, @Nonnull final Eid eid) {
-        Eid checkedEid = checkNotNull(eid);
+    public static <R> R tryToExecute(final UnsafeSupplier<R> supplier, final Eid eid) {
         try {
             return supplier.get();
         } catch (Exception throwable) {
-            throw new EidRuntimeException(checkedEid, throwable);
+            throw new EidRuntimeException(ensureEid(eid), throwable);
         }
     }
 
     /**
      * Tries to execute code in given unsafe procedure code block, and if exception is thrown, it will gets rethrown as a
      * {@link EidRuntimeException} with eid given as a argument. This is because this exception is threaded as a software bug!
-     * <p/>
+     * <p>
      * Example:
-     * <pre><code>
-     *
-     * EidPreconditions.tryToExecute({@code new UnsafeProcedure}() {
-     *    {@literal @}Override
+     * <pre>
+     * EidPreconditions.tryToExecute(new UnsafeProcedure() {
+     *     &#64;Override
      *     public void execute() throws EJBException {
-     *          em.persist(user);
+     *         em.persist(user);
      *     }
      * }, new Eid("20151117:184627"));
-     * </code></pre>
+     * </pre>
      *
      * @param procedure unsafe procedure code to be executed within a try-catch block
      * @param eid       unique developer identifier from date for ex.: "20150716:123200"
      * @throws EidRuntimeException if code block thrown any exception, which in that case is wrapped in EidRuntimeException
      */
-    public static void tryToExecute(@Nonnull final UnsafeProcedure procedure, @Nonnull final Eid eid) {
-        Eid checkedEid = checkNotNull(eid);
+    public static void tryToExecute(final UnsafeProcedure procedure, final Eid eid) {
         try {
             procedure.execute();
         } catch (Exception throwable) {
-            throw new EidRuntimeException(checkedEid, throwable);
+            throw new EidRuntimeException(ensureEid(eid), throwable);
         }
-    }
-
-    /**
-     * Code that is risky to execute and can throw some checked Exceptions. To be used with
-     *
-     * @param <R> a return type from risky code block
-     * @deprecated Use instead {@link UnsafeSupplier} or {@link UnsafeProcedure}. To be removed in next release.
-     */
-    @Deprecated
-    public interface RiskyCode<R> {
-
-        /**
-         * Executes a client code
-         *
-         * @return a object of client code
-         * @throws Exception this exception should be set to concrete one
-         */
-        R execute() throws Exception;
     }
 
     /**
@@ -580,14 +526,17 @@ public final class EidPreconditions {
         void execute() throws Exception;
     }
 
-    private static boolean isNull(@Nullable Object reference) {
-        return reference == null;
+    private static Eid ensureEid(@Nullable Eid eid) {
+        if (eid == null) {
+            return new Eid("20160329:132823", "EID-NULL");
+        }
+        return eid;
     }
 
-    private static <T> T checkNotNull(@Nullable T reference) {
-        if (isNull(reference)) {
-            throw new IllegalArgumentException("Pass not-null Eid to EidPreconditions first!");
+    private static Eid ensureEid(@Nullable String eid) {
+        if (eid == null) {
+            return new Eid("20160329:133052", "EID-NULL");
         }
-        return reference;
+        return new Eid(eid);
     }
 }

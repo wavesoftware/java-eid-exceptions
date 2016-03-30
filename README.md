@@ -43,7 +43,7 @@ This classes shouldn't be used in any public API or library. It is designed to b
 <dependency>
     <groupId>pl.wavesoftware</groupId>
     <artifactId>eid-exceptions</artifactId>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
 </dependency>
 ```
 
@@ -133,7 +133,7 @@ Example:
 
 ```java
 InputStream is = EidPreconditions.tryToExecute(new UnsafeSupplier<InputStream>() {
-    @Override
+    @Override @Nonnull
     public InputStream get() throws IOException {
         return this.getClass().getClassLoader()
             .getResourceAsStream("project.properties");
@@ -184,6 +184,11 @@ Even if you can't contribute code, if you have an idea for an improvement please
 
 ### Releases
 
+- 1.2.0
+  - Major performance tweaks and tests for `EidPreconditions` methods #4 
+  - Major performance tweaks and tests for `Eid` class #2 
+  - Switched to new OSSRH maven template
+  - Switched to Git Flow via jgitflow plugin
 - 1.1.0
   - Adding support for formatted messages in exceptions and also in utility methods of `EidPreconditions`  
 - 1.0.1

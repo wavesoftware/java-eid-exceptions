@@ -162,8 +162,7 @@ public class Eid implements Serializable {
     /**
      * Makes a log message from this EID object
      * <p>
-     * <p>This method is for convenience of usage of EID in logging. You can use it like this:
-     * <p>
+     * This method is for convenience of usage of EID in logging. You can use it like this:
      * <pre>
      * log.debug(new Eid("20151025:202129").makeLogMessage("A request: %s", request));
      * </pre>

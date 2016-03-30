@@ -54,13 +54,13 @@ public class EidRuntimeException extends RuntimeException implements EidContaine
     }
 
     /**
-     * Constructs a new runtime exception with the specified cause, a exception Id and detail message of <tt>eid.toString() + " =>
-     * " + (cause==null ? null : cause.toString())</tt>
-     * (which typically contains the class and detail message of
-     * <tt>cause</tt>). This constructor is useful for runtime exceptions that are little more than wrappers for other throwable.
+     * Constructs a new runtime exception with the specified cause, a exception Id and detail message of
+     * <code>eid.toString() + " =&gt; " + (cause==null ? null : cause.toString())</code> (which typically contains
+     * the class and detail message of <code>cause</code>). This constructor is useful for runtime exceptions
+     * that are little more than wrappers for other throwable.
      *
      * @param eid exception ID
-     * @param cause the cause (which is saved for later retrieval by the {@link #getCause()} method). (A <tt>null</tt>
+     * @param cause the cause (which is saved for later retrieval by the {@link #getCause()} method). (A <code>null</code>
      * value is permitted, and indicates that the cause is nonexistent or unknown.)
      */
     public EidRuntimeException(String eid, Throwable cause) {
@@ -72,7 +72,7 @@ public class EidRuntimeException extends RuntimeException implements EidContaine
      *
      * @param eid exception ID
      * @param ref the ref code for Eid
-     * @param cause the cause (which is saved for later retrieval by the {@link #getCause()} method). (A <tt>null</tt> value is
+     * @param cause the cause (which is saved for later retrieval by the {@link #getCause()} method). (A <code>null</code> value is
      * permitted, and indicates that the cause is nonexistent or unknown.)
      */
     public EidRuntimeException(String eid, String ref, Throwable cause) {
@@ -92,10 +92,10 @@ public class EidRuntimeException extends RuntimeException implements EidContaine
     /**
      * Constructs a new runtime exception with the specified Eid object and cause
      * <p>
-     * The detail message is computed as <tt>String.format(Eid.getMessageFormat(), id.toString(), message(cause))</tt>
+     * The detail message is computed as <code>String.format(Eid.getMessageFormat(), id.toString(), message(cause))</code>
      *
      * @param id exception ID
-     * @param cause the cause (which is saved for later retrieval by the {@link #getCause()} method). (A <tt>null</tt> value is
+     * @param cause the cause (which is saved for later retrieval by the {@link #getCause()} method). (A <code>null</code> value is
      * permitted, and indicates that the cause is nonexistent or unknown.)
      */
     public EidRuntimeException(Eid id, Throwable cause) {

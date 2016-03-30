@@ -27,81 +27,72 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
- * <strong>This class shouldn't be used in any public API or library.</strong> It is designed to be used for in-house development
- * of end user applications which will report Bugs in standardized error pages or post them to issue tracker.
- * <p/>
+ * <p>
+ * <strong>This class shouldn't be used in any public API or library.</strong> It is designed to be used for in-house
+ * development of end user applications which will report Bugs in standardized error pages or post them to issue
+ * tracker.
+ * <p>
  * Static convenience methods that help a method or constructor check whether it was invoked correctly (whether its
- * <i>preconditions</i>
- * have been met). These methods generally accept a {@code boolean} expression which is expected to be {@code true} (or in the
- * case of {@code
- * checkNotNull}, an object reference which is expected to be non-null). When {@code false} (or {@code null}) is passed instead,
- * the {@code EidPreconditions} method throws an unchecked exception, which helps the calling method communicate to <i>its</i>
- * caller that
- * <i>that</i> caller has made a mistake.
- * <p/>
- * Each method accepts a EID String or {@link Eid} object, which is designed to ease of use and provide strict ID for given
- * Exception usage. This approach speed up development of large application and helps support teams to by giving the both static
- * and random ID for each possible unpredicted bug.
- * <p/>
+ * <i>preconditions</i> have been met). These methods generally accept a {@code boolean} expression which is expected
+ * to be {@code true} (or in the case of {@link #checkNotNull(Object, String)}, an object reference which is expected
+ * to be non-null). When {@code false} (or {@code null}) is passed instead, the {@link EidPreconditions} method throws
+ * an unchecked exception, which helps the calling method communicate to <i>its</i> caller <i>that</i> caller has made
+ * a mistake.
+ * <p>
+ * Each method accepts a EID String or {@link Eid} object, which is designed to ease of use and provide strict ID for
+ * given Exception usage. This approach speed up development of large application and helps support teams to by giving
+ * the both static and random ID for each possible unpredicted bug.
+ * <p>
  * This is best to use with tools and plugins like
  * <a href="http://plugins.netbeans.org/plugin/53137/exception-id-eid-generator">EidGenerator for Netbeans IDE</a>
- * <p/>
+ * <p>
  * Example:
- * <pre>   {@code
- *
- *   /**
- *    * Returns the positive square root of the given value.
- *    *
- *    * @throws EidIllegalArgumentException if the value is negative
- *    *}{@code /
- *   public static double sqrt(double value) {
- *     EidPreconditions.checkArgument(value >= 0.0, "20150718:012333");
- *     // calculate the square root
- *   }
- *
- *   void exampleBadCaller() {
- *     double d = sqrt(-1.0);
- *   }
- * }</pre>
- * <p/>
- * In this example, {@code checkArgument} throws an {@code EidIllegalArgumentException} to indicate that {@code exampleBadCaller}
- * made an error in <i>its</i> call to {@code sqrt}. Exception, when it will be printed will contain user given Eid and also
- * Randomly generated ID. Those fields can be displayed to user on error page on posted directly to issue tracker.
- * <p/>
- * Example:
- * <p/>
  * <pre>
+ * &#47;**
+ *  * Returns the positive square root of the given value.
+ *  *
+ *  * &#64;throws EidIllegalArgumentException if the value is negative
+ *  *&#47;
+ * public static double sqrt(double value) {
+ *     EidPreconditions.checkArgument(value &gt;= 0.0, "20150718:012333");
+ *     // calculate the square root
+ * }
  *
- * {@code
- *   // Main application class for ex.: http servlet
- *    try {
- *        performRequest(request, response);
- *    } catch (EidRuntimeException ex) {
- *        issuesTracker.put(ex);
- *        throw ex;
- *    }
- * }</pre>
- * <p/>
- * <p/>
+ * void exampleBadCaller() {
+ *     double d = sqrt(-1.0);
+ * }
+ * </pre>
+ * <p>
+ * In this example, {@link #checkArgument(boolean, String)} throws an {@link EidIllegalArgumentException} to indicate
+ * that {@code exampleBadCaller} made an error in <i>its</i> call to {@code sqrt}. Exception, when it will be printed
+ * will contain user given Eid and also randomly generated ID. Those fields can be displayed to user on error page on
+ * posted directly to issue tracker.
+ * <p>
+ * Example:
+ * <pre>
+ * // Main application class for ex.: http servlet
+ * try {
+ *     performRequest(request, response);
+ * } catch (EidRuntimeException ex) {
+ *     issuesTracker.put(ex);
+ *     throw ex;
+ * }
+ * </pre>
  * <h3>Functional try to execute blocks</h3>
- * <p/>
- * <p/>
  * Using functional blocks to handle operations, that are intended to operate properly, simplify the code and makes it more
  * readable. It's also good way to deal with untested, uncovered {@code catch} blocks. It's easy and gives developers nice way of
  * dealing with countless operations that suppose to work as intended.
- * <p/>
- * <p/>
+ * <p>
  * Example:
- * <pre><code>
- *
- *     InputStream is = EidPreconditions.tryToExecute({@code new UnsafeSupplier<InputStream>}() {
- *        {@literal @}Override
- *         public InputStream get() throws IOException {
- *             return this.getClass().getClassLoader()
- *                 .getResourceAsStream("project.properties");
- *         }
- *     }, "20150718:121521");
- * </code></pre>
+ * <pre>
+ * InputStream is = EidPreconditions.tryToExecute(new UnsafeSupplier&lt;InputStream&gt;() {
+ *     &#64;Override
+ *     public InputStream get() throws IOException {
+ *         return this.getClass().getClassLoader()
+ *             .getResourceAsStream("project.properties");
+ *     }
+ * }, "20150718:121521");
+ * </pre>
  *
  * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
  * @since 0.1.0 (idea imported from Guava Library and COI code)
@@ -450,18 +441,17 @@ public final class EidPreconditions {
     /**
      * Tries to execute code in given unsafe supplier code block, and if exception is thrown, it will gets rethrown as a
      * {@link EidRuntimeException} with eid given as a argument. This is because this exception is threaded as a software bug!
-     * <p/>
+     * <p>
      * Example:
-     * <pre><code>
-     *
-     * Document doc = EidPreconditions.tryToExecute({@code new UnsafeSupplier<Document>}() {
-     *    {@literal @}Override
+     * <pre>
+     * Document doc = EidPreconditions.tryToExecute(new UnsafeSupplier&lt;Document&gt;}() {
+     *     &#64;Override
      *     public Document get() throws SAXException, IOException {
-     *          DocumentBuilder docBuilder = ...
-     *          return docBuilder.parse(new InputSource(reader));
+     *         DocumentBuilder docBuilder = ...
+     *         return docBuilder.parse(new InputSource(reader));
      *     }
      * }, new Eid("20150718:121521"));
-     * </code></pre>
+     * </pre>
      *
      * @param <R>      return type
      * @param supplier unsafe supplier code to be executed within a try-catch block
@@ -480,17 +470,16 @@ public final class EidPreconditions {
     /**
      * Tries to execute code in given unsafe procedure code block, and if exception is thrown, it will gets rethrown as a
      * {@link EidRuntimeException} with eid given as a argument. This is because this exception is threaded as a software bug!
-     * <p/>
+     * <p>
      * Example:
-     * <pre><code>
-     *
-     * EidPreconditions.tryToExecute({@code new UnsafeProcedure}() {
-     *    {@literal @}Override
+     * <pre>
+     * EidPreconditions.tryToExecute(new UnsafeProcedure() {
+     *     &#64;Override
      *     public void execute() throws EJBException {
-     *          em.persist(user);
+     *         em.persist(user);
      *     }
      * }, new Eid("20151117:184627"));
-     * </code></pre>
+     * </pre>
      *
      * @param procedure unsafe procedure code to be executed within a try-catch block
      * @param eid       unique developer identifier from date for ex.: "20150716:123200"

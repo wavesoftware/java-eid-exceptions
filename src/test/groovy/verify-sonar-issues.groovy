@@ -1,11 +1,15 @@
 import groovy.json.JsonSlurper
 
-propertyName = 'sonar.issues.file'
-filepath = new File(properties.getAt(propertyName))
+String skip = properties.getAt('sonar.skip')
+if (skip == 'true') {
+    log.info('sonar.skip = true: Skipping Sonar issues file analysis.')
+    return;
+}
+String issueFile = properties.getAt('sonar.issues.file')
+filepath = new File(issueFile)
 log.info('Sonar Issues file: ' + filepath)
-
-def slurper = new JsonSlurper()
-def contents = filepath.getText('UTF-8')
+JsonSlurper slurper = new JsonSlurper()
+String contents = filepath.getText('UTF-8')
 def json = slurper.parseText(contents)
 
 def major = 0

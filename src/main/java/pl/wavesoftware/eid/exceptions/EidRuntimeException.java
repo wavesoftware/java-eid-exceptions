@@ -34,7 +34,7 @@ import java.util.Locale;
  * <p>
  * For convenience use {@link pl.wavesoftware.eid.utils.EidPreconditions}
  *
- * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
+ * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
  */
 public class EidRuntimeException extends RuntimeException implements EidContainer {
 

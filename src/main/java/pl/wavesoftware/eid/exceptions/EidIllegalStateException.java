@@ -23,7 +23,7 @@ package pl.wavesoftware.eid.exceptions;
  *
  * @see IllegalStateException
  * @see EidRuntimeException
- * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
+ * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
  */
 public class EidIllegalStateException extends EidRuntimeException {
 
@@ -85,7 +85,6 @@ public class EidIllegalStateException extends EidRuntimeException {
     }
 
     /**
-     * @inheritdoc
      * @return {@link IllegalStateException} class
      */
     @Override

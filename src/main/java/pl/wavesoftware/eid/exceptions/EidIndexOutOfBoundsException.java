@@ -23,7 +23,7 @@ package pl.wavesoftware.eid.exceptions;
  *
  * @see IndexOutOfBoundsException
  * @see EidRuntimeException
- * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
+ * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
  */
 public class EidIndexOutOfBoundsException extends EidRuntimeException {
 
@@ -85,7 +85,6 @@ public class EidIndexOutOfBoundsException extends EidRuntimeException {
     }
 
     /**
-     * @inheritdoc
      * @return {@link IndexOutOfBoundsException} class
      */
     @Override

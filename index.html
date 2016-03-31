@@ -65,7 +65,7 @@ Caused by: java.util.zip.DataFormatException: Zipfile in invalid format
 <div class="highlight highlight-text-xml"><pre>&lt;<span class="pl-ent">dependency</span>&gt;
     &lt;<span class="pl-ent">groupId</span>&gt;pl.wavesoftware&lt;/<span class="pl-ent">groupId</span>&gt;
     &lt;<span class="pl-ent">artifactId</span>&gt;eid-exceptions&lt;/<span class="pl-ent">artifactId</span>&gt;
-    &lt;<span class="pl-ent">version</span>&gt;1.1.0&lt;/<span class="pl-ent">version</span>&gt;
+    &lt;<span class="pl-ent">version</span>&gt;1.2.0&lt;/<span class="pl-ent">version</span>&gt;
 &lt;/<span class="pl-ent">dependency</span>&gt;</pre></div>
 
 <h3>
@@ -148,7 +148,7 @@ Caused by: java.util.zip.DataFormatException: Zipfile in invalid format
 <p>Example:</p>
 
 <div class="highlight highlight-source-java"><pre><span class="pl-smi">InputStream</span> is <span class="pl-k">=</span> <span class="pl-smi">EidPreconditions</span><span class="pl-k">.</span>tryToExecute(<span class="pl-k">new</span> <span class="pl-k">UnsafeSupplier&lt;<span class="pl-smi">InputStream</span>&gt;</span>() {
-    <span class="pl-k">@Override</span>
+    <span class="pl-k">@Override</span> <span class="pl-k">@Nonnull</span>
     <span class="pl-k">public</span> <span class="pl-smi">InputStream</span> <span class="pl-en">get</span>() <span class="pl-k">throws</span> <span class="pl-smi">IOException</span> {
         <span class="pl-k">return</span> <span class="pl-v">this</span><span class="pl-k">.</span>getClass()<span class="pl-k">.</span>getClassLoader()
             .getResourceAsStream(<span class="pl-s"><span class="pl-pds">"</span>project.properties<span class="pl-pds">"</span></span>);
@@ -202,6 +202,15 @@ For example:</p>
 <a id="releases" class="anchor" href="#releases" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Releases</h3>
 
 <ul>
+<li>1.2.0
+
+<ul>
+<li>Major performance tweaks and tests for <code>EidPreconditions</code> methods #4 </li>
+<li>Major performance tweaks and tests for <code>Eid</code> class #2 </li>
+<li>Switched to new OSSRH maven template</li>
+<li>Switched to Git Flow via jgitflow plugin</li>
+</ul>
+</li>
 <li>1.1.0
 
 <ul>

@@ -164,7 +164,7 @@ will unfold to something similar to:
 2017-01-08T16:45:34,334 DEBUG [a.b.c.RestBroker] [20151119:121814]<d1afca> REST request received: <RestRequest user=<User id=345> flow=ShowLastTransactions step=Confirm>
 ```
 
-###Contributing
+### Contributing
 
 Contributions are welcome!
 

@@ -16,10 +16,10 @@
 
 /**
  * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
- * @since 2016-03-26
+ * @since 2018-10-25
  */
-@javax.annotation.ParametersAreNonnullByDefault
 @ReturnTypesAreNonnullByDefault
-package pl.wavesoftware.eid.utils;
+@ParametersAreNonnullByDefault
+package pl.wavesoftware.eid;
 
-import pl.wavesoftware.eid.ReturnTypesAreNonnullByDefault;
+import javax.annotation.ParametersAreNonnullByDefault;

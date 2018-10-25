@@ -1,11 +1,11 @@
 /*
- * Copyright 2015 Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>.
+ * Copyright (c) 2015 Wave Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,74 +15,169 @@
  */
 package pl.wavesoftware.eid.exceptions;
 
+import pl.wavesoftware.eid.Eid;
+import pl.wavesoftware.eid.EidContainer;
+import pl.wavesoftware.eid.EidMessage;
+
 import javax.annotation.Nullable;
-import java.util.Locale;
 
 /**
- * <strong>This class shouldn't be used in any public API or library.</strong> It is designed to be used for in-house development
- * of end user applications which will report Bugs in standardized error pages or post them to issue tracker.
- * <p>
- * This exception class is baseline of all Eid runtime exception classes. It is designed to ease of use and provide strict ID for
- * given Exception usage. This approach speed up development of large application and helps support teams to by giving the both
- * static and random ID for each possible unpredicted bug.
+ * This exception class is baseline of all Eid runtime exception classes. It is
+ * designed to ease of use and provide strict ID for given Exception usage.
+ * This approach speed up development of large application and helps support
+ * teams to by giving the both static and random ID for each possible
+ * unpredicted bug.
  * <p>
  * This is best to use with tools and plugins like
- * <a href="http://plugins.netbeans.org/plugin/53137/exception-id-eid-generator">EidGenerator for Netbeans IDE</a>
- * <P>
- * <strong>Caution!</strong> There is no constructor with just a string, for reason that this forces users to add Eid in all
- * places that earlier uses {@link RuntimeException}.
+ * <a href="https://goo.gl/VTHTGq">
+ * Generating Exception ID number in Intellij IDEA with Live Templates</a> or
+ * <a href="http://plugins.netbeans.org/plugin/53137/exception-id-eid-generator">
+ * EidGenerator for Netbeans IDE</a>
+ * <p>
+ * <strong>Caution!</strong> This class shouldn't be used in any public API or
+ * library. It is designed to be used for in-house development of end user
+ * applications which will report bugs in standardized error pages or post them
+ * to issue tracker.
  * <p>
  * For convenience use {@link pl.wavesoftware.eid.utils.EidPreconditions}
  *
  * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
+ * @see pl.wavesoftware.eid.utils.EidPreconditions
+ * @see Eid
+ * @since 0.1.0
  */
 public class EidRuntimeException extends RuntimeException implements EidContainer {
 
-    private static final long serialVersionUID = -9876432123423587L;
-
+    private static final long serialVersionUID = 20181029202308L;
     private final Eid eid;
 
     /**
-     * Constructs a new runtime exception with the specified exception Id and ref code. The cause is not initialized, and may
-     * subsequently be initialized by a call to {@link #initCause}.
+     * Constructs a new runtime exception with the specified Exception ID as
+     * it's detail message, that's {@code new Eid(eid).toString()}.
+     * <p>
+     * The cause is not initialized, and may subsequently be initialized by
+     * a call to {@link #initCause}.
      *
-     * @param eid exception ID
-     * @param ref the ref code for Eid
+     * @param eid an exception ID as character sequence
      */
-    public EidRuntimeException(String eid, String ref) {
-        this(new Eid(eid, ref));
+    public EidRuntimeException(CharSequence eid) {
+        this(new Eid(eid));
     }
 
     /**
-     * Constructs a new runtime exception with the specified cause, a exception Id and detail message of
-     * <code>eid.toString() + " =&gt; " + (cause==null ? null : cause.toString())</code> (which typically contains
-     * the class and detail message of <code>cause</code>). This constructor is useful for runtime exceptions
-     * that are little more than wrappers for other throwable.
+     * Constructs a new runtime exception with the specified Exception ID and
+     * detail message.
+     * <p>
+     * The cause is not initialized, and may subsequently be initialized by a
+     * call to {@link #initCause}.
      *
-     * @param eid exception ID
-     * @param cause the cause (which is saved for later retrieval by the {@link #getCause()} method). (A <code>null</code>
-     * value is permitted, and indicates that the cause is nonexistent or unknown.)
+     * @param eid     an exception ID as character sequence
+     * @param message the detail message. The detail message is saved for
+     *                later retrieval by the {@link #getMessage()} method.
      */
-    public EidRuntimeException(String eid, Throwable cause) {
+    public EidRuntimeException(
+        CharSequence eid,
+        String message
+    ) {
+        this(new Eid(eid), message);
+    }
+
+    /**
+     * Constructs a new runtime exception with the specified Eid message.
+     * <p>
+     * The cause is not initialized, and may subsequently be initialized by a
+     * call to {@link #initCause}.
+     *
+     * @param message the Eid message. The detail message is saved for
+     *                later retrieval by the {@link #getMessage()} method.
+     */
+    public EidRuntimeException(
+        EidMessage message
+    ) {
+        super(message.toString());
+        this.eid = message.getEid();
+    }
+
+    /**
+     * Constructs a new runtime exception with the specified Exception ID,
+     * detail message and cause.
+     *
+     * <p>
+     * Note that the detail message associated with <code>cause</code> is
+     * <i>not</i> automatically incorporated in this runtime exception's
+     * detail message.
+     *
+     * @param eid     an exception ID as character sequence
+     * @param message the detail message (which is saved for later retrieval
+     *                by the {@link #getMessage()} method).
+     * @param cause   the cause (which is saved for later retrieval by the
+     *                {@link #getCause()} method).  (A <tt>null</tt> value is
+     *                permitted, and indicates that the cause is nonexistent or
+     *                unknown.)
+     */
+    public EidRuntimeException(
+        CharSequence eid,
+        String message,
+        @Nullable Throwable cause
+    ) {
+        this(new Eid(eid), message, cause);
+    }
+
+    /**
+     * Constructs a new runtime exception with the specified Exception ID,
+     * detail message and cause.
+     *
+     * <p>
+     * Note that the detail message associated with <code>cause</code> is
+     * <i>not</i> automatically incorporated in this runtime exception's
+     * detail message.
+     *
+     * @param message the Eid message (which is saved for later retrieval
+     *                by the {@link #getMessage()} method).
+     * @param cause   the cause (which is saved for later retrieval by the
+     *                {@link #getCause()} method).  (A <tt>null</tt> value is
+     *                permitted, and indicates that the cause is nonexistent or
+     *                unknown.)
+     */
+    public EidRuntimeException(
+        EidMessage message,
+        @Nullable Throwable cause
+    ) {
+        this(message.getEid(), message.toString(), cause);
+    }
+
+    /**
+     * Constructs a new runtime exception with the specified Exception ID and
+     * cause.
+     * <p>
+     * A detail message of <code>eid.toString() + (cause==null ? "" : cause.toString())</code>
+     * (which typically contains the class and detail message of
+     * <code>cause</code>).
+     * <p>
+     * This constructor is useful for runtime exceptions that are little more
+     * than wrappers for other throwables.
+     *
+     * @param eid   an exception ID as character sequence
+     * @param cause the cause (which is saved for later retrieval by the
+     *              {@link #getCause()} method).  (A <tt>null</tt> value is
+     *              permitted, and indicates that the cause is nonexistent or
+     *              unknown.)
+     */
+    public EidRuntimeException(
+        CharSequence eid,
+        @Nullable Throwable cause
+    ) {
         this(new Eid(eid), cause);
     }
 
     /**
-     * Constructs a new runtime exception with the specified a exception Id, ref code and cause.
+     * Constructs a new runtime exception with the specified Exception ID as
+     * it's detail message, that's {@code eid.toString()}.
+     * <p>
+     * The cause is not initialized, and may subsequently be initialized by
+     * a call to {@link #initCause}.
      *
-     * @param eid exception ID
-     * @param ref the ref code for Eid
-     * @param cause the cause (which is saved for later retrieval by the {@link #getCause()} method). (A <code>null</code> value is
-     * permitted, and indicates that the cause is nonexistent or unknown.)
-     */
-    public EidRuntimeException(String eid, String ref, Throwable cause) {
-        this(new Eid(eid, ref), cause);
-    }
-
-    /**
-     * Constructs a new runtime exception with the specified Eid object
-     *
-     * @param id exception ID
+     * @param id an exception ID
      */
     public EidRuntimeException(Eid id) {
         super(id.toString());
@@ -90,35 +185,72 @@ public class EidRuntimeException extends RuntimeException implements EidContaine
     }
 
     /**
-     * Constructs a new runtime exception with the specified Eid object and cause
+     * Constructs a new runtime exception with the specified Exception ID and
+     * detail message.
      * <p>
-     * The detail message is computed as <code>String.format(Eid.getMessageFormat(), id.toString(), message(cause))</code>
+     * The cause is not initialized, and may subsequently be initialized by a
+     * call to {@link #initCause}.
      *
-     * @param id exception ID
-     * @param cause the cause (which is saved for later retrieval by the {@link #getCause()} method). (A <code>null</code> value is
-     * permitted, and indicates that the cause is nonexistent or unknown.)
+     * @param id      an exception ID
+     * @param message the detail message. The detail message is saved for
+     *                later retrieval by the {@link #getMessage()} method.
      */
-    public EidRuntimeException(Eid id, Throwable cause) {
-        super(String.format(
-                Locale.ENGLISH, Eid.getMessageFormat(), id.toString(), message(cause)
-        ), cause);
-        eid = id;
+    public EidRuntimeException(
+        Eid id,
+        String message
+    ) {
+        super(id.message(message).toString());
+        this.eid = id;
     }
 
     /**
-     * Constructs a new runtime exception with specified Eid object and custom message
+     * Constructs a new runtime exception with the specified Exception ID,
+     * detail message and cause.
+     *
      * <p>
-     * The detail message is computed as:
-     * <pre>String.format(Eid.getMessageFormat(), id.toString(), String.format(messageFormat, parameters))</pre>
-     * @param id exception ID
-     * @param messageFormat message format in form of {@link String#format(String, Object...)}
-     * @param parameters parameters in form of {@link String#format(String, Object...)}
+     * Note that the detail message associated with <code>cause</code> is
+     * <i>not</i> automatically incorporated in this runtime exception's
+     * detail message.
+     *
+     * @param id     an exception ID
+     * @param message the detail message (which is saved for later retrieval
+     *                by the {@link #getMessage()} method).
+     * @param cause   the cause (which is saved for later retrieval by the
+     *                {@link #getCause()} method).  (A <tt>null</tt> value is
+     *                permitted, and indicates that the cause is nonexistent or
+     *                unknown.)
      */
-    public EidRuntimeException(Eid id, String messageFormat, Object... parameters) {
-        super(String.format(
-                Locale.ENGLISH, Eid.getMessageFormat(), id.toString(),
-                String.format(Locale.ENGLISH, messageFormat, parameters)
-        ));
+    public EidRuntimeException(
+        Eid id,
+        String message,
+        @Nullable Throwable cause
+    ) {
+        super(id.message(message).toString(), cause);
+        this.eid = id;
+    }
+
+    /**
+     * Constructs a new runtime exception with the specified Exception ID and
+     * cause.
+     * <p>
+     * A detail message of <code>eid.toString() + (cause==null ? "" : cause.toString())</code>
+     * (which typically contains the class and detail message of
+     * <code>cause</code>).
+     * <p>
+     * This constructor is useful for runtime exceptions that are little more
+     * than wrappers for other throwables.
+     *
+     * @param id   an exception ID
+     * @param cause the cause (which is saved for later retrieval by the
+     *              {@link #getCause()} method).  (A <tt>null</tt> value is
+     *              permitted, and indicates that the cause is nonexistent or
+     *              unknown.)
+     */
+    public EidRuntimeException(
+        Eid id,
+        @Nullable Throwable cause
+    ) {
+        super(messageOf(id, cause), cause);
         eid = id;
     }
 
@@ -128,17 +260,28 @@ public class EidRuntimeException extends RuntimeException implements EidContaine
     }
 
     /**
-     * Returns a standard JDK class that this ones is base on. It doesn't mean this class extends that class.
+     * Returns a standard JDK class that this ones is base on. It doesn't mean
+     * this class do extends that class, but it might.
      *
-     * @return a standard JDK class of exception, in this case {@link RuntimeException} class.
+     * @return a standard JDK class of exception, in this case
+     * {@link RuntimeException} class.
      */
-    public Class<? extends RuntimeException> getStandardJdkClass() {
+    public Class<? extends RuntimeException> getJavaClass() {
         return RuntimeException.class;
     }
 
-    private static String message(Throwable cause) {
-        String msg = coalesce(cause.getLocalizedMessage(), cause.getMessage());
-        return coalesce(msg, cause.toString());
+    private static String messageOf(Eid eid, @Nullable Throwable cause) {
+        if (cause != null) {
+            return eid.message(messageOf(cause)).toString();
+        }
+        return eid.toString();
+    }
+
+    private static String messageOf(Throwable cause) {
+        return coalesce(
+            coalesce(cause.getLocalizedMessage(), cause.getMessage()),
+            cause.toString()
+        );
     }
 
     @Nullable
@@ -149,5 +292,4 @@ public class EidRuntimeException extends RuntimeException implements EidContaine
             return first;
         }
     }
-
 }

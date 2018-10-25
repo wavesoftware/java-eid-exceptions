@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Wave Software
+ * Copyright (c) 2018 Wave Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,20 @@
  * limitations under the License.
  */
 
+package pl.wavesoftware.eid.impl;
+
+import pl.wavesoftware.eid.configuration.Configurator;
+import pl.wavesoftware.eid.configuration.ConfigurationBuilder;
+
 /**
  * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
- * @since 2016-03-26
+ * @since 2.0.0
  */
-@javax.annotation.ParametersAreNonnullByDefault
-@ReturnTypesAreNonnullByDefault
-package pl.wavesoftware.eid.utils;
-
-import pl.wavesoftware.eid.ReturnTypesAreNonnullByDefault;
+final class DefaultConfigurator implements Configurator {
+    @Override
+    public void configure(ConfigurationBuilder configuration) {
+        configuration
+            .formatter(new DefaultFormatter())
+            .uniqueIdGenerator(new DefaultUniqueIdGenerator());
+    }
+}

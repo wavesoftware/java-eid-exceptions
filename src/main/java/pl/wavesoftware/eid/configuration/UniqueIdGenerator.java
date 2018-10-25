@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Wave Software
+ * Copyright (c) 2018 Wave Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,21 @@
  * limitations under the License.
  */
 
-/**
- * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
- * @since 2016-03-26
- */
-@javax.annotation.ParametersAreNonnullByDefault
-@ReturnTypesAreNonnullByDefault
-package pl.wavesoftware.eid.utils;
+package pl.wavesoftware.eid.configuration;
 
-import pl.wavesoftware.eid.ReturnTypesAreNonnullByDefault;
+/**
+ * It is used to generate unique ID for each EID object. It's mustn't be secure
+ * because it just indicate EID object while logging.
+ *
+ * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
+ * @since 1.0.0
+ */
+public interface UniqueIdGenerator {
+
+    /**
+     * Generates a unique string ID
+     *
+     * @return a generated unique ID
+     */
+    String generateUniqId();
+}

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Wave Software
+ * Copyright (c) 2018 Wave Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,12 +14,32 @@
  * limitations under the License.
  */
 
-/**
- * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
- * @since 2016-03-26
- */
-@javax.annotation.ParametersAreNonnullByDefault
-@ReturnTypesAreNonnullByDefault
 package pl.wavesoftware.eid.utils;
 
-import pl.wavesoftware.eid.ReturnTypesAreNonnullByDefault;
+import pl.wavesoftware.eid.Eid;
+
+import javax.annotation.Nullable;
+
+/**
+ * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
+ * @since 2018-10-29
+ */
+final class EidUtil {
+    private EidUtil() {
+        // nothing here
+    }
+
+    static Eid ensureEid(@Nullable Eid eid) {
+        if (eid == null) {
+            return new Eid("20160329:132823", "EID-NULL");
+        }
+        return eid;
+    }
+
+    static Eid ensureEid(@Nullable String eid) {
+        if (eid == null) {
+            return new Eid("20160329:133052", "EID-NULL");
+        }
+        return new Eid(eid);
+    }
+}

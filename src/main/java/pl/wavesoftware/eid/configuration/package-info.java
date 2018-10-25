@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Wave Software
+ * Copyright (c) 2018 Wave Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,12 @@
 
 /**
  * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
- * @since 2016-03-26
+ * @since 2018-10-31
  */
-@javax.annotation.ParametersAreNonnullByDefault
+@ParametersAreNonnullByDefault
 @ReturnTypesAreNonnullByDefault
-package pl.wavesoftware.eid.utils;
+package pl.wavesoftware.eid.configuration;
 
 import pl.wavesoftware.eid.ReturnTypesAreNonnullByDefault;
+
+import javax.annotation.ParametersAreNonnullByDefault;

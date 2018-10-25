@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) 2015 Wave Software
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package pl.wavesoftware.eid.exceptions;
 
 import org.hamcrest.CoreMatchers;
@@ -6,6 +22,10 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import pl.wavesoftware.eid.Eid;
+import pl.wavesoftware.eid.configuration.ConfigurationBuilder;
+import pl.wavesoftware.eid.configuration.Configurator;
+import pl.wavesoftware.eid.configuration.UniqueIdGenerator;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.containsString;
@@ -24,31 +44,38 @@ public class EidIndexOutOfBoundsExceptionTest {
     private String causeString = "Index seams to be invalid";
     @SuppressWarnings("ThrowableInstanceNeverThrown")
     private Throwable cause = new ArrayIndexOutOfBoundsException(causeString);
-    private Eid.UniqIdGenerator original;
+    private Configurator original;
 
     @Before
     public void before() {
-        original = Eid.setUniqIdGenerator(new Eid.UniqIdGenerator() {
+        original = Eid.getBinding().getConfigurationSystem().configure(new Configurator() {
             @Override
-            public String generateUniqId() {
-                return constUniq;
+            public void configure(ConfigurationBuilder configuration) {
+                configuration.uniqueIdGenerator(new UniqueIdGenerator() {
+                    @Override
+                    public String generateUniqId() {
+                        return constUniq;
+                    }
+                });
             }
         });
     }
 
     @After
     public void after() {
-        Eid.setUniqIdGenerator(original);
+        Eid.getBinding().getConfigurationSystem().configure(original);
     }
 
     @Test
-    public void testGetStandardJdkClass() throws Exception {
+    public void testGetStandardJdkClass() {
         // given
         @SuppressWarnings("ThrowableInstanceNeverThrown")
-        EidIndexOutOfBoundsException ex = new EidIndexOutOfBoundsException(new Eid("20151119:103152"));
+        EidIndexOutOfBoundsException ex = new EidIndexOutOfBoundsException(
+            new Eid("20151119:103152")
+        );
 
         // when
-        Class<? extends RuntimeException> cls = ex.getStandardJdkClass();
+        Class<? extends RuntimeException> cls = ex.getJavaClass();
 
         // then
         assertThat(cls).isEqualTo(IndexOutOfBoundsException.class);
@@ -64,10 +91,13 @@ public class EidIndexOutOfBoundsExceptionTest {
         thrown.expectCause(hasMessage(containsString(causeString)));
         thrown.expectCause(CoreMatchers.<Throwable>instanceOf(ArrayIndexOutOfBoundsException.class));
         thrown.expect(EidIndexOutOfBoundsException.class);
-        thrown.expectMessage("[20151119:103158|MS+1233]<deadfa11> => Index seams to be invalid");
+        thrown.expectMessage(
+            "[20151119:103158|MS+1233]<deadfa11> => " +
+                "Index seams to be invalid"
+        );
 
         // when
-        throw new EidIndexOutOfBoundsException(eid, ref, cause);
+        throw new EidIndexOutOfBoundsException(new Eid(eid, ref), cause);
     }
 
     @Test
@@ -81,7 +111,7 @@ public class EidIndexOutOfBoundsExceptionTest {
         thrown.expectMessage("[20151119:103217|MS+1233]<deadfa11>");
 
         // when
-        throw new EidIndexOutOfBoundsException(eid, ref);
+        throw new EidIndexOutOfBoundsException(new Eid(eid, ref));
     }
 
     @Test

@@ -14,20 +14,32 @@
  * limitations under the License.
  */
 
-package pl.wavesoftware.eid;
+package pl.wavesoftware.eid.configuration;
 
-import javax.annotation.Nonnull;
-import javax.annotation.meta.TypeQualifierDefault;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import pl.wavesoftware.eid.Eid;
 
 /**
+ * Represents a formatter that will be used to display an Eid number in logs
+ * or screen.
+ *
  * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
- * @since 2016-03-26
+ * @since 2.0.0
  */
-@Nonnull
-@TypeQualifierDefault(ElementType.METHOD)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface ReturnTypesAreNonnullByDefault {
+public interface Formatter {
+    /**
+     * Formats an Eid number to string
+     *
+     * @param eid an eid number
+     * @return a string with formatted Eid number
+     */
+    String format(Eid eid);
+
+    /**
+     * Formats an Eid paired with a message.
+     *
+     * @param eid     an eid number to format
+     * @param message a message to be pair to eid
+     * @return a string with formatted eid and message
+     */
+    String format(Eid eid, String message);
 }

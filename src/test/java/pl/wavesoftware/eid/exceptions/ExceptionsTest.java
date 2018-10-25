@@ -1,11 +1,11 @@
 /*
- * Copyright 2015 Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>.
+ * Copyright (c) 2015 Wave Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -21,6 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+import pl.wavesoftware.eid.Eid;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -49,14 +50,14 @@ public class ExceptionsTest {
     }
 
     private static List<Object[]> getArguments() {
-        Throwable cause = new InterruptedException("A testing message");
-        String eid = "20150718:112954";
-        String ref = "PL-981";
+        String message = "A testing message";
+        Throwable cause = new InterruptedException(message);
+        CharSequence eid = "20150718:112954";
         Eid id = new Eid(eid);
         List<Object[]> arguments = Lists.newArrayList();
-        arguments.add(new Object[]{eid, ref, cause});
+        arguments.add(new Object[]{eid, message, cause});
         arguments.add(new Object[]{eid, cause});
-        arguments.add(new Object[]{eid, ref});
+        arguments.add(new Object[]{eid, message});
         arguments.add(new Object[]{id, cause});
         arguments.add(new Object[]{id});
         return arguments;
@@ -73,7 +74,11 @@ public class ExceptionsTest {
     private static Class<?>[] getArgumentsTypes(Object[] args) {
         List<Class<?>> classes = Lists.newArrayList();
         for (Object arg : args) {
-            classes.add(Throwable.class.isAssignableFrom(arg.getClass()) ? Throwable.class : arg.getClass());
+            classes.add(
+                Throwable.class.isAssignableFrom(arg.getClass())
+                    ? Throwable.class
+                    : arg.getClass()
+            );
         }
         Class<?>[] empty = new Class<?>[0];
         return classes.toArray(empty);
@@ -82,7 +87,8 @@ public class ExceptionsTest {
     @Parameters(name = "{index}: {0}({1})")
     public static Iterable<Object[]> data() {
         List<Object[]> argsList = getArguments();
-        Map<Class<? extends EidRuntimeException>, Class<? extends RuntimeException>> mapping = getClassesMapping();
+        Map<Class<? extends EidRuntimeException>, Class<? extends RuntimeException>> mapping =
+            getClassesMapping();
         List<Object[]> parameters = Lists.newArrayList();
         for (Map.Entry<Class<? extends EidRuntimeException>, Class<? extends RuntimeException>> entrySet : mapping.entrySet()) {
             for (Object[] args : argsList) {
@@ -92,13 +98,21 @@ public class ExceptionsTest {
         return parameters;
     }
 
-    private static void addParameters(Map.Entry<Class<? extends EidRuntimeException>, Class<? extends RuntimeException>> entrySet,
-        List<Object[]> parameters, Object[] args) {
+    private static void addParameters(
+        Map.Entry<Class<? extends EidRuntimeException>,
+            Class<? extends RuntimeException>> entrySet,
+        List<Object[]> parameters, Object[] args
+    ) {
         try {
             Class<? extends EidRuntimeException> eidClass = entrySet.getKey();
             Class<? extends RuntimeException> jdkClass = entrySet.getValue();
 
-            Constructor<? extends EidRuntimeException> constructor = eidClass.getDeclaredConstructor(getArgumentsTypes(args));
+            Class<?>[] types = getArgumentsTypes(args);
+            if (types[0] == String.class) {
+                types[0] = CharSequence.class;
+            }
+            Constructor<? extends EidRuntimeException> constructor =
+                eidClass.getDeclaredConstructor(types);
             parameters.add(new Object[]{
                 eidClass.getSimpleName(),
                 argumentsTypesToString(args),
@@ -141,7 +155,7 @@ public class ExceptionsTest {
 
         // when
         Eid eid = exception.getEid();
-        Class<? extends RuntimeException> jdkCls = exception.getStandardJdkClass();
+        Class<? extends RuntimeException> jdkCls = exception.getJavaClass();
 
         // then
         assertThat(exception).isNotNull();

@@ -14,20 +14,27 @@
  * limitations under the License.
  */
 
-package pl.wavesoftware.eid;
-
-import javax.annotation.Nonnull;
-import javax.annotation.meta.TypeQualifierDefault;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+package pl.wavesoftware.eid.configuration;
 
 /**
+ * Implementing this validator and configuring it can help you assure that every
+ * Eid in your project, conform to your rules.
+ * <p><p>
+ * Keep in mind that validation adds a little bit of cost, to every Eid creation,
+ * even if that particular Eid don't turn up to be used.
+ * <p><p>
+ * To use your {@code Validator}, use {@link Configurator}.
+ *
  * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
- * @since 2016-03-26
+ * @since 2.0.0
+ * @see Configurator
  */
-@Nonnull
-@TypeQualifierDefault(ElementType.METHOD)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface ReturnTypesAreNonnullByDefault {
+public interface Validator {
+    /**
+     * Checks an ID that will be used as an Exception ID.
+     *
+     * @param id an id to check
+     * @return true, if given ID is valid
+     */
+    boolean isValid(CharSequence id);
 }

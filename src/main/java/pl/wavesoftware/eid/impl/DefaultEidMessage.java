@@ -18,7 +18,7 @@ package pl.wavesoftware.eid.impl;
 
 import pl.wavesoftware.eid.Eid;
 import pl.wavesoftware.eid.EidMessage;
-import pl.wavesoftware.eid.configuration.Formatter;
+import pl.wavesoftware.eid.configuration.Configuration;
 
 import java.io.Serializable;
 
@@ -29,18 +29,18 @@ import java.io.Serializable;
 final class DefaultEidMessage implements EidMessage, Serializable {
     private static final long serialVersionUID = 20181029192322L;
 
-    private final EidTextRepresntation represntation;
+    private final EidTextRepresentation represntation;
 
     DefaultEidMessage(
         Eid eid,
-        Formatter formatter,
+        Configuration configuration,
         CharSequence messageFormat,
         Object[] arguments
     ) {
-        this.represntation = new EidTextRepresntation(
+        this.represntation = new EidTextRepresentation(
             eid,
-            new TextMessage(messageFormat, arguments),
-            formatter
+            new TextMessage(configuration, messageFormat, arguments),
+            configuration
         );
     }
 

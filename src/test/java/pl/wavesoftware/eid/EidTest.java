@@ -19,6 +19,17 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -29,6 +40,32 @@ public class EidTest {
 
     @Rule
     public final ExpectedException thrown = ExpectedException.none();
+
+    @Test
+    public void invalidNullEid() {
+        // given
+        String eid = null;
+
+        // then
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("Exception ID can't be null");
+
+        // when
+        Eid.eid(eid);
+    }
+
+    @Test
+    public void invalidEid() {
+        // given
+        String eid = "1234";
+
+        // then
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("Invalid ID given as an Exception ID: 1234");
+
+        // when
+        Eid.eid(eid);
+    }
 
     @Test
     public void testToString() {
@@ -97,7 +134,7 @@ public class EidTest {
     }
 
     @Test
-    public void testMakeLogMessage() {
+    public void message() {
         // given
         String code = "20151117:192211";
         Eid eid = new Eid(code);
@@ -108,6 +145,35 @@ public class EidTest {
 
         // then
         assertThat(message).contains("[20151117:192211]<", "> => Files: 18");
+    }
+
+    @Test
+    public void raceTheSun() throws InterruptedException, ExecutionException {
+        // given
+        final Eid eid = new Eid("20181114:223748");
+        ExecutorService executorService = Executors.newFixedThreadPool(4);
+        Callable<String> task = new Callable<String>() {
+            @Override
+            public String call() {
+                return eid.getUnique();
+            }
+        };
+        Collection<Callable<String>> tasks =
+            new ArrayList<Callable<String>>(20);
+        for (int i = 0; i < 20; i++) {
+            tasks.add(task);
+        }
+        executorService.invokeAll(tasks);
+
+        // when
+        List<Future<String>> executed = executorService.invokeAll(tasks);
+
+        // then
+        Set<String> collected = new HashSet<String>();
+        for (Future<String> future : executed) {
+            collected.add(future.get());
+        }
+        assertThat(collected).hasSize(1);
     }
 
 }

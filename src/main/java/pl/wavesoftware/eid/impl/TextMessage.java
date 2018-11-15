@@ -16,14 +16,16 @@
 
 package pl.wavesoftware.eid.impl;
 
-import pl.wavesoftware.eid.Eid;
+import pl.wavesoftware.eid.configuration.Configuration;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
 import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
@@ -32,14 +34,17 @@ import java.util.Locale;
 final class TextMessage implements Serializable {
     private static final long serialVersionUID = 20181029231527L;
 
+    private transient Configuration configuration;
     private transient CharSequence messageFormat;
     private transient Object[] arguments;
     private String message;
 
     TextMessage(
+        Configuration configuration,
         CharSequence messageFormat,
         Object[] arguments
     ) {
+        this.configuration = configuration;
         this.messageFormat = messageFormat;
         this.arguments = arguments.clone();
     }
@@ -49,29 +54,42 @@ final class TextMessage implements Serializable {
             message = doGet();
             messageFormat = null;
             arguments = null;
+            configuration = null;
         }
         return message;
     }
 
     private synchronized String doGet() {
         if (message == null) {
-            @Nullable
-            Locale locale = Eid.getBinding()
-                .getConfigurationSystem()
-                .getConfiguration()
-                .getLocale();
-            MessageFormat formatter = getFormatter(locale);
-            return formatter.format(arguments);
+            return getFormatter().format(arguments);
         }
         return message;
     }
 
-    private MessageFormat getFormatter(@Nullable Locale locale) {
+    private MessageFormat getFormatter() {
+        @Nullable
+        Locale locale = configuration.getLocale();
+        MessageFormat format;
         if (locale == null) {
-            return new MessageFormat(messageFormat.toString());
+            format = new MessageFormat(messageFormat.toString());
         } else {
-            return new MessageFormat(messageFormat.toString(), locale);
+            format = new MessageFormat(messageFormat.toString(), locale);
         }
+        return ensureTimeZone(format);
+    }
+
+    private MessageFormat ensureTimeZone(MessageFormat messageFormat) {
+        @Nullable
+        TimeZone zone = configuration.getTimeZone();
+        if (zone != null) {
+            Object[] formats = messageFormat.getFormats();
+            for (Object format : formats) {
+                if (format instanceof SimpleDateFormat) {
+                    ((SimpleDateFormat) format).setTimeZone(zone);
+                }
+            }
+        }
+        return messageFormat;
     }
 
     /**

@@ -16,6 +16,7 @@
 
 package pl.wavesoftware.eid.impl;
 
+import pl.wavesoftware.eid.configuration.Configuration;
 import pl.wavesoftware.eid.configuration.ConfigurationBuilder;
 import pl.wavesoftware.eid.configuration.Formatter;
 import pl.wavesoftware.eid.configuration.UniqueIdGenerator;
@@ -23,10 +24,11 @@ import pl.wavesoftware.eid.configuration.Validator;
 
 import javax.annotation.Nullable;
 import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
- * @since 2018-10-29
+ * @since 2.0.0
  */
 final class ConfigurationImpl implements MutableConfiguration {
 
@@ -36,6 +38,8 @@ final class ConfigurationImpl implements MutableConfiguration {
     private Validator validator;
     @Nullable
     private Locale locale;
+    @Nullable
+    private TimeZone zone;
 
     ConfigurationImpl() {
         // nothing here
@@ -45,7 +49,8 @@ final class ConfigurationImpl implements MutableConfiguration {
         this.formatter = settings.getFormatter();
         this.generator = settings.getIdGenerator();
         this.validator = settings.getValidator();
-        this.locale    = settings.getLocale();
+        this.locale = settings.getLocale();
+        this.zone = settings.getTimeZone();
     }
 
     @Override
@@ -67,8 +72,19 @@ final class ConfigurationImpl implements MutableConfiguration {
     }
 
     @Override
+    public ConfigurationBuilder timezone(TimeZone zone) {
+        this.zone = zone;
+        return this;
+    }
+
+    @Override
     public ConfigurationBuilder validator(Validator validator) {
         this.validator = validator;
+        return this;
+    }
+
+    @Override
+    public Configuration getFutureConfiguration() {
         return this;
     }
 
@@ -92,5 +108,11 @@ final class ConfigurationImpl implements MutableConfiguration {
     @Override
     public Locale getLocale() {
         return locale;
+    }
+
+    @Nullable
+    @Override
+    public TimeZone getTimeZone() {
+        return zone;
     }
 }

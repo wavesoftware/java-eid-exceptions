@@ -14,20 +14,32 @@
  * limitations under the License.
  */
 
-package pl.wavesoftware.eid.impl;
+package pl.wavesoftware.eid.configuration;
 
-import pl.wavesoftware.eid.configuration.Configurator;
-import pl.wavesoftware.eid.configuration.ConfigurationBuilder;
+import java.util.Locale;
+import java.util.TimeZone;
+import java.util.regex.Pattern;
 
 /**
  * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
  * @since 2.0.0
  */
-final class DefaultConfigurator implements Configurator {
+public final class TestConfigurator implements Configurator {
+
     @Override
     public void configure(ConfigurationBuilder configuration) {
         configuration
-            .formatter(new DefaultFormatter(configuration.getFutureConfiguration()))
-            .uniqueIdGenerator(new DefaultUniqueIdGenerator());
+            .locale(Locale.ENGLISH)
+            .timezone(TimeZone.getTimeZone("GMT"))
+            .validator(new PseudoDateValidator());
+    }
+
+    private static final class PseudoDateValidator implements Validator {
+        private final Pattern pattern = Pattern.compile("^\\d{8}:\\d{6}$");
+
+        @Override
+        public boolean isValid(CharSequence id) {
+            return pattern.matcher(id).matches();
+        }
     }
 }

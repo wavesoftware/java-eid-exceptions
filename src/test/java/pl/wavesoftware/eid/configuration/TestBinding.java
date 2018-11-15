@@ -14,24 +14,23 @@
  * limitations under the License.
  */
 
-package pl.wavesoftware.eid.impl;
+package pl.wavesoftware.eid.configuration;
 
 import pl.wavesoftware.eid.Eid;
 import pl.wavesoftware.eid.EidMessage;
-import pl.wavesoftware.eid.configuration.Binding;
-import pl.wavesoftware.eid.configuration.ConfigurationSystem;
+import pl.wavesoftware.eid.impl.BindingImpl;
 
 /**
  * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
  * @since 2.0.0
  */
-public final class BindingImpl implements Binding {
+public final class TestBinding implements Binding {
 
-    private final ConfigurationSystem system = new ConfigurationSystemImpl();
+    private final Binding impl = new BindingImpl();
 
     @Override
     public ConfigurationSystem getConfigurationSystem() {
-        return system;
+        return impl.getConfigurationSystem();
     }
 
     @Override
@@ -40,11 +39,8 @@ public final class BindingImpl implements Binding {
         CharSequence messageTemplate,
         Object[] templateArguments
     ) {
-        return new DefaultEidMessage(
-            eid,
-            getConfigurationSystem().getConfiguration(),
-            messageTemplate,
-            templateArguments
+        return impl.createEidMessage(
+            eid, messageTemplate, templateArguments
         );
     }
 }

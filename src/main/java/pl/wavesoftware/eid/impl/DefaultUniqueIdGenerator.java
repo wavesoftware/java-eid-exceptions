@@ -20,14 +20,13 @@ import pl.wavesoftware.eid.configuration.UniqueIdGenerator;
 
 import java.util.Random;
 
-import static java.lang.Math.abs;
-
 /**
  * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
  */
 final class DefaultUniqueIdGenerator implements UniqueIdGenerator {
 
     private static final int BASE36 = 36;
+    private static final int MIN = 60466176;
 
     private final Random random;
 
@@ -37,10 +36,8 @@ final class DefaultUniqueIdGenerator implements UniqueIdGenerator {
 
     @Override
     public String generateUniqId() {
-        long first = abs(random.nextLong() + 1);
-        int second = abs(random.nextInt(Integer.MAX_VALUE));
-        int calc = (int) (first + second);
-        return Integer.toString(abs(calc), BASE36);
+        int calc = random.nextInt(Integer.MAX_VALUE - MIN) + MIN;
+        return Integer.toString(calc, BASE36);
     }
 
     /*

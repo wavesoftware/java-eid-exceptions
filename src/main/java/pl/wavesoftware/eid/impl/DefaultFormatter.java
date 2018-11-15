@@ -17,7 +17,11 @@
 package pl.wavesoftware.eid.impl;
 
 import pl.wavesoftware.eid.Eid;
+import pl.wavesoftware.eid.configuration.Configuration;
 import pl.wavesoftware.eid.configuration.Formatter;
+
+import javax.annotation.Nullable;
+import java.util.Locale;
 
 /**
  * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
@@ -25,33 +29,56 @@ import pl.wavesoftware.eid.configuration.Formatter;
  */
 final class DefaultFormatter implements Formatter {
 
-    private static final String FORMAT     = "[%s]<%s>";
+    private static final String FORMAT = "[%s]<%s>";
     private static final String REF_FORMAT = "[%s|%s]<%s>";
     private static final String MSG_FORMAT = "%s => %s";
 
+    private final Configuration configuration;
+
+    DefaultFormatter(Configuration configuration) {
+        this.configuration = configuration;
+    }
+
     @Override
     public String format(Eid eid) {
+        String fmt;
+        Object[] params;
         if (eid.getRef() == null) {
-            return String.format(
-                FORMAT,
+            fmt = FORMAT;
+            params = new Object[]{
                 eid.getId(),
                 eid.getUnique()
-            );
+            };
+        } else {
+            fmt = REF_FORMAT;
+            params = new Object[]{
+                eid.getId(),
+                eid.getRef(),
+                eid.getUnique()
+            };
         }
-        return String.format(
-            REF_FORMAT,
-            eid.getId(),
-            eid.getRef(),
-            eid.getUnique()
-        );
+        java.util.Formatter formatter = getStringFormatter()
+            .format(fmt, params);
+        return formatter.toString();
     }
 
     @Override
     public String format(Eid eid, String message) {
-        return String.format(
-            MSG_FORMAT,
-            format(eid),
-            message
-        );
+        return getStringFormatter()
+            .format(
+                MSG_FORMAT,
+                format(eid),
+                message
+            ).toString();
+    }
+
+    private java.util.Formatter getStringFormatter() {
+        @Nullable
+        Locale locale = configuration.getLocale();
+        if (locale != null) {
+            return new java.util.Formatter(locale);
+        } else {
+            return new java.util.Formatter();
+        }
     }
 }

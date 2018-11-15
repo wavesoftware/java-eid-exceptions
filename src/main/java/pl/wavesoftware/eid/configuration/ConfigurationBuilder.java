@@ -17,6 +17,7 @@
 package pl.wavesoftware.eid.configuration;
 
 import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * Use {@link Configurator} to configure Eid settings.
@@ -55,6 +56,17 @@ public interface ConfigurationBuilder {
     ConfigurationBuilder locale(Locale locale);
 
     /**
+     * Sets a time zone to be used when formatting texts. If not set, default
+     * system time zone will be used (platform specific). See
+     * {@link TimeZone#getDefault()}.
+     *
+     * @param zone a time zone to be used
+     * @return a self reference for ease of use
+     * @see TimeZone#getDefault()
+     */
+    ConfigurationBuilder timezone(TimeZone zone);
+
+    /**
      * Configures a validator that will be called on each Eid number. By
      * default, there is no validator configured for maximum speed. Using this
      * validator you can enforce a standardization of Eid numbers.
@@ -63,4 +75,15 @@ public interface ConfigurationBuilder {
      * @return a self reference for ease of use
      */
     ConfigurationBuilder validator(Validator validator);
+
+    /**
+     * Gets an object that is a future configuration, to be used to cross
+     * configure elements of the configuration.
+     * <p>
+     * It might throw exceptions if configuration isn't completed so use it
+     * only if configuration is done.
+     *
+     * @return a future configuration
+     */
+    Configuration getFutureConfiguration();
 }

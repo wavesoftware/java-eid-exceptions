@@ -18,7 +18,7 @@ package pl.wavesoftware.eid.impl;
 
 import pl.wavesoftware.eid.Eid;
 import pl.wavesoftware.eid.EidContainer;
-import pl.wavesoftware.eid.configuration.Formatter;
+import pl.wavesoftware.eid.configuration.Configuration;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -28,22 +28,22 @@ import java.io.Serializable;
  * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
  * @since 2.0.0
  */
-final class EidTextRepresntation implements EidContainer, Serializable {
+final class EidTextRepresentation implements EidContainer, Serializable {
     private static final long serialVersionUID = 20181029231519L;
 
     private final Eid eid;
     private final TextMessage textMessage;
-    private transient Formatter formatter;
+    private transient Configuration configuration;
     private String actual;
 
-    EidTextRepresntation(
+    EidTextRepresentation(
         Eid eid,
         TextMessage textMessage,
-        Formatter formatter
+        Configuration configuration
     ) {
         this.eid = eid;
         this.textMessage = textMessage;
-        this.formatter = formatter;
+        this.configuration = configuration;
     }
 
     @Override
@@ -58,14 +58,15 @@ final class EidTextRepresntation implements EidContainer, Serializable {
     String get() {
         if (actual == null) {
             actual = doGet();
-            formatter = null;
+            configuration = null;
         }
         return actual;
     }
 
     private synchronized String doGet() {
         if (actual == null) {
-            return formatter.format(eid, textMessage.get());
+            return configuration.getFormatter()
+                .format(eid, textMessage.get());
         }
         return actual;
     }

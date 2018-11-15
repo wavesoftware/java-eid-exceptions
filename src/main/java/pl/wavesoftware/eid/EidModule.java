@@ -45,9 +45,7 @@ enum EidModule {
                 best = bond;
             }
         }
-        if (best == null) {
-            throw new IllegalStateException("20181106:000523");
-        }
+        assert best != null : "20181106:000523";
         return best;
     }
 

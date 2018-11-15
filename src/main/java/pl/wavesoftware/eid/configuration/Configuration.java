@@ -18,6 +18,7 @@ package pl.wavesoftware.eid.configuration;
 
 import javax.annotation.Nullable;
 import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * Represents a configuration of Eid library. To reconfigure use
@@ -58,4 +59,13 @@ public interface Configuration {
      */
     @Nullable
     Locale getLocale();
+
+    /**
+     * Gets a time zone to be used when formatting texts. Returns null if time
+     * zone isn't set.
+     *
+     * @return a time zone to be used when formatting texts, or null
+     */
+    @Nullable
+    TimeZone getTimeZone();
 }

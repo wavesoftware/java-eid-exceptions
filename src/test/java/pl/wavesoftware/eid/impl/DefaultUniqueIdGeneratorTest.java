@@ -16,35 +16,29 @@
 
 package pl.wavesoftware.eid.impl;
 
-import pl.wavesoftware.eid.Eid;
-import pl.wavesoftware.eid.EidMessage;
-import pl.wavesoftware.eid.configuration.Binding;
-import pl.wavesoftware.eid.configuration.ConfigurationSystem;
+import org.junit.Test;
+import pl.wavesoftware.eid.configuration.UniqueIdGenerator;
+
+import static org.assertj.core.api.Assertions.*;
 
 /**
  * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
  * @since 2.0.0
  */
-public final class BindingImpl implements Binding {
+public class DefaultUniqueIdGeneratorTest {
 
-    private final ConfigurationSystem system = new ConfigurationSystemImpl();
+    @Test
+    public void testGenerateUniqId() {
+        // given
+        UniqueIdGenerator generator = new DefaultUniqueIdGenerator();
+        String id;
 
-    @Override
-    public ConfigurationSystem getConfigurationSystem() {
-        return system;
-    }
+        for (int i = 0; i < 1000000; i++) {
+            // when
+            id = generator.generateUniqId();
 
-    @Override
-    public EidMessage createEidMessage(
-        Eid eid,
-        CharSequence messageTemplate,
-        Object[] templateArguments
-    ) {
-        return new DefaultEidMessage(
-            eid,
-            getConfigurationSystem().getConfiguration(),
-            messageTemplate,
-            templateArguments
-        );
+            // then
+            assertThat(id).hasSize(6);
+        }
     }
 }

@@ -19,7 +19,7 @@ import groovy.json.JsonSlurper
 String skip = properties.getAt('sonar.skip')
 if (skip == 'true') {
     log.info('sonar.skip = true: Skipping Sonar issues file analysis.')
-    return;
+    return
 }
 String issueFile = properties.getAt('sonar.issues.file')
 filepath = new File(issueFile)

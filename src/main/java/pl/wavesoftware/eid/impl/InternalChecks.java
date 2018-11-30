@@ -16,31 +16,22 @@
 
 package pl.wavesoftware.eid.impl;
 
-import pl.wavesoftware.eid.configuration.Configuration;
-
-import java.io.Serializable;
+import javax.annotation.Nullable;
 
 /**
  * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
  * @since 2.0.0
  */
-final class TextMessage implements Serializable {
-    private static final long serialVersionUID = 20181029231527L;
-
-    private final SerializableLazy<String> message;
-
-    TextMessage(
-        Configuration configuration,
-        CharSequence messageFormat,
-        Object[] arguments
-    ) {
-        message = SerializableLazy.of(new MessageSupplier(
-            configuration, messageFormat, arguments
-        ));
+final class InternalChecks {
+    private InternalChecks() {
+        // nothing here
     }
 
-    String get() {
-        return message.get();
+    @SuppressWarnings("squid:S1695")
+    static <T> T checkNotNull(@Nullable T value, String message) {
+        if (value == null) {
+            throw new IllegalArgumentException(message);
+        }
+        return value;
     }
-
 }

@@ -18,6 +18,10 @@ package pl.wavesoftware.eid.configuration;
 
 import pl.wavesoftware.eid.Eid;
 import pl.wavesoftware.eid.EidMessage;
+import pl.wavesoftware.eid.impl.SerializableSupplier;
+import pl.wavesoftware.eid.impl.Supplier;
+
+import java.io.Serializable;
 
 /**
  * A binding of Eid library. This interface can be used to completely
@@ -64,4 +68,13 @@ public interface Binding {
         CharSequence messageTemplate,
         Object[] templateArguments
     );
+
+    /**
+     * Creates a lazy supplier of a given supplier of serializable value
+     *
+     * @param supplier a supplier of serializable value
+     * @param <T> a serializable type
+     * @return a lazy, serializable, supplier
+     */
+    <T extends Serializable> SerializableSupplier<T> lazy(Supplier<T> supplier);
 }

@@ -21,7 +21,11 @@ import pl.wavesoftware.eid.EidMessage;
 import pl.wavesoftware.eid.configuration.Binding;
 import pl.wavesoftware.eid.configuration.ConfigurationSystem;
 
+import java.io.Serializable;
+
 /**
+ * A default binding implementation.
+ *
  * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
  * @since 2.0.0
  */
@@ -46,5 +50,10 @@ public final class BindingImpl implements Binding {
             messageTemplate,
             templateArguments
         );
+    }
+
+    @Override
+    public <T extends Serializable> SerializableSupplier<T> lazy(Supplier<T> supplier) {
+        return SerializableLazy.of(supplier);
     }
 }

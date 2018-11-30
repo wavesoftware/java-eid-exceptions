@@ -20,6 +20,7 @@ import org.hamcrest.CustomMatcher;
 import org.hamcrest.Matcher;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -328,6 +329,19 @@ public class EidPreconditionsTest {
         // given
         int index = -1;
         int size = 0;
+        // then
+        thrown.expect(EidIndexOutOfBoundsException.class);
+        thrown.expectMessage(containsString(eid));
+        // when
+        EidPreconditions.checkElementIndex(index, size, eid);
+    }
+
+    @Test
+    @Ignore("https://github.com/wavesoftware/java-eid-exceptions/issues/15")
+    public void testCheckElementIndexOnGithubIssue15() {
+        // given
+        int index = 4;
+        int size = 4;
         // then
         thrown.expect(EidIndexOutOfBoundsException.class);
         thrown.expectMessage(containsString(eid));

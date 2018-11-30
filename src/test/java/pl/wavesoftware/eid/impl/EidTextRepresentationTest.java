@@ -25,17 +25,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -44,48 +34,6 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @since 2018-11-14
  */
 public class EidTextRepresentationTest {
-
-    @Test
-    public void raceTheSun() throws InterruptedException, ExecutionException {
-        // given
-        final Eid eid = new Eid("20181114:230849");
-        Configuration configuration = Eid.getBinding()
-            .getConfigurationSystem()
-            .getConfiguration();
-        TextMessage textMessage = new TextMessage(
-            configuration,
-            "Example {0}",
-            new Object[]{new Date(2048000L)}
-        );
-        final EidTextRepresentation representation = new EidTextRepresentation(
-            eid,
-            textMessage,
-            configuration
-        );
-        ExecutorService executorService = Executors.newFixedThreadPool(4);
-        Callable<String> task = new Callable<String>() {
-            @Override
-            public String call() {
-                return representation.get();
-            }
-        };
-        Collection<Callable<String>> tasks =
-            new ArrayList<Callable<String>>(20);
-        for (int i = 0; i < 20; i++) {
-            tasks.add(task);
-        }
-        executorService.invokeAll(tasks);
-
-        // when
-        List<Future<String>> executed = executorService.invokeAll(tasks);
-
-        // then
-        Set<String> collected = new HashSet<String>();
-        for (Future<String> future : executed) {
-            collected.add(future.get());
-        }
-        assertThat(collected).hasSize(1);
-    }
 
     @Test
     public void passivation() throws IOException, ClassNotFoundException {

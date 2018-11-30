@@ -29,7 +29,8 @@ import java.util.ServiceLoader;
  */
 final class ConfigurationSystemImpl implements ConfigurationSystem {
 
-    private volatile MutableConfiguration configuration;
+    private Lazy<MutableConfiguration> configuration =
+        Lazy.of(new MutableConfigurationSupplier());
 
     ConfigurationSystemImpl() {
         // nothing here
@@ -37,46 +38,37 @@ final class ConfigurationSystemImpl implements ConfigurationSystem {
 
     @Override
     public Configuration getConfiguration() {
-        if (configuration == null) {
-            configuration = getMutableConfiguration();
-        }
-        return configuration;
+        return configuration.get();
     }
 
-    /**
-     * Configures an Eid library programmatically.
-     *
-     * @param configurator a configurator to use to configure Eid library
-     * @return a reference to a configurator that can be used to restore
-     * previous configuration
-     */
     @Override
     public Configurator configure(Configurator configurator) {
-        // ensure system configuration are loaded
-        getConfiguration();
-        MutableConfiguration configuredSettings = configuration;
-        configuration = new ConfigurationImpl(configuredSettings);
-        configurator.configure(configuration);
-        return new RestoreConfigurator(configuredSettings);
+        MutableConfiguration configured = configuration.get();
+        MutableConfiguration mutable = new ConfigurationImpl(configured);
+        configurator.configure(mutable);
+        configuration = Lazy.of(mutable);
+        return new RestoreConfigurator(configured);
     }
 
-    private synchronized MutableConfiguration getMutableConfiguration() {
-        if (configuration == null) {
+    private static final class MutableConfigurationSupplier
+        implements Supplier<MutableConfiguration> {
+
+        @Override
+        public MutableConfiguration get() {
             return loadConfiguration();
         }
-        return configuration;
-    }
 
-    private static MutableConfiguration loadConfiguration() {
-        MutableConfiguration mutableConfiguration = new ConfigurationImpl();
-        new DefaultConfigurator().configure(mutableConfiguration);
-        ServiceLoader<Configurator> configurators =
-            ServiceLoader.load(Configurator.class);
+        private static MutableConfiguration loadConfiguration() {
+            MutableConfiguration mutableConfiguration = new ConfigurationImpl();
+            new DefaultConfigurator().configure(mutableConfiguration);
+            ServiceLoader<Configurator> configurators =
+                ServiceLoader.load(Configurator.class);
 
-        for (Configurator configurator : configurators) {
-            configurator.configure(mutableConfiguration);
+            for (Configurator configurator : configurators) {
+                configurator.configure(mutableConfiguration);
+            }
+            return mutableConfiguration;
         }
-        return mutableConfiguration;
     }
 
     private static final class RestoreConfigurator

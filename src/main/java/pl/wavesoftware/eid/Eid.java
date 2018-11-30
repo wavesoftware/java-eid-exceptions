@@ -18,6 +18,8 @@ package pl.wavesoftware.eid;
 import pl.wavesoftware.eid.configuration.Binding;
 import pl.wavesoftware.eid.configuration.Configurator;
 import pl.wavesoftware.eid.configuration.Validator;
+import pl.wavesoftware.eid.impl.SerializableSupplier;
+import pl.wavesoftware.eid.impl.Supplier;
 
 import javax.annotation.Nullable;
 import java.io.Serializable;
@@ -112,7 +114,18 @@ public class Eid implements Serializable {
     private transient String id;
     @Nullable
     private transient String ref;
-    private String uniqueId;
+    private final SerializableSupplier<String> uniqueId = MODULE
+        .getBinding()
+        .lazy(new Supplier<String>() {
+            @Override
+            public String get() {
+                return MODULE.getBinding()
+                    .getConfigurationSystem()
+                    .getConfiguration()
+                    .getIdGenerator()
+                    .generateUniqId();
+            }
+        });
 
     /**
      * Constructor a single value of exception ID.
@@ -191,10 +204,7 @@ public class Eid implements Serializable {
      * @return a unique string
      */
     public String getUnique() {
-        if (uniqueId == null) {
-            uniqueId = doGetUniqueId();
-        }
-        return uniqueId;
+        return uniqueId.get();
     }
 
     /**
@@ -225,17 +235,6 @@ public class Eid implements Serializable {
             .getConfiguration()
             .getFormatter()
             .format(this);
-    }
-
-    private synchronized String doGetUniqueId() {
-        if (uniqueId == null) {
-            return MODULE.getBinding()
-                .getConfigurationSystem()
-                .getConfiguration()
-                .getIdGenerator()
-                .generateUniqId();
-        }
-        return uniqueId;
     }
 
     /*

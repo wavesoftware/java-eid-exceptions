@@ -19,6 +19,11 @@ package pl.wavesoftware.eid.configuration;
 import pl.wavesoftware.eid.Eid;
 import pl.wavesoftware.eid.EidMessage;
 import pl.wavesoftware.eid.impl.BindingImpl;
+import pl.wavesoftware.eid.impl.LazyProvider;
+import pl.wavesoftware.eid.impl.SerializableSupplier;
+import pl.wavesoftware.eid.impl.Supplier;
+
+import java.io.Serializable;
 
 /**
  * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
@@ -42,5 +47,10 @@ public final class TestBinding implements Binding {
         return impl.createEidMessage(
             eid, messageTemplate, templateArguments
         );
+    }
+
+    @Override
+    public <T extends Serializable> SerializableSupplier<T> lazy(Supplier<T> supplier) {
+        return LazyProvider.lazy(supplier);
     }
 }

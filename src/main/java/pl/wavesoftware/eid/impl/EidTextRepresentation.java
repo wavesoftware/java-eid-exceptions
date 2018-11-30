@@ -20,8 +20,6 @@ import pl.wavesoftware.eid.Eid;
 import pl.wavesoftware.eid.EidContainer;
 import pl.wavesoftware.eid.configuration.Configuration;
 
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 /**
@@ -33,17 +31,22 @@ final class EidTextRepresentation implements EidContainer, Serializable {
 
     private final Eid eid;
     private final TextMessage textMessage;
-    private transient Configuration configuration;
-    private String actual;
+    private final SerializableLazy<String> actual;
 
     EidTextRepresentation(
-        Eid eid,
-        TextMessage textMessage,
-        Configuration configuration
+        final Eid eid,
+        final TextMessage textMessage,
+        final Configuration configuration
     ) {
         this.eid = eid;
         this.textMessage = textMessage;
-        this.configuration = configuration;
+        this.actual = SerializableLazy.of(new Supplier<String>() {
+            @Override
+            public String get() {
+                return configuration.getFormatter()
+                    .format(eid, textMessage.get());
+            }
+        });
     }
 
     @Override
@@ -56,30 +59,6 @@ final class EidTextRepresentation implements EidContainer, Serializable {
     }
 
     String get() {
-        if (actual == null) {
-            actual = doGet();
-            configuration = null;
-        }
-        return actual;
-    }
-
-    private synchronized String doGet() {
-        if (actual == null) {
-            return configuration.getFormatter()
-                .format(eid, textMessage.get());
-        }
-        return actual;
-    }
-
-    /**
-     * Ensures that the value is evaluated before serialization.
-     *
-     * @param stream An object serialization stream.
-     * @throws java.io.IOException If an error occurs writing to the stream.
-     */
-    private void writeObject(ObjectOutputStream stream) throws IOException {
-        // evaluates the values if it isn't evaluated yet!
-        get();
-        stream.defaultWriteObject();
+        return actual.get();
     }
 }

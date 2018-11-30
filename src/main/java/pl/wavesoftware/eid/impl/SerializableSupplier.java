@@ -16,31 +16,15 @@
 
 package pl.wavesoftware.eid.impl;
 
-import pl.wavesoftware.eid.configuration.Configuration;
-
 import java.io.Serializable;
 
 /**
+ * A serializable supplier.
+ *
  * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
  * @since 2.0.0
+ * @param <T> a type of this supplier, must be serializable
  */
-final class TextMessage implements Serializable {
-    private static final long serialVersionUID = 20181029231527L;
-
-    private final SerializableLazy<String> message;
-
-    TextMessage(
-        Configuration configuration,
-        CharSequence messageFormat,
-        Object[] arguments
-    ) {
-        message = SerializableLazy.of(new MessageSupplier(
-            configuration, messageFormat, arguments
-        ));
-    }
-
-    String get() {
-        return message.get();
-    }
-
+public interface SerializableSupplier<T extends Serializable>
+    extends Supplier<T>, Serializable {
 }

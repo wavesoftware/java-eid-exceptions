@@ -205,12 +205,4 @@ public class EidIllegalArgumentException extends EidRuntimeException {
         super(id, cause);
     }
 
-    /**
-     * @return {@link IllegalArgumentException} class
-     */
-    @Override
-    public Class<? extends RuntimeException> getJavaClass() {
-        return IllegalArgumentException.class;
-    }
-
 }

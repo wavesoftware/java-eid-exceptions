@@ -94,11 +94,7 @@ public class EidNullPointerException extends EidRuntimeException {
      *                {@link #getCause()} method).  (A <tt>null</tt> value is
      *                permitted, and indicates that the cause is nonexistent or
      */
-    public EidNullPointerException(
-        CharSequence eid,
-        String message,
-        @Nullable Throwable cause
-    ) {
+    public EidNullPointerException(CharSequence eid, String message, @Nullable Throwable cause) {
         super(eid, message, cause);
     }
 
@@ -117,10 +113,7 @@ public class EidNullPointerException extends EidRuntimeException {
      *                {@link #getCause()} method).  (A <tt>null</tt> value is
      *                permitted, and indicates that the cause is nonexistent or
      */
-    public EidNullPointerException(
-        EidMessage message,
-        @Nullable Throwable cause
-    ) {
+    public EidNullPointerException(EidMessage message, @Nullable Throwable cause) {
         super(message, cause);
     }
 
@@ -140,10 +133,7 @@ public class EidNullPointerException extends EidRuntimeException {
      *              {@link #getCause()} method).  (A <tt>null</tt> value is
      *              permitted, and indicates that the cause is nonexistent or
      */
-    public EidNullPointerException(
-        CharSequence eid,
-        @Nullable Throwable cause
-    ) {
+    public EidNullPointerException(CharSequence eid, @Nullable Throwable cause) {
         super(eid, cause);
     }
 
@@ -191,11 +181,7 @@ public class EidNullPointerException extends EidRuntimeException {
      *                {@link #getCause()} method).  (A <tt>null</tt> value is
      *                permitted, and indicates that the cause is nonexistent or
      */
-    public EidNullPointerException(
-        Eid id,
-        String message,
-        @Nullable Throwable cause
-    ) {
+    public EidNullPointerException(Eid id, String message, @Nullable Throwable cause) {
         super(id, message, cause);
     }
 
@@ -215,19 +201,8 @@ public class EidNullPointerException extends EidRuntimeException {
      *              {@link #getCause()} method).  (A <tt>null</tt> value is
      *              permitted, and indicates that the cause is nonexistent or
      */
-    public EidNullPointerException(
-        Eid id,
-        @Nullable Throwable cause
-    ) {
+    public EidNullPointerException(Eid id, @Nullable Throwable cause) {
         super(id, cause);
-    }
-
-    /**
-     * @return {@link NullPointerException} class
-     */
-    @Override
-    public Class<? extends RuntimeException> getJavaClass() {
-        return NullPointerException.class;
     }
 
 }

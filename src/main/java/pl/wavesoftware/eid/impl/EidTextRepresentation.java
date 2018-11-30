@@ -40,7 +40,7 @@ final class EidTextRepresentation implements EidContainer, Serializable {
     ) {
         this.eid = eid;
         this.textMessage = textMessage;
-        this.actual = SerializableLazy.of(new Supplier<String>() {
+        this.actual = SerializableLazy.serializableOf(new Supplier<String>() {
             @Override
             public String get() {
                 return configuration.getFormatter()

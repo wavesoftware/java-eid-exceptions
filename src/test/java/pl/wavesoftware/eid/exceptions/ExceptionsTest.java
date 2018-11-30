@@ -149,22 +149,6 @@ public class ExceptionsTest {
     }
 
     @Test
-    public void testGetStandardJdkClass() {
-        // given
-        EidRuntimeException exception = construct();
-
-        // when
-        Eid eid = exception.getEid();
-        Class<? extends RuntimeException> jdkCls = exception.getJavaClass();
-
-        // then
-        assertThat(exception).isNotNull();
-        assertThat(eid).isNotNull();
-        assertThat(jdkCls).isNotNull();
-        assertThat(jdkCls).isEqualTo(jdkClass);
-    }
-
-    @Test
     public void testMessage() {
         // given
         EidRuntimeException exception = construct();

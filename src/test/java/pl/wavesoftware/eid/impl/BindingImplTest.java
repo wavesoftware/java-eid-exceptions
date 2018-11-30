@@ -16,31 +16,32 @@
 
 package pl.wavesoftware.eid.impl;
 
-import pl.wavesoftware.eid.configuration.Configuration;
+import org.junit.Test;
+import pl.wavesoftware.eid.configuration.Binding;
 
-import java.io.Serializable;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
- * @since 2.0.0
+ * @since 2018-11-30
  */
-final class TextMessage implements Serializable {
-    private static final long serialVersionUID = 20181029231527L;
+public class BindingImplTest {
 
-    private final SerializableLazy<String> message;
+    @Test
+    public void testLazy() {
+        // given
+        Binding binding = new BindingImpl();
 
-    TextMessage(
-        Configuration configuration,
-        CharSequence messageFormat,
-        Object[] arguments
-    ) {
-        message = SerializableLazy.serializableOf(new MessageSupplier(
-            configuration, messageFormat, arguments
-        ));
+        // when
+        SerializableSupplier<String> lazy = binding.lazy(new Supplier<String>() {
+            @Override
+            public String get() {
+                return "Alice";
+            }
+        });
+        String result = lazy.get();
+
+        // then
+        assertThat(result).isEqualTo("Alice");
     }
-
-    String get() {
-        return message.get();
-    }
-
 }

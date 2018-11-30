@@ -28,6 +28,6 @@ public final class LazyProvider {
     }
 
     public static <T extends Serializable> SerializableSupplier<T> lazy(Supplier<T> supplier) {
-        return SerializableLazy.of(supplier);
+        return SerializableLazy.serializableOf(supplier);
     }
 }

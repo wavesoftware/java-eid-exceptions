@@ -35,7 +35,7 @@ final class SerializableLazy<T extends Serializable>
         super(supplier);
     }
 
-    static <R extends Serializable> SerializableLazy<R> of(Supplier<R> supplier) {
+    static <R extends Serializable> SerializableLazy<R> serializableOf(Supplier<R> supplier) {
         return new SerializableLazy<R>(supplier);
     }
 

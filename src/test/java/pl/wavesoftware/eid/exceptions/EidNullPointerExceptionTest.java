@@ -22,12 +22,11 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import pl.wavesoftware.eid.configuration.Configurator;
 import pl.wavesoftware.eid.Eid;
 import pl.wavesoftware.eid.configuration.ConfigurationBuilder;
+import pl.wavesoftware.eid.configuration.Configurator;
 import pl.wavesoftware.eid.configuration.UniqueIdGenerator;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.internal.matchers.ThrowableMessageMatcher.hasMessage;
 
@@ -64,19 +63,6 @@ public class EidNullPointerExceptionTest {
     @After
     public void after() {
         Eid.getBinding().getConfigurationSystem().configure(original);
-    }
-
-    @Test
-    public void testGetStandardJdkClass() {
-        // given
-        @SuppressWarnings("ThrowableInstanceNeverThrown")
-        EidNullPointerException ex = new EidNullPointerException(new Eid("20151119:102323"));
-
-        // when
-        Class<? extends RuntimeException> cls = ex.getJavaClass();
-
-        // then
-        assertThat(cls).isEqualTo(NullPointerException.class);
     }
 
     @Test

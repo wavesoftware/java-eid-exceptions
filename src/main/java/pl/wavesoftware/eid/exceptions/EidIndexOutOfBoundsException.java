@@ -222,13 +222,4 @@ public class EidIndexOutOfBoundsException extends EidRuntimeException {
         super(id, cause);
     }
 
-
-    /**
-     * @return {@link IndexOutOfBoundsException} class
-     */
-    @Override
-    public Class<? extends RuntimeException> getJavaClass() {
-        return IndexOutOfBoundsException.class;
-    }
-
 }

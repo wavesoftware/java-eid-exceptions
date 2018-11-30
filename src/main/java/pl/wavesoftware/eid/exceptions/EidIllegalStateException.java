@@ -219,12 +219,4 @@ public class EidIllegalStateException extends EidRuntimeException {
         super(id, cause);
     }
 
-    /**
-     * @return {@link IllegalStateException} class
-     */
-    @Override
-    public Class<? extends RuntimeException> getJavaClass() {
-        return IllegalStateException.class;
-    }
-
 }

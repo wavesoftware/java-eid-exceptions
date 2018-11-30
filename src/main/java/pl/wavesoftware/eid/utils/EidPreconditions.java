@@ -541,7 +541,7 @@ public final class EidPreconditions {
     }
 
     private static boolean isIndexAndSizeIllegal(int index, int size) {
-        return index < 0 || index > size;
+        return index < 0 || index >= size;
     }
 
     private static boolean isSizeIllegal(int size) {

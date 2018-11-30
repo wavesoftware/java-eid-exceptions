@@ -20,13 +20,12 @@ import org.hamcrest.CustomMatcher;
 import org.hamcrest.Matcher;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import pl.wavesoftware.eid.configuration.Configurator;
 import pl.wavesoftware.eid.Eid;
 import pl.wavesoftware.eid.configuration.ConfigurationBuilder;
+import pl.wavesoftware.eid.configuration.Configurator;
 import pl.wavesoftware.eid.exceptions.EidIllegalArgumentException;
 import pl.wavesoftware.eid.exceptions.EidIllegalStateException;
 import pl.wavesoftware.eid.exceptions.EidIndexOutOfBoundsException;
@@ -337,7 +336,6 @@ public class EidPreconditionsTest {
     }
 
     @Test
-    @Ignore("https://github.com/wavesoftware/java-eid-exceptions/issues/15")
     public void testCheckElementIndexOnGithubIssue15() {
         // given
         int index = 4;

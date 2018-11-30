@@ -54,6 +54,6 @@ public final class BindingImpl implements Binding {
 
     @Override
     public <T extends Serializable> SerializableSupplier<T> lazy(Supplier<T> supplier) {
-        return SerializableLazy.of(supplier);
+        return SerializableLazy.serializableOf(supplier);
     }
 }

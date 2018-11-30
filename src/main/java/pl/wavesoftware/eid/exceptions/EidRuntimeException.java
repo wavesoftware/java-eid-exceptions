@@ -75,10 +75,7 @@ public class EidRuntimeException extends RuntimeException implements EidContaine
      * @param message the detail message. The detail message is saved for
      *                later retrieval by the {@link #getMessage()} method.
      */
-    public EidRuntimeException(
-        CharSequence eid,
-        String message
-    ) {
+    public EidRuntimeException(CharSequence eid, String message) {
         this(new Eid(eid), message);
     }
 
@@ -91,9 +88,7 @@ public class EidRuntimeException extends RuntimeException implements EidContaine
      * @param message the Eid message. The detail message is saved for
      *                later retrieval by the {@link #getMessage()} method.
      */
-    public EidRuntimeException(
-        EidMessage message
-    ) {
+    public EidRuntimeException(EidMessage message) {
         super(message.toString());
         this.eid = message.getEid();
     }
@@ -115,11 +110,7 @@ public class EidRuntimeException extends RuntimeException implements EidContaine
      *                permitted, and indicates that the cause is nonexistent or
      *                unknown.)
      */
-    public EidRuntimeException(
-        CharSequence eid,
-        String message,
-        @Nullable Throwable cause
-    ) {
+    public EidRuntimeException(CharSequence eid, String message, @Nullable Throwable cause) {
         this(new Eid(eid), message, cause);
     }
 
@@ -139,10 +130,7 @@ public class EidRuntimeException extends RuntimeException implements EidContaine
      *                permitted, and indicates that the cause is nonexistent or
      *                unknown.)
      */
-    public EidRuntimeException(
-        EidMessage message,
-        @Nullable Throwable cause
-    ) {
+    public EidRuntimeException(EidMessage message, @Nullable Throwable cause) {
         this(message.getEid(), message.toString(), cause);
     }
 
@@ -163,10 +151,7 @@ public class EidRuntimeException extends RuntimeException implements EidContaine
      *              permitted, and indicates that the cause is nonexistent or
      *              unknown.)
      */
-    public EidRuntimeException(
-        CharSequence eid,
-        @Nullable Throwable cause
-    ) {
+    public EidRuntimeException(CharSequence eid, @Nullable Throwable cause) {
         this(new Eid(eid), cause);
     }
 
@@ -195,10 +180,7 @@ public class EidRuntimeException extends RuntimeException implements EidContaine
      * @param message the detail message. The detail message is saved for
      *                later retrieval by the {@link #getMessage()} method.
      */
-    public EidRuntimeException(
-        Eid id,
-        String message
-    ) {
+    public EidRuntimeException(Eid id, String message) {
         super(id.message(message).toString());
         this.eid = id;
     }
@@ -220,11 +202,7 @@ public class EidRuntimeException extends RuntimeException implements EidContaine
      *                permitted, and indicates that the cause is nonexistent or
      *                unknown.)
      */
-    public EidRuntimeException(
-        Eid id,
-        String message,
-        @Nullable Throwable cause
-    ) {
+    public EidRuntimeException(Eid id, String message, @Nullable Throwable cause) {
         super(id.message(message).toString(), cause);
         this.eid = id;
     }
@@ -246,10 +224,7 @@ public class EidRuntimeException extends RuntimeException implements EidContaine
      *              permitted, and indicates that the cause is nonexistent or
      *              unknown.)
      */
-    public EidRuntimeException(
-        Eid id,
-        @Nullable Throwable cause
-    ) {
+    public EidRuntimeException(Eid id, @Nullable Throwable cause) {
         super(messageOf(id, cause), cause);
         eid = id;
     }
@@ -257,17 +232,6 @@ public class EidRuntimeException extends RuntimeException implements EidContaine
     @Override
     public Eid getEid() {
         return eid;
-    }
-
-    /**
-     * Returns a standard JDK class that this ones is base on. It doesn't mean
-     * this class do extends that class, but it might.
-     *
-     * @return a standard JDK class of exception, in this case
-     * {@link RuntimeException} class.
-     */
-    public Class<? extends RuntimeException> getJavaClass() {
-        return RuntimeException.class;
     }
 
     private static String messageOf(Eid eid, @Nullable Throwable cause) {

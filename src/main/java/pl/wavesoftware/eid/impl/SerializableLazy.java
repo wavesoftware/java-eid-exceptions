@@ -29,7 +29,7 @@ final class SerializableLazy<T extends Serializable>
     implements SerializableSupplier<T> {
 
     private static final long serialVersionUID = 20181124011908L;
-    private T serializable;
+    private volatile T serializable;
 
     private SerializableLazy(Supplier<T> supplier) {
         super(supplier);
@@ -42,14 +42,11 @@ final class SerializableLazy<T extends Serializable>
     @Override
     public T get() {
         if (serializable == null) {
-            serializable = doGetFromParent();
-        }
-        return serializable;
-    }
-
-    private synchronized T doGetFromParent() {
-        if (serializable == null) {
-            return super.get();
+            synchronized (this) {
+                if (serializable == null) {
+                    serializable = super.get();
+                }
+            }
         }
         return serializable;
     }

@@ -24,7 +24,7 @@ import static pl.wavesoftware.eid.impl.InternalChecks.checkNotNull;
  * @since 2.0.0
  */
 class Lazy<T> implements Supplier<T> {
-    private Supplier<T> supplier;
+    private volatile Supplier<T> supplier;
     private T value;
 
     Lazy(Supplier<T> supplier) {
@@ -50,16 +50,13 @@ class Lazy<T> implements Supplier<T> {
     @Override
     public T get() {
         if (supplier != null) {
-            value = doGet();
-        }
-        return value;
-    }
-
-    private synchronized T doGet() {
-        if (supplier != null) {
-            T calculated = supplier.get();
-            supplier = null;
-            return calculated;
+            synchronized (this) {
+                if (supplier != null) {
+                    T calculated = supplier.get();
+                    supplier = null;
+                    value = calculated;
+                }
+            }
         }
         return value;
     }

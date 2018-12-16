@@ -21,7 +21,9 @@ import pl.wavesoftware.eid.EidMessage;
 import javax.annotation.Nullable;
 
 /**
- * This exception is Eid version of Java's {@link IllegalArgumentException}.
+ * This exception is Eid version of Java's {@link IllegalArgumentException} that
+ * holds an {@link Eid} object. It can be used to process it in application
+ * central error handler.
  * <p>
  * <strong>Caution!</strong> This class shouldn't be used in any public API or
  * library. It is designed to be used for in-house development of end user
@@ -94,7 +96,9 @@ public class EidIllegalArgumentException extends EidRuntimeException {
      *                {@link #getCause()} method).  (A <tt>null</tt> value is
      *                permitted, and indicates that the cause is nonexistent or
      */
-    public EidIllegalArgumentException(CharSequence eid, String message, @Nullable Throwable cause) {
+    public EidIllegalArgumentException(
+        CharSequence eid, String message, @Nullable Throwable cause
+    ) {
         super(eid, message, cause);
     }
 
@@ -113,7 +117,9 @@ public class EidIllegalArgumentException extends EidRuntimeException {
      *                {@link #getCause()} method).  (A <tt>null</tt> value is
      *                permitted, and indicates that the cause is nonexistent or
      */
-    public EidIllegalArgumentException(EidMessage message, @Nullable Throwable cause) {
+    public EidIllegalArgumentException(
+        EidMessage message, @Nullable Throwable cause
+    ) {
         super(message, cause);
     }
 
@@ -133,7 +139,9 @@ public class EidIllegalArgumentException extends EidRuntimeException {
      *              {@link #getCause()} method).  (A <tt>null</tt> value is
      *              permitted, and indicates that the cause is nonexistent or
      */
-    public EidIllegalArgumentException(CharSequence eid, @Nullable Throwable cause) {
+    public EidIllegalArgumentException(
+        CharSequence eid, @Nullable Throwable cause
+    ) {
         super(eid, cause);
     }
 
@@ -181,7 +189,9 @@ public class EidIllegalArgumentException extends EidRuntimeException {
      *                {@link #getCause()} method).  (A <tt>null</tt> value is
      *                permitted, and indicates that the cause is nonexistent or
      */
-    public EidIllegalArgumentException(Eid id, String message, @Nullable Throwable cause) {
+    public EidIllegalArgumentException(
+        Eid id, String message, @Nullable Throwable cause
+    ) {
         super(id, message, cause);
     }
 

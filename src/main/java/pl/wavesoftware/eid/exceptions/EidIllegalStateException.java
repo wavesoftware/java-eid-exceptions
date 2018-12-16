@@ -21,7 +21,9 @@ import pl.wavesoftware.eid.EidMessage;
 import javax.annotation.Nullable;
 
 /**
- * This exception is Eid version of Java's {@link IllegalStateException}.
+ * This exception is Eid version of Java's {@link IllegalStateException} that
+ * holds an {@link Eid} object. It can be used to process it in application
+ * central error handler.
  * <p>
  * <strong>Caution!</strong> This class shouldn't be used in any public API or
  * library. It is designed to be used for in-house development of end user
@@ -95,9 +97,7 @@ public class EidIllegalStateException extends EidRuntimeException {
      *                permitted, and indicates that the cause is nonexistent or
      */
     public EidIllegalStateException(
-        CharSequence eid,
-        String message,
-        @Nullable Throwable cause
+        CharSequence eid, String message, @Nullable Throwable cause
     ) {
         super(eid, message, cause);
     }
@@ -118,8 +118,7 @@ public class EidIllegalStateException extends EidRuntimeException {
      *                permitted, and indicates that the cause is nonexistent or
      */
     public EidIllegalStateException(
-        EidMessage message,
-        @Nullable Throwable cause
+        EidMessage message, @Nullable Throwable cause
     ) {
         super(message, cause);
     }
@@ -141,8 +140,7 @@ public class EidIllegalStateException extends EidRuntimeException {
      *              permitted, and indicates that the cause is nonexistent or
      */
     public EidIllegalStateException(
-        CharSequence eid,
-        @Nullable Throwable cause
+        CharSequence eid, @Nullable Throwable cause
     ) {
         super(eid, cause);
     }
@@ -192,9 +190,7 @@ public class EidIllegalStateException extends EidRuntimeException {
      *                permitted, and indicates that the cause is nonexistent or
      */
     public EidIllegalStateException(
-        Eid id,
-        String message,
-        @Nullable Throwable cause
+        Eid id, String message, @Nullable Throwable cause
     ) {
         super(id, message, cause);
     }

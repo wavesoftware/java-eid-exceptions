@@ -19,6 +19,7 @@ import pl.wavesoftware.eid.Eid;
 import pl.wavesoftware.eid.EidContainer;
 import pl.wavesoftware.eid.EidMessage;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -110,7 +111,9 @@ public class EidRuntimeException extends RuntimeException implements EidContaine
      *                permitted, and indicates that the cause is nonexistent or
      *                unknown.)
      */
-    public EidRuntimeException(CharSequence eid, String message, @Nullable Throwable cause) {
+    public EidRuntimeException(
+        CharSequence eid, String message, @Nullable Throwable cause
+    ) {
         this(new Eid(eid), message, cause);
     }
 
@@ -131,7 +134,7 @@ public class EidRuntimeException extends RuntimeException implements EidContaine
      *                unknown.)
      */
     public EidRuntimeException(EidMessage message, @Nullable Throwable cause) {
-        this(message.getEid(), message.toString(), cause);
+        this(message.getEid(), message.getFormattedMessage().toString(), cause);
     }
 
     /**
@@ -241,11 +244,14 @@ public class EidRuntimeException extends RuntimeException implements EidContaine
         return eid.toString();
     }
 
+    @Nonnull
     private static String messageOf(Throwable cause) {
-        return coalesce(
+        String value = coalesce(
             coalesce(cause.getLocalizedMessage(), cause.getMessage()),
             cause.toString()
         );
+        assert value != null : "20181214:234625";
+        return value;
     }
 
     @Nullable

@@ -14,27 +14,31 @@
  * limitations under the License.
  */
 
-package pl.wavesoftware.eid.configuration;
+package pl.wavesoftware.eid.api;
+
+import java.util.ServiceLoader;
 
 /**
- * Implementing this validator and configuring it can help you assure that every
- * Eid in your project, conform to your rules.
- * <p><p>
- * Keep in mind that validation adds a little bit of cost, to every Eid creation,
- * even if that particular Eid don't turn up to be used.
- * <p><p>
- * To use your {@code Validator}, use {@link Configurator}.
+ * You can use this interface with Java's {@link ServiceLoader} class.
+ * <p>
+ * To do that, create on your classpath, a file:
+ * <pre>META-INF/services/pl.wavesoftware.eid.api.Configurator</pre>
+ *
+ * In that file, place a fully qualified class name of your class that implements
+ * {@link Configurator} interface. It should be called first time you
+ * reference an {@link Eid}, or and of the eid exceptions, or utility
+ * preconditions class.
  *
  * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
  * @since 2.0.0
- * @see Configurator
+ * @see ServiceLoader
  */
-public interface Validator {
+public interface Configurator {
+
     /**
-     * Checks an ID that will be used as an Exception ID.
+     * Configures an Eid configuration.
      *
-     * @param id an id to check
-     * @return true, if given ID is valid
+     * @param configuration a configuration to be configured
      */
-    boolean isValid(CharSequence id);
+    void configure(ConfigurationBuilder configuration);
 }

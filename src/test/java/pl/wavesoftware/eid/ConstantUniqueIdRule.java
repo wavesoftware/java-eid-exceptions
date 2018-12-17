@@ -14,15 +14,29 @@
  * limitations under the License.
  */
 
-package pl.wavesoftware.eid.impl;
+package pl.wavesoftware.eid;
 
 import pl.wavesoftware.eid.api.ConfigurationBuilder;
-import pl.wavesoftware.eid.api.Configuration;
+import pl.wavesoftware.eid.api.Configurator;
+import pl.wavesoftware.eid.api.UniqueIdGenerator;
 
 /**
  * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
  * @since 2.0.0
  */
-interface MutableConfiguration
-    extends Configuration, ConfigurationBuilder {
+public final class ConstantUniqueIdRule extends ConfiguratorRule {
+
+    public ConstantUniqueIdRule(final String constantId) {
+        super(new Configurator() {
+            @Override
+            public void configure(ConfigurationBuilder configuration) {
+                configuration.uniqueIdGenerator(new UniqueIdGenerator() {
+                    @Override
+                    public String generateUniqId() {
+                        return constantId;
+                    }
+                });
+            }
+        });
+    }
 }

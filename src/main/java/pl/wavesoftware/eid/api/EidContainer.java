@@ -13,15 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package pl.wavesoftware.eid.api;
 
 /**
+ * Indicate that object contains a {@link Eid} object
+ *
  * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
- * @since 2018-10-31
+ * @see Eid
  */
-@ParametersAreNonnullByDefault
-@ReturnTypesAreNonnullByDefault
-package pl.wavesoftware.eid.configuration;
+public interface EidContainer {
 
-import pl.wavesoftware.eid.ReturnTypesAreNonnullByDefault;
-
-import javax.annotation.ParametersAreNonnullByDefault;
+    /**
+     * Retrieves a Eid object
+     *
+     * @return Eid object
+     */
+    Eid getEid();
+}

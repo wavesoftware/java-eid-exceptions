@@ -17,8 +17,9 @@
 package pl.wavesoftware.eid.impl;
 
 import org.junit.Test;
-import pl.wavesoftware.eid.Eid;
-import pl.wavesoftware.eid.configuration.Configuration;
+import pl.wavesoftware.eid.DefaultEid;
+import pl.wavesoftware.eid.api.Configuration;
+import pl.wavesoftware.eid.system.EidModule;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -38,8 +39,9 @@ public class EidTextRepresentationTest {
     @Test
     public void passivation() throws IOException, ClassNotFoundException {
         // given
-        final Eid eid = new Eid("20181114:231205");
-        Configuration configuration = Eid.getBinding()
+        final DefaultEid eid = new DefaultEid("20181114:231205");
+        Configuration configuration = EidModule.MODULE
+            .getBinding()
             .getConfigurationSystem()
             .getConfiguration();
         TextMessage textMessage = new TextMessage(

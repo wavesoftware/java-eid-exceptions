@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Wave Software
+ * Copyright (c) 2018 Wave Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,20 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package pl.wavesoftware.eid;
 
 /**
- * Indicate that object contains a {@link Eid} object
- *
  * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
- * @see Eid
+ * @since 2.0.0
  */
-public interface EidContainer {
+@ParametersAreNonnullByDefault
+@ReturnTypesAreNonnullByDefault
+package pl.wavesoftware.eid.system;
 
-    /**
-     * Retrieves a Eid object
-     *
-     * @return Eid object
-     */
-    Eid getEid();
-}
+import pl.wavesoftware.eid.api.ReturnTypesAreNonnullByDefault;
+
+import javax.annotation.ParametersAreNonnullByDefault;

@@ -16,7 +16,7 @@
 package pl.wavesoftware.eid.utils;
 
 
-import pl.wavesoftware.eid.Eid;
+import pl.wavesoftware.eid.api.Eid;
 import pl.wavesoftware.eid.exceptions.EidIllegalArgumentException;
 import pl.wavesoftware.eid.exceptions.EidIllegalStateException;
 import pl.wavesoftware.eid.exceptions.EidIndexOutOfBoundsException;

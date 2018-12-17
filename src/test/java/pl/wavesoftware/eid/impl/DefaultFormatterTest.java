@@ -16,15 +16,12 @@
 
 package pl.wavesoftware.eid.impl;
 
-import org.junit.After;
-import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import pl.wavesoftware.eid.Eid;
-import pl.wavesoftware.eid.configuration.Configuration;
-import pl.wavesoftware.eid.configuration.ConfigurationBuilder;
-import pl.wavesoftware.eid.configuration.Configurator;
-import pl.wavesoftware.eid.configuration.Formatter;
-import pl.wavesoftware.eid.configuration.UniqueIdGenerator;
+import pl.wavesoftware.eid.ConstantUniqueIdRule;
+import pl.wavesoftware.eid.DefaultEid;
+import pl.wavesoftware.eid.api.Configuration;
+import pl.wavesoftware.eid.api.Formatter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -34,27 +31,10 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class DefaultFormatterTest {
 
-    private Configurator restore;
-
-    @Before
-    public void before() {
-        restore = Eid.getBinding().getConfigurationSystem().configure(new Configurator() {
-            @Override
-            public void configure(ConfigurationBuilder configuration) {
-                configuration.uniqueIdGenerator(new UniqueIdGenerator() {
-                    @Override
-                    public String generateUniqId() {
-                        return "deadcafe";
-                    }
-                });
-            }
-        });
-    }
-
-    @After
-    public void after() {
-        Eid.getBinding().getConfigurationSystem().configure(restore);
-    }
+    @Rule
+    public ConstantUniqueIdRule uniqueIdRule = new ConstantUniqueIdRule(
+        "deadcafe"
+    );
 
     @Test
     public void format() {
@@ -63,7 +43,7 @@ public class DefaultFormatterTest {
         Formatter formatter = new DefaultFormatter(configuration);
 
         // when
-        String formatted = formatter.format(new Eid("20181203:224055"));
+        String formatted = formatter.format(new DefaultEid("20181203:224055"));
 
         // then
         assertThat(formatted).isEqualTo("[20181203:224055]<deadcafe>");
@@ -77,7 +57,7 @@ public class DefaultFormatterTest {
 
         // when
         String formatted = formatter.format(
-            new Eid("20181203:224137"),
+            new DefaultEid("20181203:224137"),
             "a message"
         );
 

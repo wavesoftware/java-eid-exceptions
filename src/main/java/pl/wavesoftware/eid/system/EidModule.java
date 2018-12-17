@@ -14,33 +14,39 @@
  * limitations under the License.
  */
 
-package pl.wavesoftware.eid.configuration;
+package pl.wavesoftware.eid.system;
 
-import pl.wavesoftware.eid.Eid;
+import pl.wavesoftware.eid.api.Binding;
 
 import java.util.ServiceLoader;
 
 /**
- * You can use this interface with Java's {@link ServiceLoader} class.
+ * Represents a EID library module, and it's configuration binding.
  * <p>
- * To do that, create on your classpath, a file:
- * <pre>META-INF/services/pl.wavesoftware.eid.configuration.Configurator</pre>
- *
- * In that file, place a fully qualified class name of your class that implements
- * {@link Configurator} interface. It should be called first time you
- * reference an {@link Eid}, or and of the eid exceptions, or utility
- * preconditions class.
+ * Utilizing {@link #getBinding()} method it is possible to reconfigure this
+ * module to perform differently then the default behavior.
  *
  * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
  * @since 2.0.0
- * @see ServiceLoader
  */
-public interface Configurator {
+public enum EidModule {
+    MODULE;
+
+    private final Binding binding;
+
+    EidModule() {
+        ServiceLoader<Binding> loader = ServiceLoader.load(Binding.class);
+        BindingChooser chooser = new BindingChooser();
+        binding = chooser.chooseImplementation(loader);
+    }
 
     /**
-     * Configures an Eid configuration.
+     * Provides a binding to Eid library. It can be used to reconfigure
+     * configuration programmatically.
      *
-     * @param configuration a configuration to be configured
+     * @return a binding interface
      */
-    void configure(ConfigurationBuilder configuration);
+    public Binding getBinding() {
+        return binding;
+    }
 }

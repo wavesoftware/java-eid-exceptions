@@ -16,7 +16,8 @@
 
 package pl.wavesoftware.eid.utils;
 
-import pl.wavesoftware.eid.Eid;
+import pl.wavesoftware.eid.api.Eid;
+import pl.wavesoftware.eid.system.EidModule;
 
 import javax.annotation.Nullable;
 
@@ -31,15 +32,27 @@ final class EidUtil {
 
     static Eid ensureEid(@Nullable Eid eid) {
         if (eid == null) {
-            return new Eid("20160329:132823", "EID-NULL");
+            return EidModule.MODULE
+                .getBinding()
+                .getFactories()
+                .getEidFactory()
+                .create("20160329:132823", "EID-NULL");
         }
         return eid;
     }
 
     static Eid ensureEid(@Nullable String eid) {
         if (eid == null) {
-            return new Eid("20160329:133052", "EID-NULL");
+            return EidModule.MODULE
+                .getBinding()
+                .getFactories()
+                .getEidFactory()
+                .create("20160329:133052", "EID-NULL");
         }
-        return new Eid(eid);
+        return EidModule.MODULE
+            .getBinding()
+            .getFactories()
+            .getEidFactory()
+            .create(eid);
     }
 }

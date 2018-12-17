@@ -16,8 +16,8 @@
 
 package pl.wavesoftware.eid.impl;
 
-import pl.wavesoftware.eid.configuration.Configurator;
-import pl.wavesoftware.eid.configuration.ConfigurationBuilder;
+import pl.wavesoftware.eid.api.Configurator;
+import pl.wavesoftware.eid.api.ConfigurationBuilder;
 
 /**
  * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>

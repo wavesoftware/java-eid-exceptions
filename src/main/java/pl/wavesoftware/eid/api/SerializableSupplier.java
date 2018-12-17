@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-package pl.wavesoftware.eid.impl;
+package pl.wavesoftware.eid.api;
+
+import java.io.Serializable;
 
 /**
+ * A serializable supplier.
+ *
  * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
  * @since 2.0.0
- * @param <T> a type of object that this supplier provides
+ * @param <T> a type of this supplier, must be serializable
  */
-public interface Supplier<T> {
-    /**
-     * Gets an object
-     *
-     * @return an object
-     */
-    T get();
+public interface SerializableSupplier<T extends Serializable>
+    extends Supplier<T>, Serializable {
 }

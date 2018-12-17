@@ -22,6 +22,6 @@
 @ParametersAreNonnullByDefault
 package pl.wavesoftware.eid.impl;
 
-import pl.wavesoftware.eid.ReturnTypesAreNonnullByDefault;
+import pl.wavesoftware.eid.api.ReturnTypesAreNonnullByDefault;
 
 import javax.annotation.ParametersAreNonnullByDefault;

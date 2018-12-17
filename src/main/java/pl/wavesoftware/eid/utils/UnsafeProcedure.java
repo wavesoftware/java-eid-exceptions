@@ -16,7 +16,7 @@
 
 package pl.wavesoftware.eid.utils;
 
-import pl.wavesoftware.eid.Eid;
+import pl.wavesoftware.eid.api.Eid;
 
 /**
  * This unsafe procedure can be used to execute a code block that can throw

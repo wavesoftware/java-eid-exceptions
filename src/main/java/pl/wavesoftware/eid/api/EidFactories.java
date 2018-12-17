@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015 Wave Software
+ * Copyright (c) 2018 Wave Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,34 @@
  * limitations under the License.
  */
 
+package pl.wavesoftware.eid.api;
+
 /**
+ * Represents an Eid library bound factories.
+ *
  * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
- * @since 2018-10-25
+ * @since 2.0.0
  */
-@ReturnTypesAreNonnullByDefault
-@ParametersAreNonnullByDefault
-package pl.wavesoftware.eid;
+public interface EidFactories {
 
-import pl.wavesoftware.eid.api.ReturnTypesAreNonnullByDefault;
+    /**
+     * Gets an Eid message factory.
+     *
+     * @return a factory for Eid messages.
+     */
+    EidMessageFactory getMessageFactory();
 
-import javax.annotation.ParametersAreNonnullByDefault;
+    /**
+     * Gets a factory for lazy objects.
+     *
+     * @return a lazy objects factory.
+     */
+    LazyFactory getLazyFactory();
+
+    /**
+     * Gets a Eid object factory.
+     *
+     * @return a factory for Eid objects
+     */
+    EidFactory getEidFactory();
+}

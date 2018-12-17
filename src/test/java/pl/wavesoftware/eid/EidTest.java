@@ -18,6 +18,8 @@ package pl.wavesoftware.eid;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import pl.wavesoftware.eid.api.Eid;
+import pl.wavesoftware.eid.api.EidMessage;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -51,7 +53,7 @@ public class EidTest {
         thrown.expectMessage("Exception ID can't be null");
 
         // when
-        Eid.eid(eid);
+        DefaultEid.eid(eid);
     }
 
     @Test
@@ -64,13 +66,13 @@ public class EidTest {
         thrown.expectMessage("Invalid ID given as an Exception ID: 1234");
 
         // when
-        Eid.eid(eid);
+        DefaultEid.eid(eid);
     }
 
     @Test
     public void testToString() {
         // given
-        Eid instance = new Eid("20150718:012917");
+        DefaultEid instance = new DefaultEid("20150718:012917");
         String expResult = "[20150718:012917]";
         // when
         String result = instance.toString();
@@ -82,7 +84,7 @@ public class EidTest {
     @Test
     public void testToString_Ref() {
         // given
-        Eid instance = new Eid("20150718:013056", "ORA-38101");
+        DefaultEid instance = new DefaultEid("20150718:013056", "ORA-38101");
         String expResult = "[20150718:013056|ORA-38101]";
         // when
         String result = instance.toString();
@@ -93,7 +95,7 @@ public class EidTest {
     @Test
     public void testGetId() {
         // given
-        Eid instance = new Eid("20150718:013209");
+        DefaultEid instance = new DefaultEid("20150718:013209");
         String expResult = "20150718:013209";
         // when
         String result = instance.getId();
@@ -104,7 +106,7 @@ public class EidTest {
     @Test
     public void testGetRef() {
         // given
-        Eid instance = new Eid("20150718:013314", "ORA-38105");
+        DefaultEid instance = new DefaultEid("20150718:013314", "ORA-38105");
         String expResult = "ORA-38105";
         // when
         String result = instance.getRef();
@@ -115,7 +117,7 @@ public class EidTest {
     @Test
     public void testGetRef_Null() {
         // given
-        Eid instance = Eid.eid("20150718:013236");
+        Eid instance = DefaultEid.eid("20150718:013236");
         // when
         String result = instance.getRef();
         // then
@@ -125,8 +127,8 @@ public class EidTest {
     @Test
     public void testGetUniq() {
         String id = "20150718:013443";
-        Eid instance = new Eid(id);
-        Eid instance2 = new Eid(id);
+        DefaultEid instance = new DefaultEid(id);
+        DefaultEid instance2 = new DefaultEid(id);
         String result = instance.getUnique();
         String result2 = instance2.getUnique();
         assertThat(result).isNotEmpty();
@@ -137,7 +139,7 @@ public class EidTest {
     public void message() {
         // given
         String code = "20151117:192211";
-        Eid eid = new Eid(code);
+        DefaultEid eid = new DefaultEid(code);
         int filesNumber = 18;
 
         // when
@@ -150,7 +152,7 @@ public class EidTest {
     @Test
     public void raceTheSun() throws InterruptedException, ExecutionException {
         // given
-        final Eid eid = new Eid("20181114:223748");
+        final DefaultEid eid = new DefaultEid("20181114:223748");
         ExecutorService executorService = Executors.newFixedThreadPool(4);
         Callable<String> task = new Callable<String>() {
             @Override

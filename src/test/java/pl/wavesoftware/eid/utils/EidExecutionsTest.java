@@ -19,7 +19,7 @@ package pl.wavesoftware.eid.utils;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import pl.wavesoftware.eid.Eid;
+import pl.wavesoftware.eid.DefaultEid;
 import pl.wavesoftware.eid.exceptions.EidRuntimeException;
 
 import java.text.ParseException;
@@ -88,7 +88,7 @@ public class EidExecutionsTest {
         thrown.expectCause(isA(ParseException.class));
         thrown.expectCause(hasMessage(equalTo(causeMessage)));
         // when
-        EidExecutions.tryToExecute(procedure, new Eid(eid));
+        EidExecutions.tryToExecute(procedure, new DefaultEid(eid));
     }
 
     @Test
@@ -101,7 +101,7 @@ public class EidExecutionsTest {
             }
         };
         // when
-        EidExecutions.tryToExecute(procedure, new Eid(eid));
+        EidExecutions.tryToExecute(procedure, new DefaultEid(eid));
         // then
         assertThat(procedure).isNotNull();
     }
@@ -158,7 +158,7 @@ public class EidExecutionsTest {
         thrown.expectCause(isA(ParseException.class));
         thrown.expectCause(hasMessage(equalTo(causeMessage)));
         // when
-        EidExecutions.tryToExecute(supplier, new Eid(eid));
+        EidExecutions.tryToExecute(supplier, new DefaultEid(eid));
     }
 
     @Test
@@ -172,7 +172,7 @@ public class EidExecutionsTest {
             }
         };
         // when
-        String answer = EidExecutions.tryToExecute(supplier, new Eid(eid));
+        String answer = EidExecutions.tryToExecute(supplier, new DefaultEid(eid));
         // then
         assertThat(supplier).isNotNull();
         assertThat(answer).isNotNull().isNotEmpty().isEqualTo(returning);

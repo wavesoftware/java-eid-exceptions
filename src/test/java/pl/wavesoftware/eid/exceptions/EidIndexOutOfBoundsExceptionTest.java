@@ -20,7 +20,9 @@ import org.hamcrest.CoreMatchers;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import pl.wavesoftware.eid.Eid;
+import pl.wavesoftware.eid.ConstantUniqueIdRule;
+import pl.wavesoftware.eid.DefaultEid;
+import pl.wavesoftware.eid.api.Eid;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -58,7 +60,7 @@ public class EidIndexOutOfBoundsExceptionTest {
         );
 
         // when
-        throw new EidIndexOutOfBoundsException(new Eid(eid, ref), getCause());
+        throw new EidIndexOutOfBoundsException(new DefaultEid(eid, ref), getCause());
     }
 
     @Test
@@ -72,7 +74,7 @@ public class EidIndexOutOfBoundsExceptionTest {
         thrown.expectMessage("[20151119:103217|MS+1233]<deadfa11>");
 
         // when
-        throw new EidIndexOutOfBoundsException(new Eid(eid, ref));
+        throw new EidIndexOutOfBoundsException(new DefaultEid(eid, ref));
     }
 
     @Test
@@ -95,7 +97,7 @@ public class EidIndexOutOfBoundsExceptionTest {
     public void throwWithEidAndCause() {
         // given
         String eidNum = "20151119:103245";
-        Eid eid = new Eid(eidNum);
+        DefaultEid eid = new DefaultEid(eidNum);
 
         // then
         thrown.expectCause(hasMessage(containsString(causeString)));
@@ -154,7 +156,7 @@ public class EidIndexOutOfBoundsExceptionTest {
 
         // when
         throw new EidIndexOutOfBoundsException(
-            Eid.eid(eid).message(message, new A())
+            DefaultEid.eid(eid).message(message, new A())
         );
     }
 
@@ -194,14 +196,14 @@ public class EidIndexOutOfBoundsExceptionTest {
 
         // when
         throw new EidIndexOutOfBoundsException(
-            Eid.eid(eid).message(message, new A()), getCause()
+            DefaultEid.eid(eid).message(message, new A()), getCause()
         );
     }
 
     @Test
     public void throwWithEidAndMessage() {
         // given
-        Eid eid = Eid.eid("20181217:001519");
+        Eid eid = DefaultEid.eid("20181217:001519");
         String message = "This is a message";
 
         // then
@@ -219,7 +221,7 @@ public class EidIndexOutOfBoundsExceptionTest {
     @Test
     public void throwWithEidAndMessageAndCause() {
         // given
-        Eid eid = Eid.eid("20181217:001727");
+        Eid eid = DefaultEid.eid("20181217:001727");
         String message = "This is a message";
 
         // then

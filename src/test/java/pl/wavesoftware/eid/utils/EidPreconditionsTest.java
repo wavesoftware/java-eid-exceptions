@@ -18,14 +18,14 @@ package pl.wavesoftware.eid.utils;
 import org.hamcrest.CoreMatchers;
 import org.hamcrest.CustomMatcher;
 import org.hamcrest.Matcher;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import pl.wavesoftware.eid.Eid;
-import pl.wavesoftware.eid.configuration.ConfigurationBuilder;
-import pl.wavesoftware.eid.configuration.Configurator;
+import pl.wavesoftware.eid.ConfiguratorRule;
+import pl.wavesoftware.eid.DefaultEid;
+import pl.wavesoftware.eid.api.ConfigurationBuilder;
+import pl.wavesoftware.eid.api.Configurator;
+import pl.wavesoftware.eid.api.Eid;
 import pl.wavesoftware.eid.exceptions.EidIllegalArgumentException;
 import pl.wavesoftware.eid.exceptions.EidIllegalStateException;
 import pl.wavesoftware.eid.exceptions.EidIndexOutOfBoundsException;
@@ -41,30 +41,21 @@ import static org.hamcrest.CoreMatchers.containsString;
 
 /**
  *
- * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
+ * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
  */
 public class EidPreconditionsTest {
 
     @Rule
     public final ExpectedException thrown = ExpectedException.none();
+    @Rule
+    public final ConfiguratorRule configurator = new ConfiguratorRule(new Configurator() {
+        @Override
+        public void configure(ConfigurationBuilder configuration) {
+            configuration.locale(Locale.ENGLISH);
+        }
+    });
 
     private final String eid = "20150718:075046";
-    private Configurator configurator;
-
-    @Before
-    public void before() {
-        configurator = Eid.getBinding().getConfigurationSystem().configure(new Configurator() {
-            @Override
-            public void configure(ConfigurationBuilder configuration) {
-                configuration.locale(Locale.ENGLISH);
-            }
-        });
-    }
-
-    @After
-    public void after() {
-        Eid.getBinding().getConfigurationSystem().configure(configurator);
-    }
 
     @Test
     public void testCheckArgument() {
@@ -115,7 +106,7 @@ public class EidPreconditionsTest {
         thrown.expectMessage(containsString("PI value is 3.14"));
         // when
         EidPreconditions.checkArgument(
-            expression, new Eid(eid),
+            expression, new DefaultEid(eid),
             "PI value is {0,number,#.##}", Math.PI
         );
     }
@@ -126,7 +117,7 @@ public class EidPreconditionsTest {
         boolean expression = truthyValue();
         // when
         EidPreconditions.checkArgument(
-            expression, new Eid(eid),
+            expression, new DefaultEid(eid),
             "PI value is {0,number,#.##}", Math.PI
         );
         // then
@@ -192,7 +183,7 @@ public class EidPreconditionsTest {
         thrown.expectMessage(containsString("PI is 3.1416"));
         // when
         EidPreconditions.checkState(
-            expression, new Eid(eid),
+            expression, new DefaultEid(eid),
             "PI is {0,number,#.####}", Math.PI
         );
     }
@@ -203,7 +194,7 @@ public class EidPreconditionsTest {
         boolean expression = truthyValue();
         // when
         EidPreconditions.checkState(
-            expression, new Eid(eid),
+            expression, new DefaultEid(eid),
             "PI is {0,number,#.##}", Math.PI
         );
         // then
@@ -280,7 +271,7 @@ public class EidPreconditionsTest {
         thrown.expectMessage(containsString("π <=> 3.142"));
         // when
         EidPreconditions.checkNotNull(
-            reference, new Eid(eid),
+            reference, new DefaultEid(eid),
             "π <=> {0,number,#.###}", Math.PI
         );
     }
@@ -291,7 +282,7 @@ public class EidPreconditionsTest {
         Object reference = "A test";
         // when
         Object checked = EidPreconditions.checkNotNull(
-            reference, new Eid(eid),
+            reference, new DefaultEid(eid),
             "π <=> {0,number,#.###}", Math.PI
         );
         // then
@@ -374,7 +365,7 @@ public class EidPreconditionsTest {
         thrown.expectMessage(containsString("Pi (π): 3.14"));
         // when
         EidPreconditions.checkElementIndex(
-            index, size, new Eid(eid),
+            index, size, new DefaultEid(eid),
             "Pi (π): {0,number,#.##}", Math.PI
         );
     }
@@ -406,7 +397,7 @@ public class EidPreconditionsTest {
         thrown.expectMessage(containsString("Pi (π): 3.14"));
         // when
         EidPreconditions.checkElementIndex(
-            index, size, new Eid(eid),
+            index, size, new DefaultEid(eid),
             "Pi (π): {0,number,#.##}", Math.PI
         );
     }
@@ -432,7 +423,7 @@ public class EidPreconditionsTest {
         int size = 450;
         // when
         int checked = EidPreconditions.checkElementIndex(
-            index, size, new Eid(eid),
+            index, size, new DefaultEid(eid),
             "Pi (π): {0,number,#.#}", Math.PI
         );
         // then
@@ -460,7 +451,7 @@ public class EidPreconditionsTest {
         thrown.expect(EidIllegalArgumentException.class);
         thrown.expectMessage(containsString(eid));
         // when
-        EidPreconditions.checkElementIndex(index, size, new Eid(eid));
+        EidPreconditions.checkElementIndex(index, size, new DefaultEid(eid));
     }
 
     @Test
@@ -506,7 +497,7 @@ public class EidPreconditionsTest {
     public void testCheckArgument_boolean_Eid_Null() {
         // given
         boolean expression = falsyValue();
-        Eid eidObject = nullyValue();
+        DefaultEid eidObject = nullyValue();
         // then
         thrown.expect(EidIllegalArgumentException.class);
         thrown.expectMessage(containsString("20160329:132823|EID-NULL"));
@@ -529,7 +520,7 @@ public class EidPreconditionsTest {
     @Test
     public void testCheckArgument_boolean_Eid() {
         // given
-        Eid eidObject = getEid();
+        DefaultEid eidObject = getEid();
         boolean expression = falsyValue();
         // then
         thrown.expect(EidIllegalArgumentException.class);
@@ -541,7 +532,7 @@ public class EidPreconditionsTest {
     @Test
     public void testCheckArgument_boolean_Eid_Ok() {
         // given
-        Eid eidObject = getEid();
+        DefaultEid eidObject = getEid();
         boolean expression = truthyValue();
         // when
         EidPreconditions.checkArgument(expression, eidObject);
@@ -553,7 +544,7 @@ public class EidPreconditionsTest {
     public void testCheckState_boolean_Eid() {
         // given
         boolean expression = falsyValue();
-        Eid eidObject = getEid();
+        DefaultEid eidObject = getEid();
         // then
         thrown.expect(EidIllegalStateException.class);
         thrown.expectMessage(containsString(eid));
@@ -565,7 +556,7 @@ public class EidPreconditionsTest {
     public void testCheckState_boolean_Eid_Ok() {
         // given
         boolean expression = truthyValue();
-        Eid eidObject = getEid();
+        DefaultEid eidObject = getEid();
         // when
         EidPreconditions.checkState(expression, eidObject);
         // then
@@ -576,7 +567,7 @@ public class EidPreconditionsTest {
     public void testCheckNotNull_GenericType_Eid() {
         // given
         Object reference = nullyValue();
-        Eid eidObject = getEid();
+        DefaultEid eidObject = getEid();
         // then
         thrown.expect(EidNullPointerException.class);
         thrown.expectMessage(containsString(eid));
@@ -588,7 +579,7 @@ public class EidPreconditionsTest {
     public void testCheckNotNull_GenericType_Eid_Ok() {
         // given
         String reference = "ok";
-        Eid eidObject = getEid();
+        DefaultEid eidObject = getEid();
         // when
         String result = EidPreconditions.checkNotNull(reference, eidObject);
         // then
@@ -601,7 +592,7 @@ public class EidPreconditionsTest {
         // given
         int index = 5;
         int size = 0;
-        Eid eidObject = getEid();
+        DefaultEid eidObject = getEid();
         // then
         thrown.expect(EidIndexOutOfBoundsException.class);
         thrown.expectMessage(containsString(eid));
@@ -614,7 +605,7 @@ public class EidPreconditionsTest {
         // given
         int index = -5;
         int size = 10;
-        Eid eidObject = getEid();
+        DefaultEid eidObject = getEid();
         // then
         thrown.expect(EidIndexOutOfBoundsException.class);
         thrown.expectMessage(containsString(eid));
@@ -627,7 +618,7 @@ public class EidPreconditionsTest {
         // given
         int index = 1;
         int size = 120;
-        Eid eidObject = getEid();
+        DefaultEid eidObject = getEid();
         // when
         int result = EidPreconditions.checkElementIndex(index, size, eidObject);
         // then
@@ -635,8 +626,8 @@ public class EidPreconditionsTest {
     }
 
     @Nonnull
-    private Eid getEid() {
-        return new Eid(eid);
+    private DefaultEid getEid() {
+        return new DefaultEid(eid);
     }
 
     private static Boolean truthyValue() {

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package pl.wavesoftware.eid.configuration;
+package pl.wavesoftware.eid.api;
 
 import javax.annotation.Nullable;
 import java.util.Locale;

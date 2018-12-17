@@ -14,17 +14,30 @@
  * limitations under the License.
  */
 
-package pl.wavesoftware.eid.impl;
-
-import java.io.Serializable;
+package pl.wavesoftware.eid.api;
 
 /**
- * A serializable supplier.
+ * Represents a formatter that will be used to display an Eid number in logs
+ * or screen.
  *
  * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
  * @since 2.0.0
- * @param <T> a type of this supplier, must be serializable
  */
-public interface SerializableSupplier<T extends Serializable>
-    extends Supplier<T>, Serializable {
+public interface Formatter {
+    /**
+     * Formats an Eid number to string
+     *
+     * @param eid an eid number
+     * @return a string with formatted Eid number
+     */
+    String format(Eid eid);
+
+    /**
+     * Formats an Eid paired with a message.
+     *
+     * @param eid     an eid number to format
+     * @param message a message to be pair to eid
+     * @return a string with formatted eid and message
+     */
+    String format(Eid eid, String message);
 }

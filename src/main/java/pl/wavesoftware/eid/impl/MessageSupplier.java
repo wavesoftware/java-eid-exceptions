@@ -16,7 +16,8 @@
 
 package pl.wavesoftware.eid.impl;
 
-import pl.wavesoftware.eid.configuration.Configuration;
+import pl.wavesoftware.eid.api.Configuration;
+import pl.wavesoftware.eid.api.Supplier;
 
 import javax.annotation.Nullable;
 import java.text.MessageFormat;

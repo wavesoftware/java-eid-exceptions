@@ -17,27 +17,38 @@
 package pl.wavesoftware.eid.impl;
 
 import pl.wavesoftware.eid.api.Binding;
-import pl.wavesoftware.eid.api.ConfigurationSystem;
 import pl.wavesoftware.eid.api.EidFactories;
+import pl.wavesoftware.eid.api.EidFactory;
+import pl.wavesoftware.eid.api.EidMessageFactory;
+import pl.wavesoftware.eid.api.LazyFactory;
 
 /**
- * A default binding implementation.
- *
  * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
- * @since 2.0.0
+ * @since 2018-12-17
  */
-public final class BindingImpl implements Binding {
+final class EidFactoriesImpl implements EidFactories {
+    private final EidMessageFactory eidMessageFactory;
+    private final LazyFactory lazyFactory;
+    private final EidFactory eidFactory;
 
-    private final ConfigurationSystem system = new ConfigurationSystemImpl();
-    private final EidFactories factories = new EidFactoriesImpl(this);
-
-    @Override
-    public ConfigurationSystem getConfigurationSystem() {
-        return system;
+    EidFactoriesImpl(Binding binding) {
+        eidMessageFactory = new EidMessageFactoryImpl(binding);
+        lazyFactory = new LazyFactoryImpl();
+        eidFactory = new EidFactoryImpl();
     }
 
     @Override
-    public EidFactories getFactories() {
-        return factories;
+    public EidMessageFactory getMessageFactory() {
+        return eidMessageFactory;
+    }
+
+    @Override
+    public LazyFactory getLazyFactory() {
+        return lazyFactory;
+    }
+
+    @Override
+    public EidFactory getEidFactory() {
+        return eidFactory;
     }
 }

@@ -14,32 +14,32 @@
  * limitations under the License.
  */
 
-package pl.wavesoftware.eid.configuration;
+package pl.wavesoftware.eid.api;
 
-import pl.wavesoftware.eid.Eid;
+import java.util.Locale;
+import java.util.TimeZone;
+import java.util.regex.Pattern;
 
 /**
- * Represents a formatter that will be used to display an Eid number in logs
- * or screen.
- *
  * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
  * @since 2.0.0
  */
-public interface Formatter {
-    /**
-     * Formats an Eid number to string
-     *
-     * @param eid an eid number
-     * @return a string with formatted Eid number
-     */
-    String format(Eid eid);
+public final class TestConfigurator implements Configurator {
 
-    /**
-     * Formats an Eid paired with a message.
-     *
-     * @param eid     an eid number to format
-     * @param message a message to be pair to eid
-     * @return a string with formatted eid and message
-     */
-    String format(Eid eid, String message);
+    @Override
+    public void configure(ConfigurationBuilder configuration) {
+        configuration
+            .locale(Locale.ENGLISH)
+            .timezone(TimeZone.getTimeZone("GMT"))
+            .validator(new PseudoDateValidator());
+    }
+
+    private static final class PseudoDateValidator implements Validator {
+        private final Pattern pattern = Pattern.compile("^\\d{8}:\\d{6}$");
+
+        @Override
+        public boolean isValid(CharSequence id) {
+            return pattern.matcher(id).matches();
+        }
+    }
 }

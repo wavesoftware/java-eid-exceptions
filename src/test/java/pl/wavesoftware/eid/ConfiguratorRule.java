@@ -14,26 +14,23 @@
  * limitations under the License.
  */
 
-package pl.wavesoftware.eid.exceptions;
+package pl.wavesoftware.eid;
 
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
-import pl.wavesoftware.eid.Eid;
-import pl.wavesoftware.eid.configuration.ConfigurationBuilder;
-import pl.wavesoftware.eid.configuration.Configurator;
-import pl.wavesoftware.eid.configuration.UniqueIdGenerator;
+import pl.wavesoftware.eid.api.Configurator;
 
 /**
  * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
- * @since 2.0.0
+ * @since 2018-12-17
  */
-final class ConstantUniqueIdRule implements TestRule {
+public class ConfiguratorRule implements TestRule {
 
-    private final String constantId;
+    private final Configurator configurator;
 
-    ConstantUniqueIdRule(String constantId) {
-        this.constantId = constantId;
+    public ConfiguratorRule(Configurator configurator) {
+        this.configurator = configurator;
     }
 
     @Override
@@ -41,27 +38,14 @@ final class ConstantUniqueIdRule implements TestRule {
         return new Statement() {
             @Override
             public void evaluate() throws Throwable {
-                Configurator configurator = configureConstantId();
+                ConfigurationContext context =
+                    new ConfigurationContext(configurator);
                 try {
                     base.evaluate();
                 } finally {
-                    Eid.getBinding().getConfigurationSystem().configure(configurator);
+                    context.close();
                 }
             }
         };
-    }
-
-    private Configurator configureConstantId() {
-        return Eid.getBinding().getConfigurationSystem().configure(new Configurator() {
-            @Override
-            public void configure(ConfigurationBuilder configuration) {
-                configuration.uniqueIdGenerator(new UniqueIdGenerator() {
-                    @Override
-                    public String generateUniqId() {
-                        return constantId;
-                    }
-                });
-            }
-        });
     }
 }

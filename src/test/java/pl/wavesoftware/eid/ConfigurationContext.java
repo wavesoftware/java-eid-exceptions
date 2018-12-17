@@ -14,15 +14,33 @@
  * limitations under the License.
  */
 
-package pl.wavesoftware.eid.impl;
+package pl.wavesoftware.eid;
 
-import pl.wavesoftware.eid.api.ConfigurationBuilder;
-import pl.wavesoftware.eid.api.Configuration;
+import pl.wavesoftware.eid.api.Configurator;
+import pl.wavesoftware.eid.system.EidModule;
+
+import java.io.Closeable;
 
 /**
  * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
- * @since 2.0.0
+ * @since 2018-12-18
  */
-interface MutableConfiguration
-    extends Configuration, ConfigurationBuilder {
+final class ConfigurationContext implements Closeable {
+
+    private final Configurator saved;
+
+    ConfigurationContext(Configurator configurator) {
+        this.saved = EidModule.MODULE
+            .getBinding()
+            .getConfigurationSystem()
+            .configure(configurator);
+    }
+
+    @Override
+    public void close() {
+        EidModule.MODULE
+            .getBinding()
+            .getConfigurationSystem()
+            .configure(saved);
+    }
 }

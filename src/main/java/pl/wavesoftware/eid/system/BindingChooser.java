@@ -14,32 +14,32 @@
  * limitations under the License.
  */
 
-package pl.wavesoftware.eid.configuration;
+package pl.wavesoftware.eid.system;
 
-import java.util.Locale;
-import java.util.TimeZone;
-import java.util.regex.Pattern;
+import pl.wavesoftware.eid.api.Binding;
+import pl.wavesoftware.eid.impl.BindingImpl;
+
+import java.io.Serializable;
 
 /**
  * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
  * @since 2.0.0
  */
-public final class TestConfigurator implements Configurator {
+final class BindingChooser implements Serializable {
+    private static final long serialVersionUID = 20181218003610L;
 
-    @Override
-    public void configure(ConfigurationBuilder configuration) {
-        configuration
-            .locale(Locale.ENGLISH)
-            .timezone(TimeZone.getTimeZone("GMT"))
-            .validator(new PseudoDateValidator());
+    Binding chooseImplementation(Iterable<Binding> bindings) {
+        Binding best = null;
+        for (Binding bond : bindings) {
+            if (best == null || !isCoreImplementation(bond)) {
+                best = bond;
+            }
+        }
+        assert best != null : "20181106:000523";
+        return best;
     }
 
-    private static final class PseudoDateValidator implements Validator {
-        private final Pattern pattern = Pattern.compile("^\\d{8}:\\d{6}$");
-
-        @Override
-        public boolean isValid(CharSequence id) {
-            return pattern.matcher(id).matches();
-        }
+    private static boolean isCoreImplementation(Binding bond) {
+        return bond.getClass() == BindingImpl.class;
     }
 }

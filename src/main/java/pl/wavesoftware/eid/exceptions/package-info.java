@@ -22,4 +22,4 @@
 @ReturnTypesAreNonnullByDefault
 package pl.wavesoftware.eid.exceptions;
 
-import pl.wavesoftware.eid.ReturnTypesAreNonnullByDefault;
+import pl.wavesoftware.eid.api.ReturnTypesAreNonnullByDefault;

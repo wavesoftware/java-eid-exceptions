@@ -16,18 +16,33 @@
 
 package pl.wavesoftware.eid.impl;
 
-import java.io.Serializable;
+import pl.wavesoftware.eid.api.Binding;
+import pl.wavesoftware.eid.api.Eid;
+import pl.wavesoftware.eid.api.EidMessage;
+import pl.wavesoftware.eid.api.EidMessageFactory;
 
 /**
  * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
- * @since 2018-11-30
+ * @since 2018-12-17
  */
-public final class LazyProvider {
-    private LazyProvider() {
-        // nothing here
+final class EidMessageFactoryImpl implements EidMessageFactory {
+    private final Binding binding;
+
+    EidMessageFactoryImpl(Binding binding) {
+        this.binding = binding;
     }
 
-    public static <T extends Serializable> SerializableSupplier<T> lazy(Supplier<T> supplier) {
-        return SerializableLazy.serializableOf(supplier);
+    @Override
+    public EidMessage create(
+        Eid eid,
+        CharSequence messageTemplate,
+        Object[] templateArguments
+    ) {
+        return new DefaultEidMessage(
+            eid,
+            binding.getConfigurationSystem().getConfiguration(),
+            messageTemplate,
+            templateArguments
+        );
     }
 }

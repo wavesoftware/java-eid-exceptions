@@ -15,8 +15,8 @@
  */
 package pl.wavesoftware.eid.exceptions;
 
-import pl.wavesoftware.eid.Eid;
-import pl.wavesoftware.eid.EidMessage;
+import pl.wavesoftware.eid.api.Eid;
+import pl.wavesoftware.eid.api.EidMessage;
 
 import javax.annotation.Nullable;
 

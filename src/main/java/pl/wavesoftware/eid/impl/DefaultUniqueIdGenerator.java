@@ -16,7 +16,7 @@
 
 package pl.wavesoftware.eid.impl;
 
-import pl.wavesoftware.eid.configuration.UniqueIdGenerator;
+import pl.wavesoftware.eid.api.UniqueIdGenerator;
 
 import java.util.Random;
 

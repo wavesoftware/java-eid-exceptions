@@ -14,18 +14,30 @@
  * limitations under the License.
  */
 
-package pl.wavesoftware.eid;
+package pl.wavesoftware.eid.api;
 
 /**
+ * A configuration provider interface.
+ *
  * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
  * @since 2.0.0
  */
-public interface EidMessage extends CharSequence, EidContainer {
+public interface ConfigurationSystem {
+    /**
+     * Get a configuration object
+     *
+     * @return a configuration object
+     */
+    Configuration getConfiguration();
 
     /**
-     * Get a formatted message
+     * Configures an Eid library programmatically. Note, that method returns a
+     * configurator that can be used to restore configuration to the state
+     * before you invoke this configuration method.
      *
-     * @return a formatted message
+     * @param configurator a configurator to use to configure Eid library
+     * @return a reference to a configurator that can be used to restore
+     * previous configuration
      */
-    CharSequence getFormattedMessage();
+    Configurator configure(Configurator configurator);
 }

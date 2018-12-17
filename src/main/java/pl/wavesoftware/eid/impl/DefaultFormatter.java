@@ -16,9 +16,9 @@
 
 package pl.wavesoftware.eid.impl;
 
-import pl.wavesoftware.eid.Eid;
-import pl.wavesoftware.eid.configuration.Configuration;
-import pl.wavesoftware.eid.configuration.Formatter;
+import pl.wavesoftware.eid.api.Configuration;
+import pl.wavesoftware.eid.api.Eid;
+import pl.wavesoftware.eid.api.Formatter;
 
 import javax.annotation.Nullable;
 import java.util.Locale;

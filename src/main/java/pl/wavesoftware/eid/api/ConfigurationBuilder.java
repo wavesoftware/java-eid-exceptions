@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package pl.wavesoftware.eid.configuration;
+package pl.wavesoftware.eid.api;
 
+import javax.annotation.Nullable;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -23,8 +24,8 @@ import java.util.TimeZone;
  * Use {@link Configurator} to configure Eid settings.
  *
  * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
- * @since 2.0.0
  * @see Configurator
+ * @since 2.0.0
  */
 public interface ConfigurationBuilder {
 
@@ -49,32 +50,35 @@ public interface ConfigurationBuilder {
      * Sets a locale to be used when formatting texts. If not set default system
      * locale will be used (platform specific). See {@link Locale#getDefault()}.
      *
-     * @param locale a locale to be used
+     * @param locale a locale to be used, if {@code null} was given default
+     *               locale will be used
      * @return a self reference for ease of use
      * @see Locale#getDefault()
      */
-    ConfigurationBuilder locale(Locale locale);
+    ConfigurationBuilder locale(@Nullable Locale locale);
 
     /**
      * Sets a time zone to be used when formatting texts. If not set, default
      * system time zone will be used (platform specific). See
      * {@link TimeZone#getDefault()}.
      *
-     * @param zone a time zone to be used
+     * @param zone a time zone to be used, if {@code null} was given default
+     *             time zone will be used
      * @return a self reference for ease of use
      * @see TimeZone#getDefault()
      */
-    ConfigurationBuilder timezone(TimeZone zone);
+    ConfigurationBuilder timezone(@Nullable TimeZone zone);
 
     /**
      * Configures a validator that will be called on each Eid number. By
      * default, there is no validator configured for maximum speed. Using this
      * validator you can enforce a standardization of Eid numbers.
      *
-     * @param validator a validator to be used
+     * @param validator a validator to be used, if {@code null} was given
+     *                  validator will not be used.
      * @return a self reference for ease of use
      */
-    ConfigurationBuilder validator(Validator validator);
+    ConfigurationBuilder validator(@Nullable Validator validator);
 
     /**
      * Gets an object that is a future configuration, to be used to cross

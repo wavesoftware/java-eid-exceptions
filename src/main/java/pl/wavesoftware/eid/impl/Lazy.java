@@ -16,6 +16,8 @@
 
 package pl.wavesoftware.eid.impl;
 
+import pl.wavesoftware.eid.api.Supplier;
+
 import static pl.wavesoftware.eid.impl.InternalChecks.checkNotNull;
 
 

@@ -5,6 +5,12 @@ notifications:
     on_failure: true
 matrix:
   include:
+  # Performance testing
+  - jdk: openjdk7
+    env: JACOCO=false
+  - jdk: openjdk8
+    env: JACOCO=false
+  # Quality testing
   - jdk: openjdk7
     env: JACOCO=true
   - jdk: openjdk8

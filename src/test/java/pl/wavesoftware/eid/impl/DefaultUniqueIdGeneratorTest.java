@@ -17,7 +17,7 @@
 package pl.wavesoftware.eid.impl;
 
 import org.junit.Test;
-import pl.wavesoftware.eid.configuration.UniqueIdGenerator;
+import pl.wavesoftware.eid.api.UniqueIdGenerator;
 
 import static org.assertj.core.api.Assertions.*;
 

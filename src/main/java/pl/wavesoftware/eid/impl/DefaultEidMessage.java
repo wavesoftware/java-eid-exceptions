@@ -16,9 +16,9 @@
 
 package pl.wavesoftware.eid.impl;
 
-import pl.wavesoftware.eid.Eid;
-import pl.wavesoftware.eid.EidMessage;
-import pl.wavesoftware.eid.configuration.Configuration;
+import pl.wavesoftware.eid.api.Configuration;
+import pl.wavesoftware.eid.api.Eid;
+import pl.wavesoftware.eid.api.EidMessage;
 
 import java.io.Serializable;
 

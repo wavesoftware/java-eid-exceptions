@@ -16,6 +16,9 @@
 
 package pl.wavesoftware.eid.impl;
 
+import pl.wavesoftware.eid.api.SerializableSupplier;
+import pl.wavesoftware.eid.api.Supplier;
+
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;

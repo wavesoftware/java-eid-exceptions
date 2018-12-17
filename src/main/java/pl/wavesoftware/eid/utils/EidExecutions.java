@@ -16,7 +16,7 @@
 
 package pl.wavesoftware.eid.utils;
 
-import pl.wavesoftware.eid.Eid;
+import pl.wavesoftware.eid.api.Eid;
 import pl.wavesoftware.eid.exceptions.EidRuntimeException;
 
 import static pl.wavesoftware.eid.utils.EidUtil.ensureEid;

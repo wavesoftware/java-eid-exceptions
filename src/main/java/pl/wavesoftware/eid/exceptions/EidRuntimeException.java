@@ -15,9 +15,10 @@
  */
 package pl.wavesoftware.eid.exceptions;
 
-import pl.wavesoftware.eid.Eid;
-import pl.wavesoftware.eid.EidContainer;
-import pl.wavesoftware.eid.EidMessage;
+import pl.wavesoftware.eid.api.EidContainer;
+import pl.wavesoftware.eid.api.Eid;
+import pl.wavesoftware.eid.api.EidMessage;
+import pl.wavesoftware.eid.system.EidModule;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -62,7 +63,13 @@ public class EidRuntimeException extends RuntimeException implements EidContaine
      * @param eid an exception ID as character sequence
      */
     public EidRuntimeException(CharSequence eid) {
-        this(new Eid(eid));
+        this(
+            EidModule.MODULE
+                .getBinding()
+                .getFactories()
+                .getEidFactory()
+                .create(eid)
+        );
     }
 
     /**
@@ -77,7 +84,14 @@ public class EidRuntimeException extends RuntimeException implements EidContaine
      *                later retrieval by the {@link #getMessage()} method.
      */
     public EidRuntimeException(CharSequence eid, String message) {
-        this(new Eid(eid), message);
+        this(
+            EidModule.MODULE
+                .getBinding()
+                .getFactories()
+                .getEidFactory()
+                .create(eid),
+            message
+        );
     }
 
     /**
@@ -114,7 +128,15 @@ public class EidRuntimeException extends RuntimeException implements EidContaine
     public EidRuntimeException(
         CharSequence eid, String message, @Nullable Throwable cause
     ) {
-        this(new Eid(eid), message, cause);
+        this(
+            EidModule.MODULE
+                .getBinding()
+                .getFactories()
+                .getEidFactory()
+                .create(eid),
+            message,
+            cause
+        );
     }
 
     /**
@@ -155,7 +177,14 @@ public class EidRuntimeException extends RuntimeException implements EidContaine
      *              unknown.)
      */
     public EidRuntimeException(CharSequence eid, @Nullable Throwable cause) {
-        this(new Eid(eid), cause);
+        this(
+            EidModule.MODULE
+                .getBinding()
+                .getFactories()
+                .getEidFactory()
+                .create(eid),
+            cause
+        );
     }
 
     /**
@@ -205,7 +234,9 @@ public class EidRuntimeException extends RuntimeException implements EidContaine
      *                permitted, and indicates that the cause is nonexistent or
      *                unknown.)
      */
-    public EidRuntimeException(Eid id, String message, @Nullable Throwable cause) {
+    public EidRuntimeException(
+        Eid id, String message, @Nullable Throwable cause
+    ) {
         super(id.message(message).toString(), cause);
         this.eid = id;
     }

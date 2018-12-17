@@ -18,8 +18,10 @@ package pl.wavesoftware.eid.exceptions;
 
 import org.junit.Rule;
 import org.junit.Test;
-import pl.wavesoftware.eid.Eid;
-import pl.wavesoftware.eid.EidMessage;
+import pl.wavesoftware.eid.ConstantUniqueIdRule;
+import pl.wavesoftware.eid.DefaultEid;
+import pl.wavesoftware.eid.api.Eid;
+import pl.wavesoftware.eid.api.EidMessage;
 
 import java.io.IOException;
 
@@ -66,7 +68,7 @@ public class EidIllegalArgumentExceptionTest {
     @Test
     public void constructOfEidMessage() {
         // given
-        Eid eid = new Eid("20181216:175048");
+        DefaultEid eid = new DefaultEid("20181216:175048");
         EidMessage message = eid.message(
             "This is {0} message", new A()
         );
@@ -101,7 +103,7 @@ public class EidIllegalArgumentExceptionTest {
     @Test
     public void constructOfEidMessageAndCause() {
         // given
-        Eid eid = new Eid("20181215:000410");
+        DefaultEid eid = new DefaultEid("20181215:000410");
         EidMessage message = eid.message(
             "This is {0} message", new A()
         );
@@ -134,7 +136,7 @@ public class EidIllegalArgumentExceptionTest {
     @Test
     public void constructOfEid() {
         // given
-        Eid eid = Eid.eid("20181216:180054");
+        Eid eid = DefaultEid.eid("20181216:180054");
 
         // when
         EidRuntimeException ex = new EidIllegalArgumentException(eid);
@@ -148,7 +150,7 @@ public class EidIllegalArgumentExceptionTest {
     @Test
     public void constructOfEidAndMessage() {
         // given
-        Eid eid = Eid.eid("20181216:180212");
+        Eid eid = DefaultEid.eid("20181216:180212");
         String message = "A simple message";
 
         // when
@@ -163,7 +165,7 @@ public class EidIllegalArgumentExceptionTest {
     @Test
     public void constructOfEidAndMessageAndCause() {
         // given
-        Eid eid = Eid.eid("20181216:180355");
+        Eid eid = DefaultEid.eid("20181216:180355");
         String message = "A simple message";
         Throwable cause = getCause();
 
@@ -181,7 +183,7 @@ public class EidIllegalArgumentExceptionTest {
     @Test
     public void constructOfEidAndCause() {
         // given
-        Eid eid = Eid.eid("20181216:191804");
+        Eid eid = DefaultEid.eid("20181216:191804");
         Throwable cause = getCause();
 
         // when

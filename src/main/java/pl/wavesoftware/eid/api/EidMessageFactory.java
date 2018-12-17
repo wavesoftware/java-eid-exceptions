@@ -14,30 +14,29 @@
  * limitations under the License.
  */
 
-package pl.wavesoftware.eid.configuration;
+package pl.wavesoftware.eid.api;
 
 /**
- * A configuration provider interface.
+ * Represents a factory for Eid messages.
  *
  * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
  * @since 2.0.0
  */
-public interface ConfigurationSystem {
+public interface EidMessageFactory {
     /**
-     * Get a configuration object
+     * Create a Exception ID message, from Eid, message template and
+     * template arguments.
      *
-     * @return a configuration object
+     * @param eid               an Exception ID object
+     * @param messageTemplate   message template in form accepted by
+     *                          {@link java.text.MessageFormat#format(String, Object...)}
+     * @param templateArguments a template arguments to be used to interpolate
+     *                          into message
+     * @return a create message with Eid number
      */
-    Configuration getConfiguration();
-
-    /**
-     * Configures an Eid library programmatically. Note, that method returns a
-     * configurator that can be used to restore configuration to the state
-     * before you invoke this configuration method.
-     *
-     * @param configurator a configurator to use to configure Eid library
-     * @return a reference to a configurator that can be used to restore
-     * previous configuration
-     */
-    Configurator configure(Configurator configurator);
+    EidMessage create(
+        Eid eid,
+        CharSequence messageTemplate,
+        Object[] templateArguments
+    );
 }

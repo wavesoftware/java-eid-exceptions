@@ -17,7 +17,9 @@
 package pl.wavesoftware.eid.impl;
 
 import org.junit.Test;
-import pl.wavesoftware.eid.configuration.Binding;
+import pl.wavesoftware.eid.api.Binding;
+import pl.wavesoftware.eid.api.SerializableSupplier;
+import pl.wavesoftware.eid.api.Supplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -33,12 +35,13 @@ public class BindingImplTest {
         Binding binding = new BindingImpl();
 
         // when
-        SerializableSupplier<String> lazy = binding.lazy(new Supplier<String>() {
-            @Override
-            public String get() {
-                return "Alice";
-            }
-        });
+        SerializableSupplier<String> lazy =
+            binding.getFactories().getLazyFactory().lazy(new Supplier<String>() {
+                @Override
+                public String get() {
+                    return "Alice";
+                }
+            });
         String result = lazy.get();
 
         // then

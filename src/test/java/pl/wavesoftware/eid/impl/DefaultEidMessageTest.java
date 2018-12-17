@@ -17,8 +17,8 @@
 package pl.wavesoftware.eid.impl;
 
 import org.junit.Test;
-import pl.wavesoftware.eid.Eid;
-import pl.wavesoftware.eid.EidMessage;
+import pl.wavesoftware.eid.DefaultEid;
+import pl.wavesoftware.eid.api.EidMessage;
 
 import java.util.Date;
 
@@ -33,7 +33,7 @@ public class DefaultEidMessageTest {
     @Test
     public void testToString() {
         // given
-        Eid eid = new Eid("20181114:225421");
+        DefaultEid eid = new DefaultEid("20181114:225421");
         EidMessage message = eid.message(
             "An example message with {0,date} {0,time}",
             new Date(1024000L)

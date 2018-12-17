@@ -14,14 +14,7 @@
  * limitations under the License.
  */
 
-package pl.wavesoftware.eid.configuration;
-
-import pl.wavesoftware.eid.Eid;
-import pl.wavesoftware.eid.EidMessage;
-import pl.wavesoftware.eid.impl.SerializableSupplier;
-import pl.wavesoftware.eid.impl.Supplier;
-
-import java.io.Serializable;
+package pl.wavesoftware.eid.api;
 
 /**
  * A binding of Eid library. This interface can be used to completely
@@ -29,7 +22,7 @@ import java.io.Serializable;
  *
  * <p>To replace implementation use {@link java.util.ServiceLoader} like:
  *
- * <pre>META-INF/services/pl.wavesoftware.eid.configuration.Binding</pre>
+ * <pre>META-INF/services/pl.wavesoftware.eid.api.Binding</pre>
  * <p>
  * In that file, place a fully qualified class name of your class that implements
  * {@link Binding} interface. It should be called first time you reference an
@@ -53,28 +46,10 @@ public interface Binding {
     ConfigurationSystem getConfigurationSystem();
 
     /**
-     * Create a Exception ID message, from Eid, message template and
-     * template arguments.
+     * Get bound Eid factories to be used to perform various Eid
+     * related operations.
      *
-     * @param eid               an Exception ID object
-     * @param messageTemplate   message template in form accepted by
-     *                          {@link java.text.MessageFormat#format(String, Object...)}
-     * @param templateArguments a template arguments to be used to interpolate
-     *                          into message
-     * @return a create message with Eid number
+     * @return a factories for various Eid related things.
      */
-    EidMessage createEidMessage(
-        Eid eid,
-        CharSequence messageTemplate,
-        Object[] templateArguments
-    );
-
-    /**
-     * Creates a lazy supplier of a given supplier of serializable value
-     *
-     * @param supplier a supplier of serializable value
-     * @param <T> a serializable type
-     * @return a lazy, serializable, supplier
-     */
-    <T extends Serializable> SerializableSupplier<T> lazy(Supplier<T> supplier);
+    EidFactories getFactories();
 }

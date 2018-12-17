@@ -34,6 +34,7 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.openjdk.jmh.runner.options.TimeValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.wavesoftware.eid.DisableValidatorState;
 import pl.wavesoftware.eid.exceptions.EidRuntimeException;
 import pl.wavesoftware.testing.JavaAgentSkip;
 import pl.wavesoftware.testing.JmhCleaner;
@@ -68,7 +69,7 @@ public class EidPreconditionsIT {
         Options opt = new OptionsBuilder()
             .include(this.getClass().getName() + ".*")
             .mode(Mode.Throughput)
-            .timeUnit(TimeUnit.MICROSECONDS)
+            .timeUnit(TimeUnit.MILLISECONDS)
             .operationsPerInvocation(OPERATIONS)
             .warmupTime(TimeValue.seconds(1))
             .warmupIterations(1)
@@ -78,7 +79,11 @@ public class EidPreconditionsIT {
             .forks(1)
             .shouldFailOnError(true)
             .shouldDoGC(true)
-            .jvmArgs("-server", "-Xms256m", "-Xmx256m", "-XX:PermSize=128m", "-XX:MaxPermSize=128m", "-XX:+UseParallelGC")
+            .jvmArgs(
+                "-server", "-Xms256m", "-Xmx256m",
+                "-XX:PermSize=128m", "-XX:MaxPermSize=128m",
+                "-XX:+UseParallelGC"
+            )
             .build();
 
         Runner runner = new Runner(opt);
@@ -92,7 +97,7 @@ public class EidPreconditionsIT {
 
     @Benchmark
     @BenchmarkConfig(test = TestCase.CHECK_ARGUMENT, framework = Framework.GUAVA)
-    public void testCheckArgument(Blackhole bh) {
+    public void testCheckArgument(Blackhole bh, DisableValidatorState state) {
         for (int i = 0; i < OPERATIONS; i++) {
             Preconditions.checkArgument(i >= 0, "20160325:123449");
             bh.consume(i);
@@ -101,7 +106,7 @@ public class EidPreconditionsIT {
 
     @Benchmark
     @BenchmarkConfig(test = TestCase.CHECK_STATE, framework = Framework.GUAVA)
-    public void testCheckState(Blackhole bh) {
+    public void testCheckState(Blackhole bh, DisableValidatorState state) {
         for (int i = 0; i < OPERATIONS; i++) {
             Preconditions.checkState(i >= 0, "20160325:123534");
             bh.consume(i);

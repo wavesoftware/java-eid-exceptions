@@ -14,15 +14,36 @@
  * limitations under the License.
  */
 
-package pl.wavesoftware.eid.impl;
+package pl.wavesoftware.eid;
 
+import org.openjdk.jmh.annotations.Scope;
+import org.openjdk.jmh.annotations.Setup;
+import org.openjdk.jmh.annotations.State;
+import org.openjdk.jmh.annotations.TearDown;
 import pl.wavesoftware.eid.api.ConfigurationBuilder;
-import pl.wavesoftware.eid.api.Configuration;
+import pl.wavesoftware.eid.api.Configurator;
 
 /**
  * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
- * @since 2.0.0
+ * @since 2018-12-18
  */
-interface MutableConfiguration
-    extends Configuration, ConfigurationBuilder {
+@State(Scope.Benchmark)
+public class DisableValidatorState {
+    private ConfigurationContext context;
+
+    @Setup
+    public void setup() {
+        context =
+            new ConfigurationContext(new Configurator() {
+                @Override
+                public void configure(ConfigurationBuilder configuration) {
+                    configuration.validator(null);
+                }
+            });
+    }
+
+    @TearDown
+    public void tearDown() {
+        context.close();
+    }
 }

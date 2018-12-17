@@ -16,15 +16,17 @@
 
 package pl.wavesoftware.eid.impl;
 
-import pl.wavesoftware.eid.configuration.Configuration;
-import pl.wavesoftware.eid.configuration.ConfigurationBuilder;
-import pl.wavesoftware.eid.configuration.Formatter;
-import pl.wavesoftware.eid.configuration.UniqueIdGenerator;
-import pl.wavesoftware.eid.configuration.Validator;
+import pl.wavesoftware.eid.api.Configuration;
+import pl.wavesoftware.eid.api.ConfigurationBuilder;
+import pl.wavesoftware.eid.api.Formatter;
+import pl.wavesoftware.eid.api.UniqueIdGenerator;
+import pl.wavesoftware.eid.api.Validator;
 
 import javax.annotation.Nullable;
 import java.util.Locale;
 import java.util.TimeZone;
+
+import static pl.wavesoftware.eid.impl.InternalChecks.checkNotNull;
 
 /**
  * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
@@ -46,6 +48,7 @@ final class ConfigurationImpl implements MutableConfiguration {
     }
 
     ConfigurationImpl(MutableConfiguration settings) {
+        checkNotNull(settings, "20181218:002046");
         this.formatter = settings.getFormatter();
         this.generator = settings.getIdGenerator();
         this.validator = settings.getValidator();
@@ -55,30 +58,30 @@ final class ConfigurationImpl implements MutableConfiguration {
 
     @Override
     public ConfigurationBuilder uniqueIdGenerator(UniqueIdGenerator generator) {
-        this.generator = generator;
+        this.generator = checkNotNull(generator, "20181218:002002");
         return this;
     }
 
     @Override
     public ConfigurationBuilder formatter(Formatter formatter) {
-        this.formatter = formatter;
+        this.formatter = checkNotNull(formatter, "20181218:002018");
         return this;
     }
 
     @Override
-    public ConfigurationBuilder locale(Locale locale) {
+    public ConfigurationBuilder locale(@Nullable Locale locale) {
         this.locale = locale;
         return this;
     }
 
     @Override
-    public ConfigurationBuilder timezone(TimeZone zone) {
+    public ConfigurationBuilder timezone(@Nullable TimeZone zone) {
         this.zone = zone;
         return this;
     }
 
     @Override
-    public ConfigurationBuilder validator(Validator validator) {
+    public ConfigurationBuilder validator(@Nullable Validator validator) {
         this.validator = validator;
         return this;
     }

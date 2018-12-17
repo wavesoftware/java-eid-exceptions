@@ -20,7 +20,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import static org.assertj.core.api.Assertions.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
@@ -30,6 +33,20 @@ public class InternalChecksTest {
 
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
+
+    @Test
+    public void instantinate() throws NoSuchMethodException,
+        IllegalAccessException, InvocationTargetException,
+        InstantiationException {
+        // when
+        Constructor<InternalChecks> constr =
+            InternalChecks.class.getDeclaredConstructor();
+        constr.setAccessible(true);
+        InternalChecks checks = constr.newInstance();
+
+        // then
+        assertThat(checks).isNotNull();
+    }
 
     @Test
     public void testCheckNotNull() {

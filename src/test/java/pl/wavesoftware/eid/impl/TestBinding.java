@@ -14,16 +14,11 @@
  * limitations under the License.
  */
 
-package pl.wavesoftware.eid.configuration;
+package pl.wavesoftware.eid.impl;
 
-import pl.wavesoftware.eid.Eid;
-import pl.wavesoftware.eid.EidMessage;
-import pl.wavesoftware.eid.impl.BindingImpl;
-import pl.wavesoftware.eid.impl.LazyProvider;
-import pl.wavesoftware.eid.impl.SerializableSupplier;
-import pl.wavesoftware.eid.impl.Supplier;
-
-import java.io.Serializable;
+import pl.wavesoftware.eid.api.Binding;
+import pl.wavesoftware.eid.api.ConfigurationSystem;
+import pl.wavesoftware.eid.api.EidFactories;
 
 /**
  * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
@@ -39,18 +34,7 @@ public final class TestBinding implements Binding {
     }
 
     @Override
-    public EidMessage createEidMessage(
-        Eid eid,
-        CharSequence messageTemplate,
-        Object[] templateArguments
-    ) {
-        return impl.createEidMessage(
-            eid, messageTemplate, templateArguments
-        );
-    }
-
-    @Override
-    public <T extends Serializable> SerializableSupplier<T> lazy(Supplier<T> supplier) {
-        return LazyProvider.lazy(supplier);
+    public EidFactories getFactories() {
+        return impl.getFactories();
     }
 }

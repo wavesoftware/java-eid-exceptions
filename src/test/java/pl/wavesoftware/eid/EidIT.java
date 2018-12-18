@@ -1,4 +1,20 @@
-package pl.wavesoftware.eid.exceptions;
+/*
+ * Copyright (c) 2015 Wave Software
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package pl.wavesoftware.eid;
 
 import org.junit.ClassRule;
 import org.junit.Test;
@@ -13,6 +29,7 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.openjdk.jmh.runner.options.TimeValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.wavesoftware.eid.exceptions.EidRuntimeException;
 import pl.wavesoftware.testing.JavaAgentSkip;
 import pl.wavesoftware.testing.JmhCleaner;
 
@@ -23,7 +40,7 @@ import java.util.concurrent.TimeUnit;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
+ * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
  * @since 2016-03-24
  */
 public class EidIT {
@@ -31,7 +48,7 @@ public class EidIT {
     private static final int PERCENT = 100;
     private static final int OPERATIONS = 1000;
     private static final Logger LOG = LoggerFactory.getLogger(EidIT.class);
-    private static final double SPEED_THRESHOLD = 0.75d;
+    private static final double SPEED_THRESHOLD = 0.9d;
 
     @ClassRule
     public static RuleChain chain = RuleChain
@@ -41,20 +58,24 @@ public class EidIT {
     @Test
     public void doBenckmarking() throws Exception {
         Options opt = new OptionsBuilder()
-                .include(this.getClass().getName() + ".*")
-                .mode(Mode.Throughput)
-                .timeUnit(TimeUnit.MICROSECONDS)
-                .operationsPerInvocation(OPERATIONS)
-                .warmupTime(TimeValue.seconds(1))
-                .warmupIterations(2)
-                .measurementTime(TimeValue.seconds(1))
-                .measurementIterations(5)
-                .threads(4)
-                .forks(1)
-                .shouldFailOnError(true)
-                .shouldDoGC(true)
-                .jvmArgs("-server", "-Xms256m", "-Xmx256m", "-XX:PermSize=128m", "-XX:MaxPermSize=128m", "-XX:+UseParallelGC")
-                .build();
+            .include(this.getClass().getName() + ".*")
+            .mode(Mode.Throughput)
+            .timeUnit(TimeUnit.MILLISECONDS)
+            .operationsPerInvocation(OPERATIONS)
+            .warmupTime(TimeValue.seconds(1))
+            .warmupIterations(2)
+            .measurementTime(TimeValue.seconds(1))
+            .measurementIterations(5)
+            .threads(4)
+            .forks(1)
+            .shouldFailOnError(true)
+            .shouldDoGC(true)
+            .jvmArgs(
+                "-server", "-Xms256m", "-Xmx256m",
+                "-XX:PermSize=128m", "-XX:MaxPermSize=128m",
+                "-XX:+UseParallelGC"
+            )
+            .build();
 
         Runner runner = new Runner(opt);
         Collection<RunResult> results = runner.run();
@@ -74,24 +95,26 @@ public class EidIT {
 
         double eidTimes = eidScore / controlScore;
 
-        LOG.info(String.format("Control sample method time per operation: %.2f ops / µsec", controlScore));
-        LOG.info(String.format("#eid() method time per operation:         %.2f ops / µsec", eidScore));
+        LOG.info(String.format("Control sample method time per operation: %" +
+            ".2f ops / msec", controlScore));
+        LOG.info(String.format("#eid() method time per operation:         %" +
+            ".2f ops / msec", eidScore));
         LOG.info(String.format("%s and is %.2f%%", eidTitle, eidTimes * PERCENT));
 
         assertThat(eidTimes).as(eidTitle).isGreaterThanOrEqualTo(SPEED_THRESHOLD);
     }
 
     @Benchmark
-    public void control(Blackhole bh) {
+    public void control(Blackhole bh, DisableValidatorState state) {
         for (int i = 0; i < OPERATIONS; i++) {
             bh.consume(new Date());
         }
     }
 
     @Benchmark
-    public void eid(Blackhole bh) {
+    public void eid(Blackhole bh, DisableValidatorState state) {
         for (int i = 0; i < OPERATIONS; i++) {
-            bh.consume(new Eid("20160330:144947"));
+            bh.consume(new DefaultEid("20160330:144947"));
         }
     }
 
@@ -104,4 +127,5 @@ public class EidIT {
         }
         throw new EidRuntimeException("20160324:225412", "Invalid name: " + name);
     }
+
 }

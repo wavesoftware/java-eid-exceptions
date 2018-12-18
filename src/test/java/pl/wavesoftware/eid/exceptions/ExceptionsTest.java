@@ -1,11 +1,11 @@
 /*
- * Copyright 2015 Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>.
+ * Copyright (c) 2015 Wave Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,16 +16,17 @@
 package pl.wavesoftware.eid.exceptions;
 
 import org.assertj.core.util.Lists;
-import org.assertj.core.util.Maps;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+import pl.wavesoftware.eid.DefaultEid;
+import pl.wavesoftware.eid.api.Eid;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -37,26 +38,27 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(Parameterized.class)
 public class ExceptionsTest {
 
-    private static Map<Class<? extends EidRuntimeException>, Class<? extends RuntimeException>> getClassesMapping() {
-        Map<Class<? extends EidRuntimeException>, Class<? extends RuntimeException>> map = Maps.newHashMap();
-        map.put(EidRuntimeException.class, RuntimeException.class);
-        map.put(EidIllegalArgumentException.class, IllegalArgumentException.class);
-        map.put(EidIllegalStateException.class, IllegalStateException.class);
-        map.put(EidIndexOutOfBoundsException.class, IndexOutOfBoundsException.class);
-        map.put(EidNullPointerException.class, NullPointerException.class);
-
-        return map;
+    @Parameters(name = "{index}: {0}({1})")
+    public static Iterable<Object[]> data() {
+        List<Object[]> argsList = getArguments();
+        List<Object[]> parameters = Lists.newArrayList();
+        for (Class<? extends EidRuntimeException> exception : getExceptions()) {
+            for (Object[] args : argsList) {
+                addParameters(exception, parameters, args);
+            }
+        }
+        return parameters;
     }
 
     private static List<Object[]> getArguments() {
-        Throwable cause = new InterruptedException("A testing message");
-        String eid = "20150718:112954";
-        String ref = "PL-981";
-        Eid id = new Eid(eid);
+        String message = "A testing message";
+        Throwable cause = new InterruptedException(message);
+        CharSequence eid = "20150718:112954";
+        Eid id = new DefaultEid(eid);
         List<Object[]> arguments = Lists.newArrayList();
-        arguments.add(new Object[]{eid, ref, cause});
+        arguments.add(new Object[]{eid, message, cause});
         arguments.add(new Object[]{eid, cause});
-        arguments.add(new Object[]{eid, ref});
+        arguments.add(new Object[]{eid, message});
         arguments.add(new Object[]{id, cause});
         arguments.add(new Object[]{id});
         return arguments;
@@ -73,37 +75,47 @@ public class ExceptionsTest {
     private static Class<?>[] getArgumentsTypes(Object[] args) {
         List<Class<?>> classes = Lists.newArrayList();
         for (Object arg : args) {
-            classes.add(Throwable.class.isAssignableFrom(arg.getClass()) ? Throwable.class : arg.getClass());
+            classes.add(guessType(arg));
         }
         Class<?>[] empty = new Class<?>[0];
         return classes.toArray(empty);
     }
 
-    @Parameters(name = "{index}: {0}({1})")
-    public static Iterable<Object[]> data() {
-        List<Object[]> argsList = getArguments();
-        Map<Class<? extends EidRuntimeException>, Class<? extends RuntimeException>> mapping = getClassesMapping();
-        List<Object[]> parameters = Lists.newArrayList();
-        for (Map.Entry<Class<? extends EidRuntimeException>, Class<? extends RuntimeException>> entrySet : mapping.entrySet()) {
-            for (Object[] args : argsList) {
-                addParameters(entrySet, parameters, args);
-            }
-        }
-        return parameters;
+    private static Class<?> guessType(Object arg) {
+        return Throwable.class.isAssignableFrom(arg.getClass())
+            ? Throwable.class
+            : Eid.class.isAssignableFrom(arg.getClass())
+            ? Eid.class
+            : arg.getClass();
     }
 
-    private static void addParameters(Map.Entry<Class<? extends EidRuntimeException>, Class<? extends RuntimeException>> entrySet,
-        List<Object[]> parameters, Object[] args) {
-        try {
-            Class<? extends EidRuntimeException> eidClass = entrySet.getKey();
-            Class<? extends RuntimeException> jdkClass = entrySet.getValue();
+    @SuppressWarnings("unchecked")
+    private static Iterable<? extends Class<? extends EidRuntimeException>> getExceptions() {
+        return Arrays.asList(
+            EidRuntimeException.class,
+            EidIllegalArgumentException.class,
+            EidIllegalStateException.class,
+            EidIndexOutOfBoundsException.class,
+            EidNullPointerException.class
+        );
+    }
 
-            Constructor<? extends EidRuntimeException> constructor = eidClass.getDeclaredConstructor(getArgumentsTypes(args));
+    private static void addParameters(
+        Class<? extends EidRuntimeException> eidClass,
+        List<Object[]> parameters,
+        Object[] args
+    ) {
+        try {
+            Class<?>[] types = getArgumentsTypes(args);
+            if (types[0] == String.class) {
+                types[0] = CharSequence.class;
+            }
+            Constructor<? extends EidRuntimeException> constructor =
+                eidClass.getDeclaredConstructor(types);
             parameters.add(new Object[]{
                 eidClass.getSimpleName(),
                 argumentsTypesToString(args),
                 eidClass,
-                jdkClass,
                 constructor,
                 args
             });
@@ -116,38 +128,25 @@ public class ExceptionsTest {
 
     private final Class<? extends EidRuntimeException> eidClass;
 
-    private final Class<? extends RuntimeException> jdkClass;
 
     private final Constructor<? extends EidRuntimeException> constructor;
 
     private final Object[] arguments;
 
     @SuppressWarnings("unchecked")
-    public ExceptionsTest(String classSimpleName, String argsClasses, Class<? extends EidRuntimeException> eidClass,
-        Class<? extends RuntimeException> jdkClass, Constructor<?> constructor, Object... arguments) {
+    public ExceptionsTest(
+        String classSimpleName,
+        String argsClasses,
+        Class<? extends EidRuntimeException> eidClass,
+        Constructor<?> constructor,
+        Object... arguments
+    ) {
 
         assertThat(classSimpleName).isNotEmpty();
         assertThat(argsClasses).isNotEmpty();
         this.eidClass = eidClass;
-        this.jdkClass = jdkClass;
         this.constructor = (Constructor<? extends EidRuntimeException>) constructor;
         this.arguments = arguments;
-    }
-
-    @Test
-    public void testGetStandardJdkClass() {
-        // given
-        EidRuntimeException exception = construct();
-
-        // when
-        Eid eid = exception.getEid();
-        Class<? extends RuntimeException> jdkCls = exception.getStandardJdkClass();
-
-        // then
-        assertThat(exception).isNotNull();
-        assertThat(eid).isNotNull();
-        assertThat(jdkCls).isNotNull();
-        assertThat(jdkCls).isEqualTo(jdkClass);
     }
 
     @Test

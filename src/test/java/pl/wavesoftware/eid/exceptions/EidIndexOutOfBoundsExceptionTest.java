@@ -1,61 +1,51 @@
+/*
+ * Copyright (c) 2015 Wave Software
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package pl.wavesoftware.eid.exceptions;
 
 import org.hamcrest.CoreMatchers;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import pl.wavesoftware.eid.ConstantUniqueIdRule;
+import pl.wavesoftware.eid.DefaultEid;
+import pl.wavesoftware.eid.api.Eid;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.internal.matchers.ThrowableMessageMatcher.hasMessage;
 
 /**
- * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
+ * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
  * @since 2015-11-19
  */
 public class EidIndexOutOfBoundsExceptionTest {
 
     @Rule
-    public ExpectedException thrown = ExpectedException.none();
+    public final ExpectedException thrown = ExpectedException.none();
 
-    private String constUniq = "deadfa11";
-    private String causeString = "Index seams to be invalid";
-    @SuppressWarnings("ThrowableInstanceNeverThrown")
-    private Throwable cause = new ArrayIndexOutOfBoundsException(causeString);
-    private Eid.UniqIdGenerator original;
+    @Rule
+    public final ConstantUniqueIdRule uniqueIdRule = new ConstantUniqueIdRule(
+        "deadfa11"
+    );
 
-    @Before
-    public void before() {
-        original = Eid.setUniqIdGenerator(new Eid.UniqIdGenerator() {
-            @Override
-            public String generateUniqId() {
-                return constUniq;
-            }
-        });
-    }
-
-    @After
-    public void after() {
-        Eid.setUniqIdGenerator(original);
-    }
+    private final String causeString = "Index seams to be invalid";
 
     @Test
-    public void testGetStandardJdkClass() throws Exception {
-        // given
-        @SuppressWarnings("ThrowableInstanceNeverThrown")
-        EidIndexOutOfBoundsException ex = new EidIndexOutOfBoundsException(new Eid("20151119:103152"));
-
-        // when
-        Class<? extends RuntimeException> cls = ex.getStandardJdkClass();
-
-        // then
-        assertThat(cls).isEqualTo(IndexOutOfBoundsException.class);
-    }
-
-    @Test
-    public void testEidIndexOutOfBoundsException_String_String_Throwable() {
+    public void throwWithEidWithRefAndCause() {
         // given
         String eid = "20151119:103158";
         String ref = "MS+1233";
@@ -64,14 +54,17 @@ public class EidIndexOutOfBoundsExceptionTest {
         thrown.expectCause(hasMessage(containsString(causeString)));
         thrown.expectCause(CoreMatchers.<Throwable>instanceOf(ArrayIndexOutOfBoundsException.class));
         thrown.expect(EidIndexOutOfBoundsException.class);
-        thrown.expectMessage("[20151119:103158|MS+1233]<deadfa11> => Index seams to be invalid");
+        thrown.expectMessage(
+            "[20151119:103158|MS+1233]<deadfa11> => " +
+                "Index seams to be invalid"
+        );
 
         // when
-        throw new EidIndexOutOfBoundsException(eid, ref, cause);
+        throw new EidIndexOutOfBoundsException(new DefaultEid(eid, ref), getCause());
     }
 
     @Test
-    public void testEidIndexOutOfBoundsException_String_String() {
+    public void throwWithEidWithRef() {
         // given
         String eid = "20151119:103217";
         String ref = "MS+1233";
@@ -81,11 +74,11 @@ public class EidIndexOutOfBoundsExceptionTest {
         thrown.expectMessage("[20151119:103217|MS+1233]<deadfa11>");
 
         // when
-        throw new EidIndexOutOfBoundsException(eid, ref);
+        throw new EidIndexOutOfBoundsException(new DefaultEid(eid, ref));
     }
 
     @Test
-    public void testEidIndexOutOfBoundsException_String_Throwable() {
+    public void throwWithStringAndCause() {
         // given
         String eid = "20151119:103232";
 
@@ -93,25 +86,159 @@ public class EidIndexOutOfBoundsExceptionTest {
         thrown.expectCause(hasMessage(containsString(causeString)));
         thrown.expectCause(CoreMatchers.<Throwable>instanceOf(ArrayIndexOutOfBoundsException.class));
         thrown.expect(EidIndexOutOfBoundsException.class);
-        thrown.expectMessage("[20151119:103232]<deadfa11> => Index seams to be invalid");
+        thrown.expectMessage("[20151119:103232]<deadfa11> => " +
+            "Index seams to be invalid");
 
         // when
-        throw new EidIndexOutOfBoundsException(eid, cause);
+        throw new EidIndexOutOfBoundsException(eid, getCause());
     }
 
     @Test
-    public void testEidIndexOutOfBoundsException_Eid_Throwable() {
+    public void throwWithEidAndCause() {
         // given
         String eidNum = "20151119:103245";
-        Eid eid = new Eid(eidNum);
+        DefaultEid eid = new DefaultEid(eidNum);
 
         // then
         thrown.expectCause(hasMessage(containsString(causeString)));
-        thrown.expectCause(CoreMatchers.<Throwable>instanceOf(ArrayIndexOutOfBoundsException.class));
+        thrown.expectCause(CoreMatchers.<Throwable>instanceOf(
+            ArrayIndexOutOfBoundsException.class
+        ));
         thrown.expect(EidIndexOutOfBoundsException.class);
-        thrown.expectMessage("[20151119:103245]<deadfa11> => Index seams to be invalid");
+        thrown.expectMessage("[20151119:103245]<deadfa11> => " +
+            "Index seams to be invalid");
 
         // when
-        throw new EidIndexOutOfBoundsException(eid, cause);
+        throw new EidIndexOutOfBoundsException(eid, getCause());
+    }
+
+    @Test
+    public void throwWithString() {
+        // given
+        String eid = "20181216:233656";
+
+        // then
+        thrown.expectCause(nullValue(Throwable.class));
+        thrown.expect(EidIndexOutOfBoundsException.class);
+        thrown.expectMessage("[20181216:233656]<deadfa11>");
+
+        // when
+        throw new EidIndexOutOfBoundsException(eid);
+    }
+
+    @Test
+    public void throwWithStringAndString() {
+        // given
+        String eid = "20181216:233958";
+        String message = "This is a message";
+
+        // then
+        thrown.expectCause(nullValue(Throwable.class));
+        thrown.expect(EidIndexOutOfBoundsException.class);
+        thrown.expectMessage("[20181216:233958]<deadfa11> => " +
+            "This is a message");
+
+        // when
+        throw new EidIndexOutOfBoundsException(eid, message);
+    }
+
+    @Test
+    public void throwWithEidMessage() {
+        // given
+        String eid = "20181216:235124";
+        String message = "This is {0} message";
+
+        // then
+        thrown.expectCause(nullValue(Throwable.class));
+        thrown.expect(EidIndexOutOfBoundsException.class);
+        thrown.expectMessage("[20181216:235124]<deadfa11> => " +
+            "This is a message");
+
+        // when
+        throw new EidIndexOutOfBoundsException(
+            DefaultEid.eid(eid).message(message, new A())
+        );
+    }
+
+    @Test
+    public void throwWithStringStringAndCause() {
+        // given
+        String eid = "20181216:235554";
+        String message = "This is a message";
+
+        // then
+        thrown.expect(EidIndexOutOfBoundsException.class);
+        thrown.expectMessage("[20181216:235554]<deadfa11> => " +
+            "This is a message");
+        thrown.expectCause(CoreMatchers.<Throwable>instanceOf(
+            ArrayIndexOutOfBoundsException.class
+        ));
+
+        // when
+        throw new EidIndexOutOfBoundsException(
+            eid, message, getCause()
+        );
+    }
+
+    @Test
+    public void throwWithEidMessageAndCause() {
+        // given
+        String eid = "20181216:235729";
+        String message = "This is {0} message";
+
+        // then
+        thrown.expect(EidIndexOutOfBoundsException.class);
+        thrown.expectMessage("[20181216:235729]<deadfa11> => " +
+            "This is a message");
+        thrown.expectCause(CoreMatchers.<Throwable>instanceOf(
+            ArrayIndexOutOfBoundsException.class
+        ));
+
+        // when
+        throw new EidIndexOutOfBoundsException(
+            DefaultEid.eid(eid).message(message, new A()), getCause()
+        );
+    }
+
+    @Test
+    public void throwWithEidAndMessage() {
+        // given
+        Eid eid = DefaultEid.eid("20181217:001519");
+        String message = "This is a message";
+
+        // then
+        thrown.expect(EidIndexOutOfBoundsException.class);
+        thrown.expectMessage("[20181217:001519]<deadfa11> => " +
+            "This is a message");
+        thrown.expectCause(nullValue(Throwable.class));
+
+        // when
+        throw new EidIndexOutOfBoundsException(
+            eid, message
+        );
+    }
+
+    @Test
+    public void throwWithEidAndMessageAndCause() {
+        // given
+        Eid eid = DefaultEid.eid("20181217:001727");
+        String message = "This is a message";
+
+        // then
+        thrown.expect(EidIndexOutOfBoundsException.class);
+        thrown.expectMessage("[20181217:001727]<deadfa11> => " +
+            "This is a message");
+        thrown.expectCause(CoreMatchers.<Throwable>instanceOf(
+            ArrayIndexOutOfBoundsException.class
+        ));
+
+        // when
+        throw new EidIndexOutOfBoundsException(
+            eid, message, getCause()
+        );
+    }
+
+    private Throwable getCause() {
+        return new ArrayIndexOutOfBoundsException(causeString);
     }
 }

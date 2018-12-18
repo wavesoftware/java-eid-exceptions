@@ -1,0 +1,73 @@
+# Java Maven CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-java/ for more details
+#
+version: 2
+
+references:
+  build: &build
+    working_directory: ~/repo
+
+    environment:
+      # Customize the JVM maximum heap limit
+      MAVEN_OPTS: -Xmx2048m
+      JACOCO: true
+
+    steps:
+     - checkout
+
+     # Download and cache dependencies
+     - restore_cache:
+         keys:
+          - v2-dependencies-{{ checksum "pom.xml" }}
+          # fallback to using the latest cache if no exact match is found
+          - v2-dependencies-
+
+     - run:
+         name: Go Offline with Maven
+         command: mvn verify -DskipTests
+
+     - save_cache:
+         paths:
+          - ~/.m2
+         key: v2-dependencies-{{ checksum "pom.xml" }}
+
+     # run tests!
+     - run:
+         name: Run integration tests
+         command: mvn verify
+
+workflows:
+  version: 2
+  integration-tests:
+    jobs:
+      - zulu-6
+      - zulu-7
+      - zulu-8
+      - zulu-9
+      - zulu-11
+
+jobs:
+  zulu-6:
+    docker:
+      - image: wavesoftware/circleci-zulujdk:6
+    <<: *build
+  zulu-7:
+    docker:
+      - image: wavesoftware/circleci-zulujdk:7
+    <<: *build
+  zulu-8:
+    docker:
+      - image: wavesoftware/circleci-zulujdk:8
+    <<: *build
+  zulu-9:
+    docker:
+      - image: wavesoftware/circleci-zulujdk:9
+    <<: *build
+  zulu-11:
+    docker:
+      - image: wavesoftware/circleci-zulujdk:11
+    <<: *build
+
+
+

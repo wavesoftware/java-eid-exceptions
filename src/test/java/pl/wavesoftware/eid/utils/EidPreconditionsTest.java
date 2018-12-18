@@ -34,6 +34,7 @@ import pl.wavesoftware.eid.exceptions.EidRuntimeException;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
 import java.util.Locale;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -471,7 +472,7 @@ public class EidPreconditionsTest {
         // given
         Class<EidPreconditions> cls = EidPreconditions.class;
         Constructor<?> constructor = cls.getDeclaredConstructor();
-        boolean access = constructor.isAccessible();
+        boolean access = Modifier.isPublic(constructor.getModifiers());
 
         // then
         assertThat(access).isFalse();

@@ -21,7 +21,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import javax.xml.bind.JAXBException;
+import javax.naming.NamingException;
 import java.util.UnknownFormatConversionException;
 
 import static org.hamcrest.CoreMatchers.containsString;
@@ -32,7 +32,6 @@ import static org.junit.internal.matchers.ThrowableMessageMatcher.hasMessage;
  * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
  * @since 2015-10-07
  */
-@SuppressWarnings("ConstantConditions")
 public class EidRuntimeExceptionTest {
 
     @Rule
@@ -42,19 +41,19 @@ public class EidRuntimeExceptionTest {
     public void testGetMessage() {
         // then
         thrown.expect(EidRuntimeException.class);
-        thrown.expectCause(CoreMatchers.<Throwable>instanceOf(JAXBException.class));
+        thrown.expectCause(CoreMatchers.<Throwable>instanceOf(NamingException.class));
         thrown.expectCause(hasMessage(is((String) null)));
         thrown.expectMessage(containsString("20151007:212217"));
-        thrown.expectMessage(containsString("javax.xml.bind.JAXBException\n - " +
-            "with linked exception:\n" +
-            "[java.util.UnknownFormatConversionException: " +
-            "Conversion = Invalid for unit test]"));
+        thrown.expectMessage(containsString(
+            "javax.naming.NamingException [Root exception is java.util" +
+                ".UnknownFormatConversionException: Conversion = Invalid for" +
+                " unit test]"
+        ));
 
         // given
-        String message = null;
         Throwable original = new UnknownFormatConversionException("Invalid for unit test");
-        JAXBException cause = new JAXBException(message);
-        cause.setLinkedException(original);
+        NamingException cause = new NamingException(null);
+        cause.setRootCause(original);
         throw new EidRuntimeException("20151007:212217", cause);
     }
 

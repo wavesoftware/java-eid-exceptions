@@ -126,19 +126,19 @@
         <dependency>
             <groupId>org.openjdk.jmh</groupId>
             <artifactId>jmh-core</artifactId>
-            <version>1.11.3</version>
+            <version>1.16</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.openjdk.jmh</groupId>
             <artifactId>jmh-generator-annprocess</artifactId>
-            <version>1.11.3</version>
+            <version>1.16</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>1.7.20</version>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.2.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -207,7 +207,7 @@
                     <configuration>
                         <compilerArgs>
                             <arg>-Werror</arg>
-                            <arg>-Xlint:all</arg>
+                            <arg>-Xlint:all,-options,-processing</arg>
                         </compilerArgs>
                     </configuration>
                 </plugin>

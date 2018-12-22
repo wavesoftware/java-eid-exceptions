@@ -106,7 +106,7 @@ import static pl.wavesoftware.eid.system.EidModule.MODULE;
  * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
  * @see EidContainer
  * @see Configurator
- * @since 0.1.0
+ * @since 2.0.0
  */
 public class DefaultEid implements Eid {
 

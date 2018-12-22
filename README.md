@@ -2,8 +2,6 @@
 
 [![Build Status](https://travis-ci.org/wavesoftware/java-eid-exceptions.svg?branch=master)](https://travis-ci.org/wavesoftware/java-eid-exceptions) [![Coverage Status](https://coveralls.io/repos/wavesoftware/java-eid-exceptions/badge.svg?branch=master&service=github)](https://coveralls.io/github/wavesoftware/java-eid-exceptions?branch=master) [![SonarQube Tech Debt](https://img.shields.io/sonar/https/sonar.wavesoftware.pl/pl.wavesoftware%3Aeid-exceptions/tech_debt.svg)](https://sonar.wavesoftware.pl/dashboard?id=pl.wavesoftware%3Aeid-exceptions) [![Maven Central](https://img.shields.io/maven-central/v/pl.wavesoftware/eid-exceptions.svg)](https://search.maven.org/artifact/pl.wavesoftware/eid-exceptions/1.2.0/jar)
 
-
-
 This small library holds a set of exceptions and utilities that implements idea of fast, reusable, error codes that can be simply thrown fast in case of unpredictable and unrecoverable application failure. It is meant to be used for application bugs.
 
 ## The Idea
@@ -16,8 +14,8 @@ This error number is perfect to be displayed on the error "500" page for your ap
 
 This approach is best to use with tools and IDE plugins like:
 
- * [EidGenerator for Netbeans IDE](http://plugins.netbeans.org/plugin/53137/exception-id-eid-generator)
  * [Generating Exception Id number in Intellij IDEA with Live Templates](https://github.com/wavesoftware/java-eid-exceptions/wiki/Generating%20Exception%20Id%20number%20in%20Intellij%20IDEA%20with%20Live%20Templates)
+ * [EidGenerator for Netbeans IDE](http://plugins.netbeans.org/plugin/53137/exception-id-eid-generator)
  
 Error page can say something like:
 
@@ -130,13 +128,18 @@ From release `2.0.0` message formatting is done using `MessageFormat#format(Stri
 For example:
 
 ```java
-checkState(transation.isValid(), "20151119:120238", "Invalid transaction: {0}", transaction);
+checkState(
+  transation.isValid(), "20151119:120238", 
+  "Invalid transaction: {0}", transaction
+);
 ```
 
 Will produce output similar to;
 
 ```
-pl.wavesoftware.eid.exceptions.EidIllegalStateException: [20151119:120238]<xf4j1l> => Invalid transaction: <Transaction id=null, buyer=null, products=[]>
+pl.wavesoftware.eid.exceptions.EidIllegalStateException: 
+ ↵ [20151119:120238]<xf4j1l> => Invalid transaction:
+ ↵ <Transaction id=null, buyer=null, products=[]>
 ```
  
 #### Functional try to execute blocks
@@ -148,6 +151,17 @@ There are two versions. One with `UnsafeSupplier` and one with `UnsafeProcedure`
 Example:
 
 ```java
+import static pl.wavesoftware.eid.utils.EidExecutions.tryToExecute;
+// [..]
+InputStream is = tryToExecute(
+    () -> openResource("project.properties"),
+    "20150718:121521"
+);
+```
+
+or with JDK < 8
+
+```java
 InputStream is = EidExecutions.tryToExecute(new UnsafeSupplier<InputStream>() {
     @Override @Nonnull
     public InputStream get() throws IOException {
@@ -157,17 +171,6 @@ InputStream is = EidExecutions.tryToExecute(new UnsafeSupplier<InputStream>() {
 }, "20150718:121521");
 ```
 
-or with Java 8:
-
-```java
-import static pl.wavesoftware.eid.utils.EidExecutions.tryToExecute;
-// [..]
-InputStream is = tryToExecute(
-    () -> openResource("project.properties"),
-    "20150718:121521"
-);
-```
-
 #### Logging
 
 Eid object can also be useful in logging. That is `message` method provided to do that. Message formatting is done using 
@@ -175,13 +178,18 @@ Eid object can also be useful in logging. That is `message` method provided to d
 For example:
 
 ```java
-log.debug(new Eid("20151119:121814").message("REST request received: {0}", request).toString());
+log.debug(DefaultEid
+  .eid("20151119:121814")
+  .message("REST request received: {0}", request).toString()
+);
 ```
 
 will unfold to something similar to:
 
 ```
-2017-01-08T16:45:34,334 DEBUG [a.b.c.RestBroker] [20151119:121814]<d1afca> REST request received: <RestRequest user=<User id=345> flow=ShowLastTransactions step=Confirm>
+2017-01-08T16:45:34,334 DEBUG [a.b.c.RestBroker]
+ ↵ [20151119:121814]<d1afca> REST request received: 
+ ↵ <RestRequest user=<User id=345> flow=ShowLastTransactions step=Confirm>
 ```
 
 #### Configuration
@@ -192,29 +200,26 @@ From release `2.0.0` configuration interfaces have been added. There are 2 ways 
 
 Java `ServiceLoader` mechanism is standard for extending libraries. To do that, create on your classpath, a file:
 
-`META-INF/services/pl.wavesoftware.eid.Configurator`
+`META-INF/services/pl.wavesoftware.eid.api.Configurator`
 
-In that file, place a fully qualified class name of your class that implements `EidConfigurator` interface. It should be called first time you reference an Eid, or and of the eid exceptions, or utility preconditions class.
+In that file, place a fully qualified class name of your class that implements `Configurator` interface. It should be called first time you reference an Eid, or and of the eid exceptions, or utility preconditions class.
 
 ##### Programmatic configuration
 
-You can also configure Eid library programmatically. To do just that, use `Eid.getBinding().getConfigurationSystem().configure()` method.
+You can also configure Eid library programmatically. To do just that, use `EidModule.getBinding().getConfigurationSystem().configure()` method.
 
 ```java
 // configure
-EidConfigurator original = Eid.getBinding().getConfigurationSystem().configure(new EidConfigurator() {
-    @Override
-    public void configure(EidConfiguration configuration) {
-        configuration.uniqueIdGenerator(new UniqueIdGenerator() {
-            @Override
-            public String generateUniqId() {
-                return constUniq;
-            }
-        });
-    }
-});
+Configurator original = EidModul.getBinding()
+  .getConfigurationSystem()
+  .configure(configuration ->
+    configuration.uniqueIdGenerator(() -> constUniq)
+  );
+
 // restore original configuration with:
-Eid.getBinding().getConfigurationSystem().configure(original);
+EidModule.getBinding()
+  .getConfigurationSystem()
+  .configure(original);
 ```
  
 Note, that method returns a configurator that  can be used to restore configuration to the state before you invoke this configuration method.

@@ -11,7 +11,7 @@ references:
     environment:
       # Customize the JVM maximum heap limit
       MAVEN_OPTS: -Xmx2048m
-      JACOCO: true
+      JACOCO: false
 
     steps:
      - checkout

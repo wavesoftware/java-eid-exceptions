@@ -38,6 +38,7 @@ import pl.wavesoftware.eid.DisableValidatorState;
 import pl.wavesoftware.eid.exceptions.EidRuntimeException;
 import pl.wavesoftware.testing.JavaAgentSkip;
 import pl.wavesoftware.testing.JmhCleaner;
+import pl.wavesoftware.testing.JvmArgs;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -79,11 +80,7 @@ public class EidPreconditionsIT {
             .forks(1)
             .shouldFailOnError(true)
             .shouldDoGC(true)
-            .jvmArgs(
-                "-server", "-Xms256m", "-Xmx256m",
-                "-XX:PermSize=128m", "-XX:MaxPermSize=128m",
-                "-XX:+UseParallelGC"
-            )
+            .jvmArgs(JvmArgs.get())
             .build();
 
         Runner runner = new Runner(opt);

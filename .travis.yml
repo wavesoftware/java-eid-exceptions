@@ -1,28 +1,26 @@
 language: java
-script: mvn clean install --fail-at-end
+dist: trusty
+before_script: mvn dependency:go-offline
+script: mvn clean verify --fail-at-end
 notifications:
   email:
-    on_failure: true
+    on_failure: change
 matrix:
   include:
-  - jdk: openjdk6
-    env: JACOCO=true
-  - jdk: openjdk7
-    env: JACOCO=true COVERALLS=true
-  - jdk: oraclejdk7
-    env: JACOCO=true
-  - jdk: oraclejdk8
-    env: JACOCO=true
-  - jdk: openjdk7
-    env: JACOCO=true GDMSESSION=sonar
-  - jdk: openjdk7
-    env: JACOCO=true SONAR=publish
-    script: mvn clean install sonar:sonar --fail-at-end
-  - jdk: openjdk6
-    env: JACOCO=false
-  - jdk: openjdk7
-    env: JACOCO=false
-  - jdk: oraclejdk7
-    env: JACOCO=false
-  - jdk: oraclejdk8
-    env: JACOCO=false
+    # Quality testing
+    - jdk: oraclejdk8
+      env: JACOCO=true RELEASE_CHECKS=true
+    - jdk: oraclejdk8
+      env: JACOCO=true COVERALLS=true
+    - jdk: oraclejdk8
+      env: JACOCO=true SONAR=publish
+      script: mvn clean verify sonar:sonar --fail-at-end
+    # Performance testing
+    - jdk: openjdk7
+      env: JACOCO=false
+    - jdk: openjdk8
+      env: JACOCO=false
+    - jdk: oraclejdk9
+      env: JACOCO=false
+    - jdk: oraclejdk11
+      env: JACOCO=false

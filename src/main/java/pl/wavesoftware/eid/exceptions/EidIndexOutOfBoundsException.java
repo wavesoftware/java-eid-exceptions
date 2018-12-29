@@ -1,11 +1,11 @@
 /*
- * Copyright 2015 Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>.
+ * Copyright (c) 2015 Wave Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,81 +15,206 @@
  */
 package pl.wavesoftware.eid.exceptions;
 
+import pl.wavesoftware.eid.api.Eid;
+import pl.wavesoftware.eid.api.EidMessage;
+
+import javax.annotation.Nullable;
+
 /**
- * <strong>This class shouldn't be used in any public API or library.</strong> It is designed to be used for in-house development
- * of end user applications which will report Bugs in standardized error pages or post them to issue tracker.
+ * This exception is Eid version of Java's {@link IndexOutOfBoundsException} that
+ * holds an {@link Eid} object. It can be used to process it in application
+ * central error handler.
  * <p>
- * This id Eid version of {@link IndexOutOfBoundsException}
+ * <strong>Caution!</strong> This class shouldn't be used in any public API or
+ * library. It is designed to be used for in-house development of end user
+ * applications which will report bugs in standardized error pages or post them
+ * to issue tracker.
  *
  * @see IndexOutOfBoundsException
  * @see EidRuntimeException
  * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
+ * @since 0.1.0
  */
 public class EidIndexOutOfBoundsException extends EidRuntimeException {
 
     private static final long serialVersionUID = -9876432123423451L;
 
     /**
-     * @see EidRuntimeException#EidRuntimeException(String, String, Throwable)
-     * @param eid see description on {@link EidRuntimeException#EidRuntimeException(String, String, Throwable)}
-     * @param ref see description on {@link EidRuntimeException#EidRuntimeException(String, String, Throwable)}
-     * @param cause see description on {@link EidRuntimeException#EidRuntimeException(String, String, Throwable)}
+     * Constructs a new runtime exception with the specified Exception ID as
+     * it's detail message, that's {@code new Eid(eid).toString()}.
+     * <p>
+     * The cause is not initialized, and may subsequently be initialized by
+     * a call to {@link #initCause}.
+     *
+     * @param eid an exception ID as character sequence
      */
-    public EidIndexOutOfBoundsException(String eid, String ref, Throwable cause) {
-        super(eid, ref, cause);
+    public EidIndexOutOfBoundsException(CharSequence eid) {
+        super(eid);
     }
 
     /**
-     * @see EidRuntimeException#EidRuntimeException(String, Throwable)
-     * @param eid see description on {@link EidRuntimeException#EidRuntimeException(String, Throwable)}
-     * @param cause see description on {@link EidRuntimeException#EidRuntimeException(String, Throwable)}
+     * Constructs a new runtime exception with the specified Exception ID and
+     * detail message.
+     * <p>
+     * The cause is not initialized, and may subsequently be initialized by a
+     * call to {@link #initCause}.
+     *
+     * @param eid     an exception ID as character sequence
+     * @param message the detail message. The detail message is saved for
+     *                later retrieval by the {@link #getMessage()} method.
      */
-    public EidIndexOutOfBoundsException(String eid, Throwable cause) {
+    public EidIndexOutOfBoundsException(CharSequence eid, String message) {
+        super(eid, message);
+    }
+
+    /**
+     * Constructs a new runtime exception with the specified Eid message.
+     * <p>
+     * The cause is not initialized, and may subsequently be initialized by a
+     * call to {@link #initCause}.
+     *
+     * @param message the Eid message. The detail message is saved for
+     *                later retrieval by the {@link #getMessage()} method.
+     */
+    public EidIndexOutOfBoundsException(EidMessage message) {
+        super(message);
+    }
+
+    /**
+     * Constructs a new runtime exception with the specified Exception ID,
+     * detail message and cause.
+     *
+     * <p>
+     * Note that the detail message associated with <code>cause</code> is
+     * <i>not</i> automatically incorporated in this runtime exception's
+     * detail message.
+     *
+     * @param eid     an exception ID as character sequence
+     * @param message the detail message (which is saved for later retrieval
+     *                by the {@link #getMessage()} method).
+     * @param cause   the cause (which is saved for later retrieval by the
+     *                {@link #getCause()} method).  (A <tt>null</tt> value is
+     *                permitted, and indicates that the cause is nonexistent or
+     */
+    public EidIndexOutOfBoundsException(
+        CharSequence eid, String message, @Nullable Throwable cause
+    ) {
+        super(eid, message, cause);
+    }
+
+    /**
+     * Constructs a new runtime exception with the specified Exception ID,
+     * detail message and cause.
+     *
+     * <p>
+     * Note that the detail message associated with <code>cause</code> is
+     * <i>not</i> automatically incorporated in this runtime exception's
+     * detail message.
+     *
+     * @param message the Eid message (which is saved for later retrieval
+     *                by the {@link #getMessage()} method).
+     * @param cause   the cause (which is saved for later retrieval by the
+     *                {@link #getCause()} method).  (A <tt>null</tt> value is
+     *                permitted, and indicates that the cause is nonexistent or
+     */
+    public EidIndexOutOfBoundsException(
+        EidMessage message, @Nullable Throwable cause
+    ) {
+        super(message, cause);
+    }
+
+    /**
+     * Constructs a new runtime exception with the specified Exception ID and
+     * cause.
+     * <p>
+     * A detail message of <code>eid.toString() + (cause==null ? "" : cause.toString())</code>
+     * (which typically contains the class and detail message of
+     * <code>cause</code>).
+     * <p>
+     * This constructor is useful for runtime exceptions that are little more
+     * than wrappers for other throwables.
+     *
+     * @param eid   an exception ID as character sequence
+     * @param cause the cause (which is saved for later retrieval by the
+     *              {@link #getCause()} method).  (A <tt>null</tt> value is
+     *              permitted, and indicates that the cause is nonexistent or
+     */
+    public EidIndexOutOfBoundsException(
+        CharSequence eid, @Nullable Throwable cause
+    ) {
         super(eid, cause);
     }
 
     /**
-     * @see EidRuntimeException#EidRuntimeException(String, String)
-     * @param eid see description on {@link EidRuntimeException#EidRuntimeException(String, String)}
-     * @param ref see description on {@link EidRuntimeException#EidRuntimeException(String, String)}
-     */
-    public EidIndexOutOfBoundsException(String eid, String ref) {
-        super(eid, ref);
-    }
-
-    /**
-     * @see EidRuntimeException#EidRuntimeException(Eid, Throwable)
-     * @param id see description on {@link EidRuntimeException#EidRuntimeException(Eid, Throwable)}
-     * @param cause see description on {@link EidRuntimeException#EidRuntimeException(Eid, Throwable)}
-     */
-    public EidIndexOutOfBoundsException(Eid id, Throwable cause) {
-        super(id, cause);
-    }
-
-    /**
-     * @see EidRuntimeException#EidRuntimeException(Eid)
-     * @param id see description on {@link EidRuntimeException#EidRuntimeException(Eid)}
+     * Constructs a new runtime exception with the specified Exception ID as
+     * it's detail message, that's {@code eid.toString()}.
+     * <p>
+     * The cause is not initialized, and may subsequently be initialized by
+     * a call to {@link #initCause}.
+     *
+     * @param id an exception ID
      */
     public EidIndexOutOfBoundsException(Eid id) {
         super(id);
     }
 
     /**
-     * @see EidRuntimeException#EidRuntimeException(Eid, String, Object...)
-     * @param id see description on {@link EidRuntimeException#EidRuntimeException(Eid, String, Object...)}
-     * @param messageFormat see description on {@link EidRuntimeException#EidRuntimeException(Eid, String, Object...)}
-     * @param parameters see description on {@link EidRuntimeException#EidRuntimeException(Eid, String, Object...)}
+     * Constructs a new runtime exception with the specified Exception ID and
+     * detail message.
+     * <p>
+     * The cause is not initialized, and may subsequently be initialized by a
+     * call to {@link #initCause}.
+     *
+     * @param id      an exception ID
+     * @param message the detail message. The detail message is saved for
+     *                later retrieval by the {@link #getMessage()} method.
      */
-    public EidIndexOutOfBoundsException(Eid id, String messageFormat, Object... parameters) {
-        super(id, messageFormat, parameters);
+    public EidIndexOutOfBoundsException(Eid id, String message) {
+        super(id, message);
     }
 
     /**
-     * @return {@link IndexOutOfBoundsException} class
+     * Constructs a new runtime exception with the specified Exception ID,
+     * detail message and cause.
+     *
+     * <p>
+     * Note that the detail message associated with <code>cause</code> is
+     * <i>not</i> automatically incorporated in this runtime exception's
+     * detail message.
+     *
+     * @param id      an exception ID
+     * @param message the detail message (which is saved for later retrieval
+     *                by the {@link #getMessage()} method).
+     * @param cause   the cause (which is saved for later retrieval by the
+     *                {@link #getCause()} method).  (A <tt>null</tt> value is
+     *                permitted, and indicates that the cause is nonexistent or
      */
-    @Override
-    public Class<? extends RuntimeException> getStandardJdkClass() {
-        return IndexOutOfBoundsException.class;
+    public EidIndexOutOfBoundsException(
+        Eid id, String message, @Nullable Throwable cause
+    ) {
+        super(id, message, cause);
+    }
+
+    /**
+     * Constructs a new runtime exception with the specified Exception ID and
+     * cause.
+     * <p>
+     * A detail message of <code>eid.toString() + (cause==null ? "" : cause.toString())</code>
+     * (which typically contains the class and detail message of
+     * <code>cause</code>).
+     * <p>
+     * This constructor is useful for runtime exceptions that are little more
+     * than wrappers for other throwables.
+     *
+     * @param id    an exception ID
+     * @param cause the cause (which is saved for later retrieval by the
+     *              {@link #getCause()} method).  (A <tt>null</tt> value is
+     *              permitted, and indicates that the cause is nonexistent or
+     */
+    public EidIndexOutOfBoundsException(
+        Eid id, @Nullable Throwable cause
+    ) {
+        super(id, cause);
     }
 
 }

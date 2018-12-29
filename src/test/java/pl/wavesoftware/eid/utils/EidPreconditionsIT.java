@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) 2015 Wave Software
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package pl.wavesoftware.eid.utils;
 
 import com.google.common.base.Preconditions;
@@ -18,9 +34,11 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.openjdk.jmh.runner.options.TimeValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.wavesoftware.eid.DisableValidatorState;
 import pl.wavesoftware.eid.exceptions.EidRuntimeException;
 import pl.wavesoftware.testing.JavaAgentSkip;
 import pl.wavesoftware.testing.JmhCleaner;
+import pl.wavesoftware.testing.JvmArgs;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -52,7 +70,7 @@ public class EidPreconditionsIT {
         Options opt = new OptionsBuilder()
             .include(this.getClass().getName() + ".*")
             .mode(Mode.Throughput)
-            .timeUnit(TimeUnit.MICROSECONDS)
+            .timeUnit(TimeUnit.MILLISECONDS)
             .operationsPerInvocation(OPERATIONS)
             .warmupTime(TimeValue.seconds(1))
             .warmupIterations(1)
@@ -62,7 +80,7 @@ public class EidPreconditionsIT {
             .forks(1)
             .shouldFailOnError(true)
             .shouldDoGC(true)
-            .jvmArgs("-server", "-Xms256m", "-Xmx256m", "-XX:PermSize=128m", "-XX:MaxPermSize=128m", "-XX:+UseParallelGC")
+            .jvmArgs(JvmArgs.get())
             .build();
 
         Runner runner = new Runner(opt);
@@ -76,7 +94,7 @@ public class EidPreconditionsIT {
 
     @Benchmark
     @BenchmarkConfig(test = TestCase.CHECK_ARGUMENT, framework = Framework.GUAVA)
-    public void testCheckArgument(Blackhole bh) {
+    public void testCheckArgument(Blackhole bh, DisableValidatorState state) {
         for (int i = 0; i < OPERATIONS; i++) {
             Preconditions.checkArgument(i >= 0, "20160325:123449");
             bh.consume(i);
@@ -85,7 +103,7 @@ public class EidPreconditionsIT {
 
     @Benchmark
     @BenchmarkConfig(test = TestCase.CHECK_STATE, framework = Framework.GUAVA)
-    public void testCheckState(Blackhole bh) {
+    public void testCheckState(Blackhole bh, DisableValidatorState state) {
         for (int i = 0; i < OPERATIONS; i++) {
             Preconditions.checkState(i >= 0, "20160325:123534");
             bh.consume(i);
@@ -128,12 +146,12 @@ public class EidPreconditionsIT {
 
     @State(Scope.Benchmark)
     public static class SupplierOfUnsafes {
-        private EidPreconditions.UnsafeSupplier<String> supplier;
-        private EidPreconditions.UnsafeProcedure procedure;
+        private UnsafeSupplier<String> supplier;
+        private UnsafeProcedure procedure;
 
         @Setup
         public void setup() {
-            this.supplier = new EidPreconditions.UnsafeSupplier<String>() {
+            this.supplier = new UnsafeSupplier<String>() {
 
                 @Override
                 public String get() throws Exception {
@@ -147,7 +165,7 @@ public class EidPreconditionsIT {
     @BenchmarkConfig(test = TestCase.TRY_TO_EXECUTE, framework = Framework.EID)
     public void testTryToExecuteSupplier(SupplierOfUnsafes supplierOfUnsafes, Blackhole bh) {
         for (int i = 0; i < OPERATIONS; i++) {
-            bh.consume(EidPreconditions.tryToExecute(supplierOfUnsafes.supplier, "20160326:223854"));
+            bh.consume(EidExecutions.tryToExecute(supplierOfUnsafes.supplier, "20160326:223854"));
         }
     }
 
@@ -163,9 +181,13 @@ public class EidPreconditionsIT {
 
         double ratio = eid / guava;
 
-        LOG.info(String.format("%s: Guava score = %.2f vs Eid score = %.2f ==> ratio: %.2f%%, " +
-            "minimum threshold: %.2f%%",
-            testCase, guava, eid, ratio * PERCENT, SPEED_THRESHOLD * PERCENT));
+        LOG.info(String.format(
+            "%s: Guava score = %.2f vs Eid score = %.2f " +
+                "==> ratio: %.2f%%, " +
+                "minimum threshold: %.2f%%",
+            testCase, guava, eid,
+            ratio * PERCENT, SPEED_THRESHOLD * PERCENT
+        ));
         assertThat(ratio).isGreaterThanOrEqualTo(SPEED_THRESHOLD);
     }
 
@@ -202,6 +224,7 @@ public class EidPreconditionsIT {
     @Retention(RetentionPolicy.RUNTIME)
     private @interface BenchmarkConfig {
         TestCase test();
+
         Framework framework();
     }
 

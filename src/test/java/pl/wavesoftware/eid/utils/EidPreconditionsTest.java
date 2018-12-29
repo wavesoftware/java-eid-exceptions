@@ -1,11 +1,11 @@
 /*
- * Copyright 2015 Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>.
+ * Copyright (c) 2015 Wave Software
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -21,7 +21,11 @@ import org.hamcrest.Matcher;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import pl.wavesoftware.eid.exceptions.Eid;
+import pl.wavesoftware.eid.ConfiguratorRule;
+import pl.wavesoftware.eid.DefaultEid;
+import pl.wavesoftware.eid.api.ConfigurationBuilder;
+import pl.wavesoftware.eid.api.Configurator;
+import pl.wavesoftware.eid.api.Eid;
 import pl.wavesoftware.eid.exceptions.EidIllegalArgumentException;
 import pl.wavesoftware.eid.exceptions.EidIllegalStateException;
 import pl.wavesoftware.eid.exceptions.EidIndexOutOfBoundsException;
@@ -30,20 +34,27 @@ import pl.wavesoftware.eid.exceptions.EidRuntimeException;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Constructor;
-import java.text.ParseException;
+import java.lang.reflect.Modifier;
+import java.util.Locale;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.internal.matchers.ThrowableMessageMatcher.hasMessage;
+import static org.hamcrest.CoreMatchers.containsString;
 
 /**
  *
- * @author Krzysztof Suszyński <krzysztof.suszynski@wavesoftware.pl>
+ * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
  */
 public class EidPreconditionsTest {
 
     @Rule
     public final ExpectedException thrown = ExpectedException.none();
+    @Rule
+    public final ConfiguratorRule configurator = new ConfiguratorRule(new Configurator() {
+        @Override
+        public void configure(ConfigurationBuilder configuration) {
+            configuration.locale(Locale.ENGLISH);
+        }
+    });
 
     private final String eid = "20150718:075046";
 
@@ -67,7 +78,10 @@ public class EidPreconditionsTest {
         thrown.expectMessage(containsString(eid));
         thrown.expectMessage(containsString("PI value is 3.14"));
         // when
-        EidPreconditions.checkArgument(expression, eid, "PI value is %.2f", Math.PI);
+        EidPreconditions.checkArgument(
+            expression, eid,
+            "PI value is {0,number,#.##}", Math.PI
+        );
     }
 
     @Test
@@ -75,7 +89,10 @@ public class EidPreconditionsTest {
         // given
         boolean expression = truthyValue();
         // when
-        EidPreconditions.checkArgument(expression, eid, "PI value is %.2f", Math.PI);
+        EidPreconditions.checkArgument(
+            expression, eid,
+            "PI value is {0,number,#.##}", Math.PI
+        );
         // then
         assertThat(thrown).isNotNull();
     }
@@ -89,7 +106,10 @@ public class EidPreconditionsTest {
         thrown.expectMessage(containsString(eid));
         thrown.expectMessage(containsString("PI value is 3.14"));
         // when
-        EidPreconditions.checkArgument(expression, new Eid(eid), "PI value is %.2f", Math.PI);
+        EidPreconditions.checkArgument(
+            expression, new DefaultEid(eid),
+            "PI value is {0,number,#.##}", Math.PI
+        );
     }
 
     @Test
@@ -97,7 +117,10 @@ public class EidPreconditionsTest {
         // given
         boolean expression = truthyValue();
         // when
-        EidPreconditions.checkArgument(expression, new Eid(eid), "PI value is %.2f", Math.PI);
+        EidPreconditions.checkArgument(
+            expression, new DefaultEid(eid),
+            "PI value is {0,number,#.##}", Math.PI
+        );
         // then
         assertThat(thrown).isNotNull();
     }
@@ -132,7 +155,10 @@ public class EidPreconditionsTest {
         thrown.expectMessage(containsString(eid));
         thrown.expectMessage(containsString("PI is 3.1416"));
         // when
-        EidPreconditions.checkState(expression, eid, "PI is %.4f", Math.PI);
+        EidPreconditions.checkState(
+            expression, eid,
+            "PI is {0,number,#.####}", Math.PI
+        );
     }
 
     @Test
@@ -140,7 +166,10 @@ public class EidPreconditionsTest {
         // given
         boolean expression = truthyValue();
         // when
-        EidPreconditions.checkState(expression, eid, "PI is %.4f", Math.PI);
+        EidPreconditions.checkState(
+            expression, eid,
+            "PI is {0,number,#.##}", Math.PI
+        );
         // then
         assertThat(thrown).isNotNull();
     }
@@ -154,7 +183,10 @@ public class EidPreconditionsTest {
         thrown.expectMessage(containsString(eid));
         thrown.expectMessage(containsString("PI is 3.1416"));
         // when
-        EidPreconditions.checkState(expression, new Eid(eid), "PI is %.4f", Math.PI);
+        EidPreconditions.checkState(
+            expression, new DefaultEid(eid),
+            "PI is {0,number,#.####}", Math.PI
+        );
     }
 
     @Test
@@ -162,7 +194,10 @@ public class EidPreconditionsTest {
         // given
         boolean expression = truthyValue();
         // when
-        EidPreconditions.checkState(expression, new Eid(eid), "PI is %.4f", Math.PI);
+        EidPreconditions.checkState(
+            expression, new DefaultEid(eid),
+            "PI is {0,number,#.##}", Math.PI
+        );
         // then
         assertThat(thrown).isNotNull();
     }
@@ -208,7 +243,10 @@ public class EidPreconditionsTest {
         thrown.expectMessage(containsString(eid));
         thrown.expectMessage(containsString("π <=> 3.142"));
         // when
-        EidPreconditions.checkNotNull(reference, eid, "π <=> %.3f", Math.PI);
+        EidPreconditions.checkNotNull(
+            reference, eid,
+            "π <=> {0,number,#.###}", Math.PI
+        );
     }
 
     @Test
@@ -216,7 +254,10 @@ public class EidPreconditionsTest {
         // given
         Object reference = "A test";
         // when
-        Object checked = EidPreconditions.checkNotNull(reference, eid, "π <=> %.3f", Math.PI);
+        Object checked = EidPreconditions.checkNotNull(
+            reference, eid,
+            "π <=> {0,number,#.###}", Math.PI
+        );
         // then
         assertThat(checked).isSameAs(reference);
     }
@@ -230,7 +271,10 @@ public class EidPreconditionsTest {
         thrown.expectMessage(containsString(eid));
         thrown.expectMessage(containsString("π <=> 3.142"));
         // when
-        EidPreconditions.checkNotNull(reference, new Eid(eid), "π <=> %.3f", Math.PI);
+        EidPreconditions.checkNotNull(
+            reference, new DefaultEid(eid),
+            "π <=> {0,number,#.###}", Math.PI
+        );
     }
 
     @Test
@@ -238,7 +282,10 @@ public class EidPreconditionsTest {
         // given
         Object reference = "A test";
         // when
-        Object checked = EidPreconditions.checkNotNull(reference, new Eid(eid), "π <=> %.3f", Math.PI);
+        Object checked = EidPreconditions.checkNotNull(
+            reference, new DefaultEid(eid),
+            "π <=> {0,number,#.###}", Math.PI
+        );
         // then
         assertThat(checked).isSameAs(reference);
     }
@@ -281,6 +328,18 @@ public class EidPreconditionsTest {
     }
 
     @Test
+    public void testCheckElementIndexOnGithubIssue15() {
+        // given
+        int index = 4;
+        int size = 4;
+        // then
+        thrown.expect(EidIndexOutOfBoundsException.class);
+        thrown.expectMessage(containsString(eid));
+        // when
+        EidPreconditions.checkElementIndex(index, size, eid);
+    }
+
+    @Test
     public void testCheckElementIndex_WithMessage() {
         // given
         int index = -1;
@@ -290,7 +349,10 @@ public class EidPreconditionsTest {
         thrown.expectMessage(containsString(eid));
         thrown.expectMessage(containsString("Pi (π): 3.14"));
         // when
-        EidPreconditions.checkElementIndex(index, size, eid, "Pi (π): %.2f", Math.PI);
+        EidPreconditions.checkElementIndex(
+            index, size, eid,
+            "Pi (π): {0,number,#.##}", Math.PI
+        );
     }
 
     @Test
@@ -303,7 +365,10 @@ public class EidPreconditionsTest {
         thrown.expectMessage(containsString(eid));
         thrown.expectMessage(containsString("Pi (π): 3.14"));
         // when
-        EidPreconditions.checkElementIndex(index, size, new Eid(eid), "Pi (π): %.2f", Math.PI);
+        EidPreconditions.checkElementIndex(
+            index, size, new DefaultEid(eid),
+            "Pi (π): {0,number,#.##}", Math.PI
+        );
     }
 
     @Test
@@ -314,9 +379,12 @@ public class EidPreconditionsTest {
         // then
         thrown.expect(EidIllegalArgumentException.class);
         thrown.expectMessage(containsString(eid));
-        thrown.expectMessage(containsString("Pi (π): 3.142"));
+        thrown.expectMessage(containsString("Pi (π): 3.14"));
         // when
-        EidPreconditions.checkElementIndex(index, size, eid, "Pi (π): %.3f", Math.PI);
+        EidPreconditions.checkElementIndex(
+            index, size, eid,
+            "Pi (π): {0,number,#.##}", Math.PI
+        );
     }
 
     @Test
@@ -327,9 +395,12 @@ public class EidPreconditionsTest {
         // then
         thrown.expect(EidIllegalArgumentException.class);
         thrown.expectMessage(containsString(eid));
-        thrown.expectMessage(containsString("Pi (π): 3.142"));
+        thrown.expectMessage(containsString("Pi (π): 3.14"));
         // when
-        EidPreconditions.checkElementIndex(index, size, new Eid(eid), "Pi (π): %.3f", Math.PI);
+        EidPreconditions.checkElementIndex(
+            index, size, new DefaultEid(eid),
+            "Pi (π): {0,number,#.##}", Math.PI
+        );
     }
 
     @Test
@@ -338,7 +409,10 @@ public class EidPreconditionsTest {
         int index = 234;
         int size = 450;
         // when
-        int checked = EidPreconditions.checkElementIndex(index, size, eid, "Pi (π): %.1f", Math.PI);
+        int checked = EidPreconditions.checkElementIndex(
+            index, size, eid,
+            "Pi (π): {0,number,#.#}", Math.PI
+        );
         // then
         assertThat(checked).isEqualTo(index);
     }
@@ -349,7 +423,10 @@ public class EidPreconditionsTest {
         int index = 234;
         int size = 450;
         // when
-        int checked = EidPreconditions.checkElementIndex(index, size, new Eid(eid), "Pi (π): %.1f", Math.PI);
+        int checked = EidPreconditions.checkElementIndex(
+            index, size, new DefaultEid(eid),
+            "Pi (π): {0,number,#.#}", Math.PI
+        );
         // then
         assertThat(checked).isEqualTo(index);
     }
@@ -375,7 +452,7 @@ public class EidPreconditionsTest {
         thrown.expect(EidIllegalArgumentException.class);
         thrown.expectMessage(containsString(eid));
         // when
-        EidPreconditions.checkElementIndex(index, size, new Eid(eid));
+        EidPreconditions.checkElementIndex(index, size, new DefaultEid(eid));
     }
 
     @Test
@@ -395,7 +472,7 @@ public class EidPreconditionsTest {
         // given
         Class<EidPreconditions> cls = EidPreconditions.class;
         Constructor<?> constructor = cls.getDeclaredConstructor();
-        boolean access = constructor.isAccessible();
+        boolean access = Modifier.isPublic(constructor.getModifiers());
 
         // then
         assertThat(access).isFalse();
@@ -405,13 +482,14 @@ public class EidPreconditionsTest {
             @Override
             public boolean matches(Object item) {
                 @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
-                Eid eidObject = EidRuntimeException.class.cast(item).getEid();
+                Eid eidObject = ((EidRuntimeException) item).getEid();
                 return eidObject.getId().equals("20150718:083450")
-                    && !eidObject.getRef().isEmpty()
-                    && !eidObject.getUniq().isEmpty();
+                    && !eidObject.hasRef()
+                    && !eidObject.getUnique().isEmpty();
             }
         });
-        thrown.expectMessage(containsString("[20150718:083450|This should not be accessed]"));
+        thrown.expectMessage(containsString("[20150718:083450]"));
+        thrown.expectMessage(containsString("This should not be accessed"));
         // when
         assertThat(new EidPreconditions()).isNull();
     }
@@ -420,7 +498,7 @@ public class EidPreconditionsTest {
     public void testCheckArgument_boolean_Eid_Null() {
         // given
         boolean expression = falsyValue();
-        Eid eidObject = nullyValue();
+        DefaultEid eidObject = nullyValue();
         // then
         thrown.expect(EidIllegalArgumentException.class);
         thrown.expectMessage(containsString("20160329:132823|EID-NULL"));
@@ -443,7 +521,7 @@ public class EidPreconditionsTest {
     @Test
     public void testCheckArgument_boolean_Eid() {
         // given
-        Eid eidObject = getEid();
+        DefaultEid eidObject = getEid();
         boolean expression = falsyValue();
         // then
         thrown.expect(EidIllegalArgumentException.class);
@@ -455,7 +533,7 @@ public class EidPreconditionsTest {
     @Test
     public void testCheckArgument_boolean_Eid_Ok() {
         // given
-        Eid eidObject = getEid();
+        DefaultEid eidObject = getEid();
         boolean expression = truthyValue();
         // when
         EidPreconditions.checkArgument(expression, eidObject);
@@ -467,7 +545,7 @@ public class EidPreconditionsTest {
     public void testCheckState_boolean_Eid() {
         // given
         boolean expression = falsyValue();
-        Eid eidObject = getEid();
+        DefaultEid eidObject = getEid();
         // then
         thrown.expect(EidIllegalStateException.class);
         thrown.expectMessage(containsString(eid));
@@ -479,7 +557,7 @@ public class EidPreconditionsTest {
     public void testCheckState_boolean_Eid_Ok() {
         // given
         boolean expression = truthyValue();
-        Eid eidObject = getEid();
+        DefaultEid eidObject = getEid();
         // when
         EidPreconditions.checkState(expression, eidObject);
         // then
@@ -490,7 +568,7 @@ public class EidPreconditionsTest {
     public void testCheckNotNull_GenericType_Eid() {
         // given
         Object reference = nullyValue();
-        Eid eidObject = getEid();
+        DefaultEid eidObject = getEid();
         // then
         thrown.expect(EidNullPointerException.class);
         thrown.expectMessage(containsString(eid));
@@ -502,7 +580,7 @@ public class EidPreconditionsTest {
     public void testCheckNotNull_GenericType_Eid_Ok() {
         // given
         String reference = "ok";
-        Eid eidObject = getEid();
+        DefaultEid eidObject = getEid();
         // when
         String result = EidPreconditions.checkNotNull(reference, eidObject);
         // then
@@ -515,7 +593,7 @@ public class EidPreconditionsTest {
         // given
         int index = 5;
         int size = 0;
-        Eid eidObject = getEid();
+        DefaultEid eidObject = getEid();
         // then
         thrown.expect(EidIndexOutOfBoundsException.class);
         thrown.expectMessage(containsString(eid));
@@ -528,7 +606,7 @@ public class EidPreconditionsTest {
         // given
         int index = -5;
         int size = 10;
-        Eid eidObject = getEid();
+        DefaultEid eidObject = getEid();
         // then
         thrown.expect(EidIndexOutOfBoundsException.class);
         thrown.expectMessage(containsString(eid));
@@ -541,154 +619,16 @@ public class EidPreconditionsTest {
         // given
         int index = 1;
         int size = 120;
-        Eid eidObject = getEid();
+        DefaultEid eidObject = getEid();
         // when
         int result = EidPreconditions.checkElementIndex(index, size, eidObject);
         // then
         assertThat(result).isEqualTo(index);
     }
 
-    @Test
-    public void testTryToExecute_UnsafeProcedure_String() {
-        // given
-        final String causeMessage = "An error occured while parsing JSON document at char 178";
-        EidPreconditions.UnsafeProcedure procedure = new EidPreconditions.UnsafeProcedure() {
-            @Override
-            public void execute() throws ParseException {
-                throw new ParseException(causeMessage, 178);
-            }
-        };
-        // then
-        thrown.expect(EidRuntimeException.class);
-        thrown.expectCause(isA(ParseException.class));
-        thrown.expectCause(hasMessage(equalTo(causeMessage)));
-        // when
-        EidPreconditions.tryToExecute(procedure, eid);
-    }
-
-    @Test
-    public void testTryToExecute_UnsafeProcedure_String_Ok() {
-        // given
-        EidPreconditions.UnsafeProcedure procedure = new EidPreconditions.UnsafeProcedure() {
-            @Override
-            public void execute() {
-                // nothing special here, for unit test
-            }
-        };
-        // when
-        EidPreconditions.tryToExecute(procedure, eid);
-        // then
-        assertThat(procedure).isNotNull();
-    }
-
-    @Test
-    public void testTryToExecute_UnsafeProcedure_Eid() {
-        // given
-        final String causeMessage = "An error occured while parsing JSON document at char 178";
-        EidPreconditions.UnsafeProcedure procedure = new EidPreconditions.UnsafeProcedure() {
-            @Override
-            public void execute() throws ParseException {
-                throw new ParseException(causeMessage, 178);
-            }
-        };
-        // then
-        thrown.expect(EidRuntimeException.class);
-        thrown.expectCause(isA(ParseException.class));
-        thrown.expectCause(hasMessage(equalTo(causeMessage)));
-        // when
-        EidPreconditions.tryToExecute(procedure, new Eid(eid));
-    }
-
-    @Test
-    public void testTryToExecute_UnsafeProcedure_Eid_Ok() {
-        // given
-        EidPreconditions.UnsafeProcedure procedure = new EidPreconditions.UnsafeProcedure() {
-            @Override
-            public void execute() {
-                // nothing special here, for unit test
-            }
-        };
-        // when
-        EidPreconditions.tryToExecute(procedure, new Eid(eid));
-        // then
-        assertThat(procedure).isNotNull();
-    }
-
-    @Test
-    public void testTryToExecute_UnsafeSupplier_String() {
-        // given
-        final String causeMessage = "An error occured while parsing JSON document at char 178";
-        EidPreconditions.UnsafeSupplier<String> supplier = new EidPreconditions.UnsafeSupplier<String>() {
-
-            @Override
-            public String get() throws ParseException {
-                throw new ParseException(causeMessage, 178);
-            }
-        };
-        // then
-        thrown.expect(EidRuntimeException.class);
-        thrown.expectCause(isA(ParseException.class));
-        thrown.expectCause(hasMessage(equalTo(causeMessage)));
-        // when
-        EidPreconditions.tryToExecute(supplier, eid);
-    }
-
-    @Test
-    public void testTryToExecute_UnsafeSupplier_String_Ok() {
-        // given
-        final String returning = "An answer to universe and everything";
-        EidPreconditions.UnsafeSupplier<String> supplier = new EidPreconditions.UnsafeSupplier<String>() {
-            @Override
-            public String get() throws ParseException {
-                return returning;
-            }
-        };
-        // when
-        String answer = EidPreconditions.tryToExecute(supplier, eid);
-        // then
-        assertThat(supplier).isNotNull();
-        assertThat(answer).isNotNull().isNotEmpty().isEqualTo(returning);
-    }
-
-    @Test
-    public void testTryToExecute_UnsafeSupplier_Eid() {
-        // given
-        final String causeMessage = "An error occured while parsing JSON document at char 178";
-        EidPreconditions.UnsafeSupplier<String> supplier = new EidPreconditions.UnsafeSupplier<String>() {
-
-            @Override
-            public String get() throws ParseException {
-                throw new ParseException(causeMessage, 178);
-            }
-        };
-        // then
-        thrown.expect(EidRuntimeException.class);
-        thrown.expectCause(isA(ParseException.class));
-        thrown.expectCause(hasMessage(equalTo(causeMessage)));
-        // when
-        EidPreconditions.tryToExecute(supplier, new Eid(eid));
-    }
-
-    @Test
-    public void testTryToExecute_UnsafeSupplier_Eid_Ok() {
-        // given
-        final String returning = "An answer to universe and everything";
-        EidPreconditions.UnsafeSupplier<String> supplier = new EidPreconditions.UnsafeSupplier<String>() {
-            @Override
-            public String get() throws ParseException {
-                return returning;
-            }
-        };
-        // when
-        String answer = EidPreconditions.tryToExecute(supplier, new Eid(eid));
-        // then
-        assertThat(supplier).isNotNull();
-        assertThat(answer).isNotNull().isNotEmpty().isEqualTo(returning);
-    }
-
     @Nonnull
-    private Eid getEid() {
-        return new Eid(eid);
+    private DefaultEid getEid() {
+        return new DefaultEid(eid);
     }
 
     private static Boolean truthyValue() {

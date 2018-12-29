@@ -31,7 +31,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import pl.wavesoftware.eid.exceptions.EidRuntimeException;
 import pl.wavesoftware.testing.JavaAgentSkip;
+import pl.wavesoftware.testing.JavaVersion;
 import pl.wavesoftware.testing.JmhCleaner;
+import pl.wavesoftware.testing.JvmArgs;
 
 import java.util.Collection;
 import java.util.Date;
@@ -48,7 +50,10 @@ public class EidIT {
     private static final int PERCENT = 100;
     private static final int OPERATIONS = 1000;
     private static final Logger LOG = LoggerFactory.getLogger(EidIT.class);
-    private static final double SPEED_THRESHOLD = 0.9d;
+    private static final double SPEED_THRESHOLD =
+        JavaVersion.get().greaterOrEqual(JavaVersion.of(8))
+            ? 0.9d
+            : 0.5d;
 
     @ClassRule
     public static RuleChain chain = RuleChain
@@ -56,7 +61,7 @@ public class EidIT {
         .around(JavaAgentSkip.ifActive());
 
     @Test
-    public void doBenckmarking() throws Exception {
+    public void benchmark() throws Exception {
         Options opt = new OptionsBuilder()
             .include(this.getClass().getName() + ".*")
             .mode(Mode.Throughput)
@@ -70,11 +75,7 @@ public class EidIT {
             .forks(1)
             .shouldFailOnError(true)
             .shouldDoGC(true)
-            .jvmArgs(
-                "-server", "-Xms256m", "-Xmx256m",
-                "-XX:PermSize=128m", "-XX:MaxPermSize=128m",
-                "-XX:+UseParallelGC"
-            )
+            .jvmArgs(JvmArgs.get())
             .build();
 
         Runner runner = new Runner(opt);
@@ -105,7 +106,7 @@ public class EidIT {
     }
 
     @Benchmark
-    public void control(Blackhole bh, DisableValidatorState state) {
+    public void control(Blackhole bh) {
         for (int i = 0; i < OPERATIONS; i++) {
             bh.consume(new Date());
         }

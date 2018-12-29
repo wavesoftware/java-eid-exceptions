@@ -20,6 +20,8 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.Setup;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.TearDown;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import pl.wavesoftware.eid.api.ConfigurationBuilder;
 import pl.wavesoftware.eid.api.Configurator;
 
@@ -29,6 +31,8 @@ import pl.wavesoftware.eid.api.Configurator;
  */
 @State(Scope.Benchmark)
 public class DisableValidatorState {
+    private static final Logger LOGGER =
+        LoggerFactory.getLogger(DisableValidatorState.class);
     private ConfigurationContext context;
 
     @Setup
@@ -38,6 +42,7 @@ public class DisableValidatorState {
                 @Override
                 public void configure(ConfigurationBuilder configuration) {
                     configuration.validator(null);
+                    LOGGER.debug("Disable validation of Eid numbers");
                 }
             });
     }
@@ -45,5 +50,6 @@ public class DisableValidatorState {
     @TearDown
     public void tearDown() {
         context.close();
+        LOGGER.debug("Restoring configuration context");
     }
 }

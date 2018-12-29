@@ -1,6 +1,6 @@
 # EID Runtime Exceptions and Utilities
 
-[![Build Status](https://travis-ci.org/wavesoftware/java-eid-exceptions.svg?branch=master)](https://travis-ci.org/wavesoftware/java-eid-exceptions) [![Coverage Status](https://coveralls.io/repos/wavesoftware/java-eid-exceptions/badge.svg?branch=master&service=github)](https://coveralls.io/github/wavesoftware/java-eid-exceptions?branch=master) [![SonarQube Tech Debt](https://img.shields.io/sonar/https/sonar.wavesoftware.pl/pl.wavesoftware%3Aeid-exceptions/tech_debt.svg)](https://sonar.wavesoftware.pl/dashboard?id=pl.wavesoftware%3Aeid-exceptions) [![Maven Central](https://img.shields.io/maven-central/v/pl.wavesoftware/eid-exceptions.svg)](https://search.maven.org/artifact/pl.wavesoftware/eid-exceptions/1.2.0/jar)
+[![Build Status](https://travis-ci.org/wavesoftware/java-eid-exceptions.svg?branch=master)](https://travis-ci.org/wavesoftware/java-eid-exceptions) [![Coverage Status](https://coveralls.io/repos/wavesoftware/java-eid-exceptions/badge.svg?branch=master&service=github)](https://coveralls.io/github/wavesoftware/java-eid-exceptions?branch=master) [![SonarQube Tech Debt](https://img.shields.io/sonar/https/sonar.wavesoftware.pl/pl.wavesoftware%3Aeid-exceptions/tech_debt.svg)](https://sonar.wavesoftware.pl/dashboard?id=pl.wavesoftware%3Aeid-exceptions) [![Maven Central](https://img.shields.io/maven-central/v/pl.wavesoftware/eid-exceptions.svg)](https://search.maven.org/search?q=g:pl.wavesoftware%20AND%20a:eid-exceptions)
 
 This small library holds a set of exceptions and utilities that implements idea of fast, reusable, error codes that can be simply thrown fast in case of unpredictable and unrecoverable application failure. It is meant to be used for application bugs.
 
@@ -56,7 +56,7 @@ This classes shouldn't be used in any public API or library. It is designed to b
 <dependency>
     <groupId>pl.wavesoftware</groupId>
     <artifactId>eid-exceptions</artifactId>
-    <version>1.2.0</version>
+    <version>2.0.0</version>
 </dependency>
 ```
 
@@ -244,16 +244,16 @@ Even if you can't contribute code, if you have an idea for an improvement please
 
 ## Requirements
 
-* JDK >= 1.6
+* JDK 6 - 11
 
 ### Releases
 
 - 2.0.0
   - Complete overhaul of library structure
+  - Support for Java 9 and 11
   - More obvious exceptions constructors
   - Better configuration
   - Optional validation
-
 - 1.2.0
   - Major performance tweaks and tests for `EidPreconditions` methods #4 
   - Major performance tweaks and tests for `Eid` class #2 

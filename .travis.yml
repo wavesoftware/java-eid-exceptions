@@ -9,6 +9,8 @@ matrix:
   include:
     # Quality testing
     - jdk: oraclejdk8
+      env: JACOCO=true RELEASE_CHECKS=true
+    - jdk: oraclejdk8
       env: JACOCO=true COVERALLS=true
     - jdk: oraclejdk8
       env: JACOCO=true SONAR=publish

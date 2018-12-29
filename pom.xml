@@ -164,9 +164,9 @@
                     <version>3.5.0.1254</version>
                 </plugin>
                 <plugin>
-                    <groupId>external.atlassian.jgitflow</groupId>
+                    <groupId>com.manamind.jgitflow</groupId>
                     <artifactId>jgitflow-maven-plugin</artifactId>
-                    <version>1.0-m5.1</version>
+                    <version>1.0.0</version>
                     <configuration>
                         <enableSshAgent>true</enableSshAgent>
                         <flowInitContext>
@@ -462,6 +462,26 @@
                     </plugin>
                     <plugin>
                         <artifactId>maven-gpg-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>release-checks</id>
+            <activation>
+                <property>
+                    <name>env.RELEASE_CHECKS</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-source-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-javadoc-plugin</artifactId>
                     </plugin>
                 </plugins>
             </build>

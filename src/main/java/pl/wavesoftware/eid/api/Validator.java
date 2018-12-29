@@ -19,10 +19,10 @@ package pl.wavesoftware.eid.api;
 /**
  * Implementing this validator and configuring it can help you assure that every
  * Eid in your project, conform to your rules.
- * <p><p>
+ * <p><br>
  * Keep in mind that validation adds a little bit of cost, to every Eid creation,
  * even if that particular Eid don't turn up to be used.
- * <p><p>
+ * <p><br>
  * To use your {@code Validator}, use {@link Configurator}.
  *
  * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>

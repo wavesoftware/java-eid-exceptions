@@ -21,6 +21,8 @@ import pl.wavesoftware.eid.api.ConfigurationSystem;
 import pl.wavesoftware.eid.api.EidFactories;
 
 /**
+ * An internal implementation. Do not use manually.
+ * <p><br>
  * A default binding implementation.
  *
  * @author <a href="mailto:krzysztof.suszynski@wavesoftware.pl">Krzysztof Suszynski</a>
